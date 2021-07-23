@@ -1,0 +1,28 @@
+{
+  "name": "dep-dive",
+  "version": "0.1.0",
+  "description": "Find out which file uses a dependency with simple CLI commands 🚀",
+  "main": "index.js",
+  "repository": "git@github.com:Namchee/dep-dive.git",
+  "author": "Cristopher Namchee <cristophernamchee12@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "esprima": "^4.0.1",
+    "ora": "^5.4.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.28.0",
+    "eslint": "^7.29.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-namchee": "^1.0.6",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsdoc": "^35.4.0",
+    "prettier": "^2.3.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-standard": "^22.0.0",
+    "typescript": "^4.3.5"
+  }
+}
