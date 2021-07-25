@@ -1,7 +1,11 @@
 {
+  "compilerOptions": {
+    "outDir": "./bin",
+    "module": "commonjs"
+  },
   "extends": "eslint-config-namchee/tsconfig",
   "include": [
-    "**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

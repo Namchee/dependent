@@ -299,6 +299,11 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
+"@types/node@^16.4.2":
+  version "16.4.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.2.tgz#0a95d7fd950cb1eaca0ce11031d72e8f680b775a"
+  integrity sha512-vxyhOzFCm+jC/T5KugbVsYy1DbQM0h3NCFUrVbu0+pYa/nr+heeucpqxpa8j4pUmIGLPYzboY9zIdOF0niFAjQ==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
@@ -819,10 +824,10 @@ eslint-config-google@^0.14.0:
   resolved "https://registry.yarnpkg.com/eslint-config-google/-/eslint-config-google-0.14.0.tgz#4f5f8759ba6e11b424294a219dbfa18c508bcc1a"
   integrity sha512-WsbX4WbjuMvTdeVL6+J3rK1RGhCTqjsFjX7UMSMgZiyxxaNLkoJENbrGExzERFeoTpGw3F3FypTiWAP9ZXzkEw==
 
-eslint-config-namchee@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-namchee/-/eslint-config-namchee-1.0.6.tgz#5b35384295a9e7413bf9eefc04cdf0021ff88197"
-  integrity sha512-wnd7FtwS+jw4Z2lIjr5I2Vv7d5XhbV4AYuXEjLRdBdlWyJuOt9fwYBI6Q26/xTHn9z2rq/WSZgoPpH3USueT1Q==
+eslint-config-namchee@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/eslint-config-namchee/-/eslint-config-namchee-1.0.7.tgz#25a0e49de9568d7c998105a7932ea5ed9594df05"
+  integrity sha512-yT4caVfA0ucmlQPt4MZSvmj5U2JhwuzPIKmi7VN4VCSsau25Q2s3cUtrvw+AXgI6eciO92pYQpyRM56wbi/xYA==
 
 eslint-config-prettier@^8.3.0:
   version "8.3.0"
