@@ -2,7 +2,6 @@
   "name": "dep-dive",
   "version": "0.1.0",
   "description": "Find out which file uses a dependency with simple CLI commands 🚀",
-
   "repository": "git@github.com:Namchee/dep-dive.git",
   "author": "Cristopher Namchee <cristophernamchee12@gmail.com>",
   "license": "MIT",
@@ -19,10 +18,12 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "esprima": "^4.0.1",
-    "ora": "^5.4.1"
+    "ora": "^5.4.1",
+    "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@types/node": "^16.4.2",
+    "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "eslint": "^7.29.0",

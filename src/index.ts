@@ -1,20 +1,34 @@
 #!/usr/bin/env node
 
-
 import ora from 'ora';
 import chalk from 'chalk';
-import { resolvePackageJSON } from './project';
+import yargs from 'yargs';
 
-const spinner = ora('Scanning project directory').start();
+import { isInstalled, resolvePackageJSON } from './project';
+
+const args = yargs.command(
+  '$0 <package_name>',
+  'Analyze package usage in your project directory',
+).parseSync();
+
+const spinner = ora().start();
 
 try {
+  const dependency = args.package_name as string;
+
+  spinner.text = chalk.greenBright('Scanning project directory...');
+
   const projectDef = resolvePackageJSON();
+  spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-  spinner.stop();
-  console.log(chalk.cyan(JSON.stringify(projectDef, null, 2)));
+  const isPackageInstalled = isInstalled(dependency, projectDef);
+
+  if (!isPackageInstalled) {
+    throw new Error('The specified package is not defined for this project');
+  }
 } catch (err) {
-  spinner.stop();
-
   const error = err as Error;
-  console.error(chalk.redBright(error.message));
+
+  spinner.fail(chalk.redBright(error.message));
+  console.log(chalk.cyanBright('Terminating...'));
 }

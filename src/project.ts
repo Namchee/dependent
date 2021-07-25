@@ -11,7 +11,7 @@ export function resolvePackageJSON(): ProjectDefinition {
   // is the current workdir a NodeJS project directory?
   if (!existsSync(path)) {
     // eslint-disable-next-line max-len
-    throw new Error('The current project directory is not a NodeJS-based project. Dep dive can only analyze dependencies in NodeJS-based project.');
+    throw new Error('The current project directory is not a NodeJS-based project');
   }
 
   try {
@@ -24,6 +24,15 @@ export function resolvePackageJSON(): ProjectDefinition {
       peerDependencies: projectDef.peerDependencies,
     };
   } catch (err) {
-    throw new Error('Invalid package.json schema.');
+    throw new Error('Invalid package.json schema');
   }
+}
+
+export function isInstalled(
+  dependency: string,
+  def: ProjectDefinition,
+): boolean {
+  return Object.keys(def.dependencies || {}).includes(dependency) ||
+    Object.keys(def.devDependencies || {}).includes(dependency) ||
+    Object.keys(def.peerDependencies || {}).includes(dependency);
 }
