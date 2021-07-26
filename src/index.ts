@@ -4,7 +4,7 @@ import ora from 'ora';
 import chalk from 'chalk';
 import yargs from 'yargs';
 
-import { isInstalled, resolvePackageJSON } from './project';
+import { isDefined, resolvePackageJSON } from './project';
 
 const args = yargs.command(
   '$0 <package_name>',
@@ -21,11 +21,7 @@ try {
   const projectDef = resolvePackageJSON();
   spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-  const isPackageInstalled = isInstalled(dependency, projectDef);
-
-  if (!isPackageInstalled) {
-    throw new Error('The specified package is not defined for this project');
-  }
+  isDefined(dependency, projectDef);
 } catch (err) {
   const error = err as Error;
 

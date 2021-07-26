@@ -28,11 +28,15 @@ export function resolvePackageJSON(): ProjectDefinition {
   }
 }
 
-export function isInstalled(
+export function isDefined(
   dependency: string,
   def: ProjectDefinition,
-): boolean {
-  return Object.keys(def.dependencies || {}).includes(dependency) ||
+): void {
+  const isDefined = Object.keys(def.dependencies || {}).includes(dependency) ||
     Object.keys(def.devDependencies || {}).includes(dependency) ||
     Object.keys(def.peerDependencies || {}).includes(dependency);
+
+  if (!isDefined) {
+    throw new Error('The specified package is not defined for this project');
+  }
 }
