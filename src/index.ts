@@ -4,7 +4,7 @@ import ora from 'ora';
 import chalk from 'chalk';
 import yargs from 'yargs';
 
-import { isDefined, resolvePackageJSON } from './project';
+import { isDefined, isInstalled, resolvePackageJSON } from './package';
 
 const args = yargs.command(
   '$0 <package_name>',
@@ -22,6 +22,7 @@ try {
   spinner.text = chalk.greenBright('Analyzing package dependency...');
 
   isDefined(dependency, projectDef);
+  isInstalled(dependency);
 } catch (err) {
   const error = err as Error;
 
