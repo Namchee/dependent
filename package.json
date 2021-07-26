@@ -18,10 +18,13 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "esprima": "^4.0.1",
+    "glob": "^7.1.7",
     "ora": "^5.4.1",
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@types/esprima": "^4.0.3",
+    "@types/glob": "^7.1.4",
     "@types/node": "^16.4.2",
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.0",

@@ -22,6 +22,7 @@ export function resolvePackageJSON(): ProjectDefinition {
       dependencies: projectDef.dependencies,
       devDependencies: projectDef.devDependencies,
       peerDependencies: projectDef.peerDependencies,
+      isModule: projectDef.type && projectDef.type === 'module',
     };
   } catch (err) {
     throw new Error('Invalid package.json schema');
