@@ -27,7 +27,6 @@ function isCommonJSImport(
   });
 }
 
-
 export function getDependantFiles(
   files: ProjectFile[],
   dependency: string,

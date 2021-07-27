@@ -13,7 +13,8 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "tsc",
-    "build:watch": "tsc --watch"
+    "build:watch": "tsc --watch",
+    "test": "jest"
   },
   "dependencies": {
     "chalk": "^4.1.1",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@types/esprima": "^4.0.3",
     "@types/glob": "^7.1.4",
+    "@types/jest": "^26.0.24",
     "@types/node": "^16.4.2",
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
@@ -34,9 +36,11 @@
     "eslint-config-namchee": "^1.0.7",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsdoc": "^35.4.0",
+    "jest": "^27.0.6",
     "prettier": "^2.3.2",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
+    "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   }
 }
