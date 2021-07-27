@@ -1,7 +1,7 @@
 import { getDependantFiles } from './../src/project';
 import { ProjectFile } from './../src/types';
 
-describe('ES Module import test', () => {
+describe('ESModule import test', () => {
   it('should be able to distinguish default exports', () => {
     const files: ProjectFile[] = [
       {

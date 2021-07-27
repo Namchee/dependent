@@ -1,7 +1,11 @@
 import { parse, Options, Node, SourceLocation } from 'acorn';
 import { simple } from 'acorn-walk';
 
-import type { ImportDeclaration, ImportExpression } from 'estree';
+import type {
+  ImportDeclaration,
+  ImportExpression,
+  CallExpression,
+} from 'estree';
 
 import { DependantFile, ProjectFile } from './types';
 
@@ -39,10 +43,27 @@ function getESModulesImportLines(
 }
 
 function getCommonJSImportLines(
-  node: Node,
+  baseNode: Node,
   dependency: string,
 ): number[] {
-  const lines = [];
+  const lines: number[] = [];
+
+  simple(baseNode, {
+    CallExpression(node: Node) {
+      const callExpr = node as unknown as CallExpression;
+
+      if (
+        callExpr.callee.type === 'Identifier' &&
+        callExpr.callee.name === 'require' &&
+        callExpr.arguments[0].type === 'Literal' &&
+        callExpr.arguments[0].value === dependency
+      ) {
+        lines.push((node.loc as SourceLocation).start.line);
+      }
+    },
+  });
+
+  return lines;
 }
 
 export function getDependantFiles(
