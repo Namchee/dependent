@@ -6,7 +6,7 @@ import { ProjectFile } from './types';
 
 export function getProjectFiles(): ProjectFile[] {
   const projectFiles = glob.sync(
-    '**/*.+(js|mjs)',
+    '**/{*.js,*.mjs,!(node_modules)/**/*.js,!(node_modules)/**/*.mjs}',
     {
       silent: true,
     },

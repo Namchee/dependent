@@ -5,6 +5,8 @@ import chalk from 'chalk';
 import yargs from 'yargs';
 
 import { isDefined, isInstalled, resolvePackageJSON } from './package';
+import { getProjectFiles } from './file';
+import { getDependantFiles } from './project';
 
 const args = yargs.command(
   '$0 <package_name>',
@@ -19,10 +21,17 @@ try {
   spinner.text = chalk.greenBright('Scanning project directory...');
 
   const projectDef = resolvePackageJSON();
-  spinner.text = chalk.greenBright('Analyzing package dependency...');
+  spinner.text = chalk.greenBright('Checking package status...');
 
   isDefined(dependency, projectDef);
   isInstalled(dependency);
+
+  spinner.text = chalk.greenBright('Analyzing package dependency...');
+
+  const files = getProjectFiles();
+  const dependant = getDependantFiles(files, dependency, false);
+
+  console.log(dependant);
 } catch (err) {
   const error = err as Error;
 
