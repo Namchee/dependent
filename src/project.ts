@@ -8,8 +8,15 @@ function isModuleImport(
   dependency: string,
 ): boolean {
   return body.some((bod: Statement | ModuleDeclaration | Directive) => {
-    return bod.type === 'ImportDeclaration' &&
+    const isStaticImport = bod.type === 'ImportDeclaration' &&
       (bod.source.value as string).startsWith(dependency);
+
+    const isDynamicImport = bod.type === 'VariableDeclaration' &&
+      bod.declarations[0].init?.type === 'ImportExpression' &&
+      bod.declarations[0].init.source.type === 'Literal' &&
+      bod.declarations[0].init.source.value === dependency;
+
+    return isStaticImport || isDynamicImport;
   });
 }
 
@@ -43,18 +50,14 @@ export function getDependantFiles(
       sourceType: module || isModule ? 'module' : 'script',
     });
 
-    console.log(node);
+    const { body } = (node as unknown as Program);
 
-    if (node.type === 'Program') {
-      const { body } = (node as unknown as Program);
+    const isDependant = isModule ?
+      isModuleImport(body, dependency) :
+      validator(body, dependency);
 
-      const isDependant = isModule ?
-        isModuleImport(body, dependency) :
-        validator(body, dependency);
-
-      if (isDependant) {
-        dependant.push({ name: file.name, path: file.path });
-      }
+    if (isDependant) {
+      dependant.push({ name: file.name, path: file.path });
     }
   }
 
