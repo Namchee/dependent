@@ -17,14 +17,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "acorn": "^8.4.1",
     "chalk": "^4.1.1",
-    "esprima": "^4.0.1",
     "glob": "^7.1.7",
     "ora": "^5.4.1",
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@types/esprima": "^4.0.3",
+    "@types/acorn": "^4.0.6",
     "@types/glob": "^7.1.4",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.2",

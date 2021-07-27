@@ -7,6 +7,7 @@ import yargs from 'yargs';
 import { isDefined, isInstalled, resolvePackageJSON } from './package';
 import { getProjectFiles } from './file';
 import { getDependantFiles } from './project';
+import { parse } from 'acorn';
 
 const args = yargs.command(
   '$0 <package_name>',

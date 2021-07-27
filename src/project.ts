@@ -1,5 +1,5 @@
-import { parseModule, parseScript } from 'esprima';
-import type { Statement, ModuleDeclaration, Directive } from 'estree';
+import { parse, Options, Node } from 'acorn';
+import type { Program, Directive, Statement, ModuleDeclaration } from 'estree';
 
 import { DependantFile, ProjectFile } from './types';
 
@@ -32,22 +32,29 @@ export function getDependantFiles(
   dependency: string,
   module: boolean,
 ): DependantFile[] {
-  const parser = module ? parseModule : parseScript;
+  const baseOptions: Options = { ecmaVersion: 'latest' };
   const validator = module ? isModuleImport : isCommonJSImport;
   const dependant: DependantFile[] = [];
 
   for (const file of files) {
     const isModule = file.name.endsWith('mjs');
-    const { body } = isModule ?
-      parseModule(file.content) :
-      parser(file.content);
+    const node: Node = parse(file.content, {
+      ...baseOptions,
+      sourceType: module || isModule ? 'module' : 'script',
+    });
 
-    const isDependant = isModule ?
-      isModuleImport(body, dependency) :
-      validator(body, dependency);
+    console.log(node);
 
-    if (isDependant) {
-      dependant.push({ name: file.name, path: file.path });
+    if (node.type === 'Program') {
+      const { body } = (node as unknown as Program);
+
+      const isDependant = isModule ?
+        isModuleImport(body, dependency) :
+        validator(body, dependency);
+
+      if (isDependant) {
+        dependant.push({ name: file.name, path: file.path });
+      }
     }
   }
 

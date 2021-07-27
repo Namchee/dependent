@@ -1,9 +1,9 @@
 {
+  "extends": "eslint-config-namchee/tsconfig",
   "compilerOptions": {
     "outDir": "./bin",
-    "module": "commonjs"
+    "module": "commonjs",
   },
-  "extends": "eslint-config-namchee/tsconfig",
   "include": [
     "src/**/*.ts"
   ],
