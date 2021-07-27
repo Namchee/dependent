@@ -9,6 +9,7 @@ export interface ProjectDefinition {
 export interface DependantFile {
   name: string;
   path: string;
+  lineNumbers: number[];
 }
 
 export interface ProjectFile {

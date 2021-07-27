@@ -71,4 +71,23 @@ describe('ES Module import test', () => {
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
+
+  it('should be able to distinguish module imports nested in code', () => {
+    const files: ProjectFile[] = [
+      {
+        name: 'a.js',
+        path: 'b/a.js',
+        content: `(async () => {
+          if (somethingIsTrue) {
+            await import('express');
+          }
+        })();`,
+      },
+    ];
+
+    const dependants = getDependantFiles(files, 'express', true);
+    expect(dependants.length).toBe(1);
+    expect(dependants[0].name).toBe('a.js');
+    expect(dependants[0].lineNumbers[0]).toBe(3);
+  });
 });

@@ -1,37 +1,48 @@
-import { parse, Options, Node } from 'acorn';
-import type { Program, Directive, Statement, ModuleDeclaration } from 'estree';
+import { parse, Options, Node, SourceLocation } from 'acorn';
+import { simple } from 'acorn-walk';
+
+import type { ImportDeclaration, ImportExpression } from 'estree';
 
 import { DependantFile, ProjectFile } from './types';
 
-function isModuleImport(
-  body: (Statement | ModuleDeclaration | Directive)[],
+function getESModulesImportLines(
+  baseNode: Node,
   dependency: string,
-): boolean {
-  return body.some((bod: Statement | ModuleDeclaration | Directive) => {
-    const isStaticImport = bod.type === 'ImportDeclaration' &&
-      (bod.source.value as string).startsWith(dependency);
+): number[] {
+  const lines: number[] = [];
 
-    const isDynamicImport = bod.type === 'VariableDeclaration' &&
-      bod.declarations[0].init?.type === 'ImportExpression' &&
-      bod.declarations[0].init.source.type === 'Literal' &&
-      bod.declarations[0].init.source.value === dependency;
+  simple(baseNode, {
+    ImportExpression(node: Node) {
+      const importExpr = node as unknown as ImportExpression;
 
-    return isStaticImport || isDynamicImport;
+      if (
+        importExpr.source.type === 'Literal' &&
+        importExpr.source.value === dependency
+      ) {
+        lines.push((node.loc as SourceLocation).start.line);
+      }
+    },
+
+    ImportDeclaration(node: Node) {
+      const importDec = node as unknown as ImportDeclaration;
+
+      if (
+        importDec.source.type === 'Literal' &&
+        importDec.source.value === dependency
+      ) {
+        lines.push((node.loc as SourceLocation).start.line);
+      }
+    }
   });
+
+  return lines;
 }
 
-function isCommonJSImport(
-  body: (Statement | ModuleDeclaration | Directive)[],
+function getCommonJSImportLines(
+  node: Node,
   dependency: string,
-): boolean {
-  return body.some((bod: Statement | ModuleDeclaration | Directive) => {
-    return bod.type === 'VariableDeclaration' &&
-      bod.declarations[0].init?.type === 'CallExpression' &&
-      bod.declarations[0].init?.callee.type === 'Identifier' &&
-      bod.declarations[0].init?.callee.name === 'require' &&
-      bod.declarations[0].init.arguments[0].type === 'Literal' &&
-      bod.declarations[0].init.arguments[0].value === dependency;
-  });
+): number[] {
+  const lines = [];
 }
 
 export function getDependantFiles(
@@ -39,25 +50,30 @@ export function getDependantFiles(
   dependency: string,
   module: boolean,
 ): DependantFile[] {
-  const baseOptions: Options = { ecmaVersion: 'latest' };
-  const validator = module ? isModuleImport : isCommonJSImport;
+  const baseOptions: Options = {
+    ecmaVersion: 'latest',
+    locations: true,
+  };
+
+  const validator = module ? getESModulesImportLines : getCommonJSImportLines;
   const dependant: DependantFile[] = [];
 
   for (const file of files) {
     const isModule = file.name.endsWith('mjs');
+
     const node: Node = parse(file.content, {
       ...baseOptions,
       sourceType: module || isModule ? 'module' : 'script',
     });
 
-    const { body } = (node as unknown as Program);
-
     const isDependant = isModule ?
-      isModuleImport(body, dependency) :
-      validator(body, dependency);
+      getESModulesImportLines(node, dependency) :
+      validator(node, dependency);
 
     if (isDependant) {
-      dependant.push({ name: file.name, path: file.path });
+      dependant.push(
+        { name: file.name, path: file.path, lineNumbers: isDependant }
+      );
     }
   }
 
