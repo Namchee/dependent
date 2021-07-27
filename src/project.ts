@@ -91,7 +91,7 @@ export function getDependantFiles(
       getESModulesImportLines(node, dependency) :
       validator(node, dependency);
 
-    if (isDependant) {
+    if (isDependant.length) {
       dependant.push(
         { name: file.name, path: file.path, lineNumbers: isDependant }
       );
