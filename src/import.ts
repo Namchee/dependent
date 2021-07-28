@@ -15,8 +15,6 @@ function getESModulesImportLines(
 ): number[] {
   const lines: number[] = [];
 
-  console.log(baseNode);
-
   simple(baseNode, {
     ImportExpression(node: Node) {
       const importExpr = node as unknown as ImportExpression;

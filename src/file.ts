@@ -6,7 +6,7 @@ import { ProjectFile } from './types';
 
 export function getProjectFiles(): ProjectFile[] {
   const filePaths = glob.sync(
-    `{!(node_modules)/**/*.js,!(node_modules)/**/*.mjs,*.js,*.mjs}`,
+    '{!(node_modules)/**/*.js,!(node_modules)/**/*.mjs,*.js,*.mjs}',
     {
       silent: true,
     },

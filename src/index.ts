@@ -2,15 +2,14 @@
 
 import ora from 'ora';
 import chalk from 'chalk';
-import yargs from 'yargs';
 
-import * as command from './command';
+import { cli } from './cli';
 
 import { isDefined, isInstalled, resolvePackageJSON } from './package';
 import { getProjectFiles } from './file';
 import { getDependantFiles } from './import';
 
-const args = yargs.command(command).parseSync();
+const args = cli.parseSync();
 
 const spinner = ora().start();
 
