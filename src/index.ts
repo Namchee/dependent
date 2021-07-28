@@ -8,6 +8,7 @@ import { cli } from './cli';
 import { isDefined, isInstalled, resolvePackageJSON } from './package';
 import { getProjectFiles } from './file';
 import { getDependantFiles } from './import';
+import { showDependantFiles } from './logger';
 
 const args = cli.parseSync();
 
@@ -30,7 +31,9 @@ try {
   const files = getProjectFiles();
   const dependant = getDependantFiles(files, dependency, module);
 
-  console.log(dependant);
+  spinner.succeed(chalk.greenBright('Analysis completed successfully'));
+
+  showDependantFiles(dependant, dependency);
 } catch (err) {
   const error = err as Error;
 
