@@ -132,6 +132,24 @@ describe('CommonJS import test', () => {
     expect(dependants[0].name).toBe('a.js');
     expect(dependants[1].name).toBe('c.mjs');
   });
+
+  it('should be able to parse shebanged files', () => {
+    const files: ProjectFile[] = [
+      {
+        name: 'a.js',
+        path: 'b/a.js',
+        content: `#!/usr/bin/env node
+
+        const express = require('express');
+
+        const app = express();`,
+      },
+    ];
+
+    const dependants = getDependantFiles(files, 'express', false);
+    expect(dependants.length).toBe(1);
+    expect(dependants[0].name).toBe('a.js');
+  });
 });
 
 describe('ESModule import test', () => {
@@ -254,6 +272,40 @@ describe('ESModule import test', () => {
     ];
 
     const dependants = getDependantFiles(files, 'express', true);
+    expect(dependants.length).toBe(1);
+    expect(dependants[0].name).toBe('a.js');
+  });
+
+  it('should be able to parse shebanged files', () => {
+    const files: ProjectFile[] = [
+      {
+        name: 'a.js',
+        path: 'b/a.js',
+        content: `#!/usr/bin/env node
+
+        import express from 'express';
+
+        const app = express();`,
+      },
+    ];
+
+    const dependants = getDependantFiles(files, 'express', true);
+    expect(dependants.length).toBe(1);
+    expect(dependants[0].name).toBe('a.js');
+  });
+
+  it('should be able to tolerate CommonJS imports', () => {
+    const files: ProjectFile[] = [
+      {
+        name: 'a.js',
+        path: 'b/a.js',
+        content: `const express = require('express');
+
+        const app = express();`,
+      },
+    ];
+
+    const dependants = getDependantFiles(files, 'express', false);
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
