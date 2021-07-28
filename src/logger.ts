@@ -18,7 +18,7 @@ export function showDependantFiles(
     files.forEach(({ name, path, lineNumbers }) => {
       console.log(
         cyan(
-          `  ↳ ${name}:${lineNumbers[0]} →  ${path}`,
+          `  ↳ ${name}:${lineNumbers.join(', ')} →  ${path}`,
         ),
       )
     });

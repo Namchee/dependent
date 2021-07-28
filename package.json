@@ -1,13 +1,13 @@
 {
-  "name": "dep-dive",
+  "name": "dependent",
   "version": "0.1.0",
-  "description": "Find out which file uses a dependency with simple CLI commands 🚀",
-  "repository": "git@github.com:Namchee/dep-dive.git",
+  "description": "Simple utility CLI tool to analyze which files are using a Node dependency 🚀",
+  "repository": "git@github.com:Namchee/dependent.git",
   "author": "Cristopher Namchee <cristophernamchee12@gmail.com>",
   "license": "MIT",
   "private": false,
   "bin": {
-    "dep-dive": "./bin/index.js"
+    "dependent": "./bin/index.js"
   },
   "scripts": {
     "lint": "eslint src/**/*.ts",
