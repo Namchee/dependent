@@ -11,7 +11,9 @@ export function resolvePackageJSON(): ProjectDefinition {
   // is the current workdir a NodeJS project directory?
   if (!existsSync(path)) {
     // eslint-disable-next-line max-len
-    throw new Error('The current project directory is not a NodeJS-based project');
+    throw new Error(
+      'The current project directory is not a NodeJS-based project',
+    );
   }
 
   try {

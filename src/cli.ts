@@ -21,9 +21,18 @@ export const cli = yargs
   .options({
     module: {
       alias: 'm',
-      describe: 'Parse all files as modules',
+      describe: 'Parse all files as ES module files',
       type: 'boolean',
-      default: true,
+      default: undefined,
       demandOption: false,
+      conflicts: 'script',
+    },
+    script: {
+      alias: 's',
+      describe: 'Parse all files as JS scripts',
+      type: 'boolean',
+      default: undefined,
+      demandOption: false,
+      conflicts: 'module',
     },
   });

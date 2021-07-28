@@ -8,10 +8,29 @@ describe('CLI test', () => {
   });
 
   it('should be able to parse module option', () => {
-    const args = cli.parseSync('express --module=false');
+    const args = cli.parseSync('express --module');
 
     expect(args.package).toBe('express');
-    expect(args.module).toBe(false);
+    expect(args.module).toBe(true);
+  });
+
+  it('should be able to parse script option', () => {
+    const args = cli.parseSync('express --script');
+
+    expect(args.package).toBe('express');
+    expect(args.script).toBe(true);
+  });
+
+  it('should throw an error when `script` and `module` is `true`', () => {
+    try {
+      cli.parseSync('express --script --module');
+
+      throw new Error(
+        'Should throw an error since `script` and `module` are `true`',
+      )
+    } catch (err) {
+      expect(1).toBe(1);
+    }
   });
 
   it('should be able to parse file pattern option', () => {
@@ -30,7 +49,7 @@ describe('CLI test', () => {
   });
 
   it('should be able to accomodate complex usage', () => {
-    const args = cli.parseSync('express src/**/*.js bin/**/*.js --module=true');
+    const args = cli.parseSync('express src/**/*.js bin/**/*.js --module');
 
     expect(args.package).toBe('express');
     expect(args.files).toContain('src/**/*.js');

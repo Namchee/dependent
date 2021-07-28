@@ -16,11 +16,12 @@ const spinner = ora().start();
 
 try {
   const dependency = args.package as string;
-  const module = args.module as boolean;
 
   spinner.text = chalk.greenBright('Scanning project directory...');
 
   const projectDef = resolvePackageJSON();
+  const module = args.module || args.script || projectDef.isModule;
+
   spinner.text = chalk.greenBright('Checking package status...');
 
   isDefined(dependency, projectDef);
@@ -29,7 +30,11 @@ try {
   spinner.text = chalk.greenBright('Analyzing package dependency...');
 
   const files = getProjectFiles();
-  const dependant = getDependantFiles(files, dependency, module);
+  const dependant = getDependantFiles(
+    files,
+    dependency,
+    module,
+  );
 
   spinner.succeed(chalk.greenBright('Analysis completed successfully'));
 
