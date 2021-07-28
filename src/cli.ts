@@ -21,7 +21,8 @@ export const cli = yargs
     module: {
       alias: 'm',
       describe: 'Parse all files as modules',
-      default: false,
+      type: 'boolean',
+      default: true,
       demandOption: false,
     },
   });
