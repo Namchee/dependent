@@ -15,6 +15,8 @@ function getESModulesImportLines(
 ): number[] {
   const lines: number[] = [];
 
+  console.log(baseNode);
+
   simple(baseNode, {
     ImportExpression(node: Node) {
       const importExpr = node as unknown as ImportExpression;
@@ -74,6 +76,7 @@ export function getDependantFiles(
   const baseOptions: Options = {
     ecmaVersion: 'latest',
     locations: true,
+    allowHashBang: true,
   };
 
   const validator = module ? getESModulesImportLines : getCommonJSImportLines;

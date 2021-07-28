@@ -4,19 +4,19 @@ import ora from 'ora';
 import chalk from 'chalk';
 import yargs from 'yargs';
 
+import * as command from './command';
+
 import { isDefined, isInstalled, resolvePackageJSON } from './package';
 import { getProjectFiles } from './file';
-import { getDependantFiles } from './project';
+import { getDependantFiles } from './import';
 
-const args = yargs.command(
-  '$0 <package_name>',
-  'Analyze package usage in your project directory',
-).parseSync();
+const args = yargs.command(command).parseSync();
 
 const spinner = ora().start();
 
 try {
-  const dependency = args.package_name as string;
+  const dependency = args.package as string;
+  const module = args.module as boolean;
 
   spinner.text = chalk.greenBright('Scanning project directory...');
 
@@ -29,7 +29,7 @@ try {
   spinner.text = chalk.greenBright('Analyzing package dependency...');
 
   const files = getProjectFiles();
-  const dependant = getDependantFiles(files, dependency, false);
+  const dependant = getDependantFiles(files, dependency, module);
 
   console.log(dependant);
 } catch (err) {

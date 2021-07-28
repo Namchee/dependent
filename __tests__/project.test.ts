@@ -1,4 +1,4 @@
-import { getDependantFiles } from './../src/project';
+import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/types';
 
 describe('CommonJS import test', () => {
