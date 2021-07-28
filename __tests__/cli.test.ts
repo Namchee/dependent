@@ -18,21 +18,23 @@ describe('CLI test', () => {
     const args = cli.parseSync('express src/**/*.js');
 
     expect(args.package).toBe('express');
-    expect(args.files).toBe(['src/**/*.js']);
+    expect(args.files).toContain('src/**/*.js');
   });
 
   it('should be able to parse multi file patterns option', () => {
     const args = cli.parseSync('express src/**/*.js bin/**/*.js');
 
     expect(args.package).toBe('express');
-    expect(args.files).toBe(['src/**/*.js', 'bin/**/*.js']);
+    expect(args.files).toContain('src/**/*.js');
+    expect(args.files).toContain('bin/**/*.js');
   });
 
   it('should be able to accomodate complex usage', () => {
     const args = cli.parseSync('express src/**/*.js bin/**/*.js --module=true');
 
     expect(args.package).toBe('express');
-    expect(args.files).toBe(['src/**/*.js', 'bin/**/*.js']);
+    expect(args.files).toContain('src/**/*.js');
+    expect(args.files).toContain('bin/**/*.js');
     expect(args.module).toBe(true);
   });
 });

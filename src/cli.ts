@@ -14,8 +14,9 @@ export const cli = yargs
   .positional('files', {
     alias: 'f',
     type: 'string',
-    description: 'Files to be analyzed in glob pattern separated by commas.',
-    default: '!(node_modules)/**/*.js,!(node_modules)/**/*.mjs,*.js,*.mjs',
+    description: 'Files to be analyzed in glob pattern.',
+    // eslint-disable-next-line max-len
+    default: `['!(node_modules)/**/*.js', '!(node_modules)/**/*.mjs', '*.js', '*.mjs']`,
   })
   .options({
     module: {
