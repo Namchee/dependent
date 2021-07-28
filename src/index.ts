@@ -29,7 +29,7 @@ try {
 
   spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-  const files = getProjectFiles();
+  const files = getProjectFiles(args.files);
   const dependant = getDependantFiles(
     files,
     dependency,

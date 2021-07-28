@@ -16,7 +16,7 @@ export const cli = yargs
     type: 'string',
     description: 'Files to be analyzed in glob pattern.',
     // eslint-disable-next-line max-len
-    default: `['!(node_modules)/**/*.js', '!(node_modules)/**/*.mjs', '*.js', '*.mjs']`,
+    default: ['!(node_modules)/**/*.js', '!(node_modules)/**/*.mjs', '*.js', '*.mjs'],
   })
   .options({
     module: {

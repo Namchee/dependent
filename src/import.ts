@@ -90,20 +90,27 @@ export function getDependantFiles(
     allowHashBang: true,
   };
 
-  const validator = module ? getESModulesImportLines : getCommonJSImportLines;
+  const baseReader = module ? getESModulesImportLines : getCommonJSImportLines;
   const dependant: DependantFile[] = [];
 
   for (const file of files) {
-    const isModule = file.name.endsWith('mjs');
+    let source: 'module' | 'script' = module ? 'module' : 'script';
+    let reader = baseReader;
+
+    if (file.name.endsWith('mjs')) {
+      reader = getESModulesImportLines;
+      source = 'module';
+    } else if (file.name.endsWith('cjs')) {
+      reader = getCommonJSImportLines;
+      source = 'script';
+    }
 
     const node: Node = parse(file.content, {
       ...baseOptions,
-      sourceType: module || isModule ? 'module' : 'script',
+      sourceType: source,
     });
 
-    const isDependant = isModule ?
-      getESModulesImportLines(node, dependency) :
-      validator(node, dependency);
+    const isDependant = reader(node, dependency);
 
     if (isDependant.length) {
       dependant.push(

@@ -21,18 +21,6 @@ describe('CLI test', () => {
     expect(args.script).toBe(true);
   });
 
-  it('should throw an error when `script` and `module` is `true`', () => {
-    try {
-      cli.parseSync('express --script --module');
-
-      throw new Error(
-        'Should throw an error since `script` and `module` are `true`',
-      )
-    } catch (err) {
-      expect(1).toBe(1);
-    }
-  });
-
   it('should be able to parse file pattern option', () => {
     const args = cli.parseSync('express src/**/*.js');
 

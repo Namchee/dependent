@@ -4,9 +4,9 @@ import { basename } from 'path';
 
 import { ProjectFile } from './types';
 
-export function getProjectFiles(): ProjectFile[] {
+export function getProjectFiles(path: string[]): ProjectFile[] {
   const filePaths = glob.sync(
-    '{!(node_modules)/**/*.js,!(node_modules)/**/*.mjs,*.js,*.mjs}',
+    `{${path.join(',')}}`,
     {
       silent: true,
     },
