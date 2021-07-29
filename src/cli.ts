@@ -43,4 +43,11 @@ export const cli = yargs
       default: false,
       demandOption: false,
     },
+    table: {
+      alias: 't',
+      describe: 'Print the output in table format',
+      type: 'boolean',
+      default: false,
+      demandOption: false,
+    },
   });

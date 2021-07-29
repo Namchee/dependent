@@ -2,9 +2,32 @@ import { cyan, cyanBright } from 'chalk';
 
 import { DependantFile } from './types';
 
+function logTable(files: DependantFile[]): void {
+  const tableFriendlyObjects = files.map((file) => {
+    return {
+      'File name': file.name,
+      'File path': file.path,
+      'Line number': file.lineNumbers.join(', '),
+    };
+  });
+
+  console.table(tableFriendlyObjects);
+}
+
+function logLines(files: DependantFile[]): void {
+  files.forEach(({ name, path, lineNumbers }) => {
+    console.log(
+      cyan(
+        `  ↳ ${name}:${lineNumbers.join(', ')} → ${path}`,
+      ),
+    )
+  });
+}
+
 export function showDependantFiles(
   files: DependantFile[],
   dependency: string,
+  table: boolean,
 ): void {
   console.log();
   console.log(
@@ -15,12 +38,6 @@ export function showDependantFiles(
   );
 
   if (files.length) {
-    files.forEach(({ name, path, lineNumbers }) => {
-      console.log(
-        cyan(
-          `  ↳ ${name}:${lineNumbers.join(', ')} → ${path}`,
-        ),
-      )
-    });
+    table ? logTable(files) : logLines(files);
   }
 }

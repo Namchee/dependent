@@ -22,6 +22,7 @@ try {
   const projectDef = resolvePackageJSON();
   const module = args.module || args.require || projectDef.isModule;
   const silent = args.silent;
+  const table = args.table;
 
   spinner.text = chalk.greenBright('Checking package status...');
 
@@ -42,7 +43,7 @@ try {
 
   spinner.succeed(chalk.greenBright('Analysis completed successfully'));
 
-  showDependantFiles(dependant, dependency);
+  showDependantFiles(dependant, dependency, table);
 } catch (err) {
   const error = err as Error;
 
