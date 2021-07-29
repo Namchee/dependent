@@ -41,7 +41,7 @@ export function isDefined(
     Object.keys(def.peerDependencies || {}).includes(dependency);
 
   if (!isDefined) {
-    throw new Error('The specified package is not defined for this project');
+    throw new Error(`Package ${dependency} is not defined in this project`);
   }
 }
 
@@ -58,7 +58,7 @@ export function isInstalled(
       isInstalled ?
         resolve() :
         reject(
-          new Error('The specified package is not installed in this project'),
+          new Error(`Package ${dependency} is not installed in this project`),
         );
     });
   });

@@ -31,7 +31,7 @@ export function getProjectFiles(
       if (silent) {
         continue;
       } else {
-        throw new Error(`Failed to read file ${path}`);
+        throw new Error(`Failed to read ${path}`);
       }
     }
   }
