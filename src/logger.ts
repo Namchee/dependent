@@ -2,6 +2,12 @@ import { cyan, cyanBright } from 'chalk';
 
 import { DependantFile } from './types';
 
+/**
+ * Outputs all dependant files to `stdout` in table
+ * format.
+ *
+ * @param {DependantFile[]} files Dependant files
+ */
 function logTable(files: DependantFile[]): void {
   const tableFriendlyObjects = files.map((file) => {
     return {
@@ -14,6 +20,12 @@ function logTable(files: DependantFile[]): void {
   console.table(tableFriendlyObjects);
 }
 
+/**
+ * Outputs all dependant files to `stdout` in line-per-line
+ * format.
+ *
+ * @param {DependantFile[]} files Dependant files
+ */
 function logLines(files: DependantFile[]): void {
   files.forEach(({ name, path, lineNumbers }) => {
     console.log(
@@ -24,6 +36,14 @@ function logLines(files: DependantFile[]): void {
   });
 }
 
+/**
+ * Outputs all dependant files to `stdout`
+ *
+ * @param {DependantFile[]} files Dependant files
+ * @param {string} dependency Package name
+ * @param {boolean} table `true` if the table output is desired,
+ * `false` if line-per-line output is desired.
+ */
 export function showDependantFiles(
   files: DependantFile[],
   dependency: string,

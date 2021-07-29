@@ -4,6 +4,11 @@ import { spawn } from 'child_process';
 
 import { ProjectDefinition } from './types';
 
+/**
+ * Get all information of the project from `package.json`
+ *
+ * @returns {ProjectDefinition} Project definition. Refer to the type.
+ */
 export function resolvePackageJSON(): ProjectDefinition {
   const workdir = process.cwd();
   const path = resolve(workdir, 'package.json');
@@ -32,6 +37,14 @@ export function resolvePackageJSON(): ProjectDefinition {
   }
 }
 
+/**
+ * Check if `dependency` is defined in `package.json`
+ *
+ * @param {string} dependency Package name
+ * @param {ProjectDefinition} def Project defintion. Refer to the type
+ * @throws {Error} `Error` if `dependency` is not
+ * defined.
+ */
 export function isDefined(
   dependency: string,
   def: ProjectDefinition,
@@ -45,8 +58,15 @@ export function isDefined(
   }
 }
 
+/**
+ * Check if `dependency` is installed in the project (not globally)
+ *
+ * @param {string} dependency Package name
+ * @returns {Promise<void>} Resolves if `dependency` is installed.
+ * Rejects otherwise.
+ */
 export function isInstalled(
-  dependency: string
+  dependency: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const lsCheck = spawn('npm', ['ls', dependency])

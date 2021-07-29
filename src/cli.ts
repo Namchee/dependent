@@ -1,5 +1,8 @@
 import yargs from 'yargs';
 
+/**
+ * Command line interface definition.
+ */
 export const cli = yargs
   .command(
     '$0 <package> [files...]',

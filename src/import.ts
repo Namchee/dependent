@@ -9,6 +9,14 @@ import type {
 
 import { DependantFile, ParserOptions, ProjectFile } from './types';
 
+/**
+ * Analyze ES modules for all imports to `dependency`
+ *
+ * @param {Node} baseNode AST representation of the file
+ * @param {string} dependency Package name
+ * @returns {number[]} List of line numbers where `dependency`
+ * is imported.
+ */
 function getESModulesImportLines(
   baseNode: Node,
   dependency: string,
@@ -55,6 +63,14 @@ function getESModulesImportLines(
   return lines;
 }
 
+/**
+ * Analyze CommonJS modules for all imports to `dependency`
+ *
+ * @param {Node} baseNode AST representation of the file
+ * @param {string} dependency Package name
+ * @returns {number[]} List of line numbers where `dependency`
+ * is imported.
+ */
 function getCommonJSImportLines(
   baseNode: Node,
   dependency: string,
@@ -79,6 +95,18 @@ function getCommonJSImportLines(
   return lines;
 }
 
+/**
+ * Analyze all relevant files for imports to `dependency`
+ *
+ * @param {ProjectFile[]} files Relevant files
+ * @param {string} dependency Package name
+ * @param {ParserOptions} options Parsing options
+ * @param {boolean} options.module `true` if all files should
+ * be parsed as ES modules, `false` otherwise.
+ * @param {boolean} options.silent `true` if the parser
+ * should ignore invalid files, `false` otherwise.
+ * @returns {DependantFile[]} List of files which imports `dependency`.
+ */
 export function getDependantFiles(
   files: ProjectFile[],
   dependency: string,

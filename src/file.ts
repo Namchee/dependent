@@ -4,6 +4,16 @@ import { basename } from 'path';
 
 import { ProjectFile } from './types';
 
+/**
+ * Get all files in the project directory that matches
+ * path criteria.
+ *
+ * @param {string[]} path Path criteria in glob patterns.
+ * @param {boolean} silent Set to `true` to ignore file read
+ * errors.
+ * @returns {ProjectFile[]} List of files that matches the `path`
+ * criteria.
+ */
 export function getProjectFiles(
   path: string[],
   silent: boolean,
