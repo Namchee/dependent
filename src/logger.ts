@@ -18,7 +18,7 @@ function logLines(files: DependantFile[]): void {
   files.forEach(({ name, path, lineNumbers }) => {
     console.log(
       cyan(
-        `  ↳ ${name}:${lineNumbers.join(', ')} → ${path}`,
+        ` └── ${name}:${lineNumbers.join(', ')} → ${path}`,
       ),
     )
   });

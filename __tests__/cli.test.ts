@@ -36,6 +36,20 @@ describe('CLI test', () => {
     expect(args.files).toContain('bin/**/*.js');
   });
 
+  it('should be able to parse silent option', () => {
+    const args = cli.parseSync('express --silent');
+
+    expect(args.package).toBe('express');
+    expect(args.silent).toBe(true);
+  });
+
+  it('should be able to parse table option', () => {
+    const args = cli.parseSync('express --table');
+
+    expect(args.package).toBe('express');
+    expect(args.table).toBe(true);
+  });
+
   it('should be able to accomodate complex usage', () => {
     const args = cli.parseSync('express src/**/*.js bin/**/*.js --module');
 
