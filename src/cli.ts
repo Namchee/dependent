@@ -27,12 +27,20 @@ export const cli = yargs
       demandOption: false,
       conflicts: 'script',
     },
-    script: {
-      alias: 's',
+    require: {
+      alias: 'r',
       describe: 'Parse all files as JS scripts',
       type: 'boolean',
       default: undefined,
       demandOption: false,
       conflicts: 'module',
+    },
+    silent: {
+      alias: 's',
+      // eslint-disable-next-line max-len
+      describe: 'Skip all unreadable and unparseable files instead of throwing errors',
+      type: 'boolean',
+      default: false,
+      demandOption: false,
     },
   });

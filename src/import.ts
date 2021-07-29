@@ -7,7 +7,7 @@ import type {
   CallExpression,
 } from 'estree';
 
-import { DependantFile, ProjectFile } from './types';
+import { DependantFile, ParserOptions, ProjectFile } from './types';
 
 function getESModulesImportLines(
   baseNode: Node,
@@ -82,7 +82,7 @@ function getCommonJSImportLines(
 export function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
-  module: boolean,
+  { module, silent }: ParserOptions,
 ): DependantFile[] {
   const baseOptions: Options = {
     ecmaVersion: 'latest',
@@ -105,17 +105,25 @@ export function getDependantFiles(
       source = 'script';
     }
 
-    const node: Node = parse(file.content, {
-      ...baseOptions,
-      sourceType: source,
-    });
+    try {
+      const node: Node = parse(file.content, {
+        ...baseOptions,
+        sourceType: source,
+      });
 
-    const isDependant = reader(node, dependency);
+      const isDependant = reader(node, dependency);
 
-    if (isDependant.length) {
-      dependant.push(
-        { name: file.name, path: file.path, lineNumbers: isDependant }
-      );
+      if (isDependant.length) {
+        dependant.push(
+          { name: file.name, path: file.path, lineNumbers: isDependant }
+        );
+      }
+    } catch (err) {
+      if (silent) {
+        continue;
+      } else {
+        throw new Error(`Failed to parse ${file.path}`);
+      }
     }
   }
 

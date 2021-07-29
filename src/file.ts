@@ -4,7 +4,10 @@ import { basename } from 'path';
 
 import { ProjectFile } from './types';
 
-export function getProjectFiles(path: string[]): ProjectFile[] {
+export function getProjectFiles(
+  path: string[],
+  silent: boolean,
+): ProjectFile[] {
   const filePaths = glob.sync(
     `{${path.join(',')}}`,
     {
@@ -25,7 +28,11 @@ export function getProjectFiles(path: string[]): ProjectFile[] {
         content,
       });
     } catch {
-      continue;
+      if (silent) {
+        continue;
+      } else {
+        throw new Error(`Failed to read file ${path}`);
+      }
     }
   }
 

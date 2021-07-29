@@ -20,7 +20,8 @@ try {
   spinner.text = chalk.greenBright('Scanning project directory...');
 
   const projectDef = resolvePackageJSON();
-  const module = args.module || args.script || projectDef.isModule;
+  const module = args.module || args.require || projectDef.isModule;
+  const silent = args.silent;
 
   spinner.text = chalk.greenBright('Checking package status...');
 
@@ -29,11 +30,14 @@ try {
 
   spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-  const files = getProjectFiles(args.files);
+  const files = getProjectFiles(args.files, silent);
   const dependant = getDependantFiles(
     files,
     dependency,
-    module,
+    {
+      module,
+      silent,
+    },
   );
 
   spinner.succeed(chalk.greenBright('Analysis completed successfully'));

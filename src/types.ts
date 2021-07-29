@@ -17,3 +17,8 @@ export interface ProjectFile {
   path: string;
   content: string;
 }
+
+export interface ParserOptions {
+  module: boolean;
+  silent: boolean;
+}

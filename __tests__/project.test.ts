@@ -1,6 +1,40 @@
 import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/types';
 
+describe('Parser tolerance test', () => {
+  it('should throw an error when silent is false', () => {
+    const files: ProjectFile[] = [
+      {
+        name: 'a.js',
+        path: 'src/a.js',
+        content: 'const a =',
+      },
+    ];
+
+    expect(() => getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    })).toThrowError('Failed to parse src/a.js');
+  });
+
+  it('should not throw an error when silent is true', () => {
+    const files: ProjectFile[] = [
+      {
+        name: 'a.js',
+        path: 'src/a.js',
+        content: 'const a =',
+      },
+    ];
+
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: true,
+    });
+
+    expect(dependants.length).toBe(0);
+  });
+});
+
 describe('CommonJS import test', () => {
   it('should be able to distinguish CommonJS imports', () => {
     const files: ProjectFile[] = [
@@ -11,7 +45,10 @@ describe('CommonJS import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: false,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -35,7 +72,10 @@ describe('CommonJS import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: false,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -64,7 +104,10 @@ describe('CommonJS import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: false,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -98,7 +141,10 @@ describe('CommonJS import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: false,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -127,7 +173,10 @@ describe('CommonJS import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: false,
+      silent: false,
+    });
     expect(dependants.length).toBe(2);
     expect(dependants[0].name).toBe('a.js');
     expect(dependants[1].name).toBe('c.mjs');
@@ -146,7 +195,10 @@ describe('CommonJS import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: false,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -162,7 +214,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -176,7 +231,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -190,7 +248,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -204,7 +265,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -218,7 +282,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -236,7 +303,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
     expect(dependants[0].lineNumbers[0]).toBe(3);
@@ -271,7 +341,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -289,7 +362,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', true);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
@@ -305,7 +381,10 @@ describe('ESModule import test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', false);
+    const dependants = getDependantFiles(files, 'express', {
+      module: true,
+      silent: false,
+    });
     expect(dependants.length).toBe(1);
     expect(dependants[0].name).toBe('a.js');
   });
