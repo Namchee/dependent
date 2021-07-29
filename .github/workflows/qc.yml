@@ -1,9 +1,6 @@
 name: Lint and test the files to ensure code quality
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master

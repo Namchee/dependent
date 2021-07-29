@@ -26,6 +26,8 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@auto-it/conventional-commits": "^10.30.0",
+    "@auto-it/npm": "^10.30.0",
     "@types/acorn": "^4.0.6",
     "@types/glob": "^7.1.4",
     "@types/jest": "^26.0.24",
@@ -33,6 +35,7 @@
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
+    "auto": "^10.30.0",
     "eslint": "^7.29.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-namchee": "^1.0.7",
