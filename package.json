@@ -1,9 +1,12 @@
 {
-  "name": "dependent",
+  "name": "@namchee/dependent",
   "version": "0.1.0",
   "description": "Simple utility CLI tool to analyze which files are using a Node dependency 🚀",
   "repository": "git@github.com:Namchee/dependent.git",
-  "author": "Cristopher Namchee <cristophernamchee12@gmail.com>",
+  "author": {
+    "name": "Cristopher",
+    "email": "cristophernamchee12@gmail.com"
+  },
   "license": "MIT",
   "private": false,
   "bin": {
