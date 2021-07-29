@@ -1,6 +1,6 @@
 # Dependent
 
-[![NPM package version](https://img.shields.io/npm/v/namchee/dependent)](https://www.npmjs.com/package/@namchee/dependent) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/namchee/telepon)
+[![NPM package version](https://img.shields.io/npm/v/@namchee/dependent)](https://www.npmjs.com/package/@namchee/dependent) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/namchee/telepon)
 
 Dependent is a simple utility CLI to find out which files in your JavaScript project is using a certain dependency. 🚀
 
