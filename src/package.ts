@@ -1,5 +1,6 @@
 import { existsSync } from 'fs';
 import { resolve } from 'path';
+import { spawn } from 'child_process';
 
 import { ProjectDefinition } from './types';
 
@@ -46,12 +47,19 @@ export function isDefined(
 
 export function isInstalled(
   dependency: string
-): void {
-  const folderExist = existsSync(
-    resolve(process.cwd(), 'node_modules', dependency),
-  );
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const lsCheck = spawn('npm', ['ls', dependency])
 
-  if (!folderExist) {
-    throw new Error('The specified package is not installed in this project');
-  }
+    lsCheck.stdout.on('data', (data) => {
+      const isInstalled = data.includes(dependency) &&
+        data.lastIndexOf(dependency) !== 0;
+
+      isInstalled ?
+        resolve() :
+        reject(
+          new Error('The specified package is not installed in this project'),
+        );
+    });
+  });
 }

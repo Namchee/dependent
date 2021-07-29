@@ -10,43 +10,45 @@ import { getProjectFiles } from './file';
 import { getDependantFiles } from './import';
 import { showDependantFiles } from './logger';
 
-const args = cli.parseSync();
+(async () => {
+  const args = cli.parseSync();
 
-const spinner = ora().start();
+  const spinner = ora().start();
 
-try {
-  const dependency = args.package as string;
+  try {
+    const dependency = args.package as string;
 
-  spinner.text = chalk.greenBright('Scanning project directory...');
+    spinner.text = chalk.greenBright('Scanning project directory...');
 
-  const projectDef = resolvePackageJSON();
-  const module = args.module || args.require || projectDef.isModule;
-  const silent = args.silent;
-  const table = args.table;
+    const projectDef = resolvePackageJSON();
+    const module = args.module || args.require || projectDef.isModule;
+    const silent = args.silent;
+    const table = args.table;
 
-  spinner.text = chalk.greenBright('Checking package status...');
+    spinner.text = chalk.greenBright('Checking package installation...');
 
-  isDefined(dependency, projectDef);
-  isInstalled(dependency);
+    isDefined(dependency, projectDef);
+    await isInstalled(dependency);
 
-  spinner.text = chalk.greenBright('Analyzing package dependency...');
+    spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-  const files = getProjectFiles(args.files, silent);
-  const dependant = getDependantFiles(
-    files,
-    dependency,
-    {
-      module,
-      silent,
-    },
-  );
+    const files = getProjectFiles(args.files, silent);
+    const dependant = getDependantFiles(
+      files,
+      dependency,
+      {
+        module,
+        silent,
+      },
+    );
 
-  spinner.succeed(chalk.greenBright('Analysis completed successfully'));
+    spinner.succeed(chalk.greenBright('Analysis completed successfully'));
 
-  showDependantFiles(dependant, dependency, table);
-} catch (err) {
-  const error = err as Error;
+    showDependantFiles(dependant, dependency, table);
+  } catch (err) {
+    const error = err as Error;
 
-  spinner.fail(chalk.redBright(error.message));
-  console.log(chalk.cyanBright('Terminating...'));
-}
+    spinner.fail(chalk.redBright(error.message));
+    console.log(chalk.cyanBright('Terminating...'));
+  }
+})();
