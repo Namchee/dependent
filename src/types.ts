@@ -22,3 +22,11 @@ export interface ParserOptions {
   module: boolean;
   silent: boolean;
 }
+
+/**
+ * Base function for all file parsers
+ */
+export type FileParser = (
+  content: string,
+  dependency: string,
+) => number[];
