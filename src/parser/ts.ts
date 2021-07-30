@@ -17,14 +17,12 @@ function parseNode(
   const walk = (node: ts.Node) => {
     switch (node.kind) {
       case ts.SyntaxKind.ImportDeclaration: {
-        const expectedChild = node.getChildAt(
-          node.getChildCount() > 1 ?
-            2 : 1,
-        );
+        const specifier = (node as ts.ImportDeclaration)
+          .moduleSpecifier;
 
         if (
-          expectedChild.kind === ts.SyntaxKind.StringLiteral &&
-          expectedChild.getText() === dependency
+          specifier.kind === ts.SyntaxKind.StringLiteral &&
+          specifier.getText().slice(1, -1) === dependency
         ) {
           lineNumbers.push(
             sourceNode.getLineAndCharacterOfPosition(node.getStart()).line + 1,
@@ -35,17 +33,21 @@ function parseNode(
       }
 
       case ts.SyntaxKind.CallExpression: {
-        const keyword = node.getChildAt(1);
-        const child = node.getChildAt(2);
+        const callExpr = node as ts.CallExpression;
 
-        const isImport = keyword.kind === ts.SyntaxKind.ImportKeyword &&
-          child.kind === ts.SyntaxKind.StringLiteral &&
-          child.getText() === dependency;
+        const expression = callExpr.expression;
+        const child = callExpr.arguments;
 
-        const isRequire = keyword.kind === ts.SyntaxKind.CallExpression &&
-          (keyword as ts.CallExpression).expression.getText() === 'require' &&
-          child.kind === ts.SyntaxKind.StringLiteral &&
-          child.getText() === dependency;
+        const isImport = expression.kind === ts.SyntaxKind.ImportKeyword &&
+          child.length === 1 &&
+          child[0].kind === ts.SyntaxKind.StringLiteral &&
+          child[0].getText().slice(1, -1) === dependency;
+
+        const isRequire = expression.kind === ts.SyntaxKind.CallExpression &&
+          expression.getText() === 'require' &&
+          child.length === 1 &&
+          child[0].kind === ts.SyntaxKind.StringLiteral &&
+          child[0].getText().slice(1, -1) === dependency;
 
         if (isImport || isRequire) {
           lineNumbers.push(
