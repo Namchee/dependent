@@ -2,6 +2,7 @@ import { getCommonJSImportLines } from './cjs';
 import { getESModulesImportLines } from './mjs';
 
 import { FileParser } from '../types';
+import { getTypeScriptImportLines } from './ts';
 
 /**
  * Extension to parser map. Make sure to register the function here
@@ -10,6 +11,7 @@ import { FileParser } from '../types';
 const PARSER_MAP: Record<string, FileParser> = {
   cjs: getCommonJSImportLines,
   mjs: getESModulesImportLines,
+  ts: getTypeScriptImportLines,
 };
 
 /**

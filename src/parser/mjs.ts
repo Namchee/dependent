@@ -12,18 +12,18 @@ import type {
 /**
  * Parse ESM nodes for imports to `dependency`
  *
- * @param {Node} baseNode AST representation of the file
+ * @param {Node} sourceNode AST representation of the file
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
 export function parseNode(
-  baseNode: Node,
+  sourceNode: Node,
   dependency: string,
 ): number[] {
   const lines: number[] = [];
 
-  simple(baseNode, {
+  simple(sourceNode, {
     ImportExpression(node: Node) {
       const importExpr = node as unknown as ImportExpression;
 
