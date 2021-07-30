@@ -23,9 +23,11 @@ export const cli = yargs
       '!(node_modules)/**/*.js',
       '!(node_modules)/**/*.mjs',
       '!(node_modules)/**/*.cjs',
+      '!(node_modules)/**/*.ts',
       '*.js',
       '*.mjs',
       '*.cjs',
+      '*.ts',
     ],
   })
   .options({
