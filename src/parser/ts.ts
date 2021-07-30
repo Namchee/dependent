@@ -43,7 +43,7 @@ function parseNode(
           child[0].kind === ts.SyntaxKind.StringLiteral &&
           child[0].getText().slice(1, -1) === dependency;
 
-        const isRequire = expression.kind === ts.SyntaxKind.CallExpression &&
+        const isRequire = expression.kind === ts.SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
           child[0].kind === ts.SyntaxKind.StringLiteral &&
