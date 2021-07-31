@@ -1,3 +1,21 @@
+# v0.2.0 (Sat Jul 31 2021)
+
+#### 🚀 Enhancement
+
+- feat: Add TypeScript support [#3](https://github.com/Namchee/dependent/pull/3) ([@Namchee](https://github.com/Namchee))
+
+#### 🐛 Bug Fix
+
+- fix: Remove duplicate issue template [#6](https://github.com/Namchee/dependent/pull/6) ([@Namchee](https://github.com/Namchee))
+- docs: Add issue templates [#5](https://github.com/Namchee/dependent/pull/5) ([@Namchee](https://github.com/Namchee))
+- docs: Fix npm package scope badge [#2](https://github.com/Namchee/dependent/pull/2) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.1.1 (Thu Jul 29 2021)
 
 #### ⚠️ Pushed to `master`
