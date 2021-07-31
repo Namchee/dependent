@@ -24,7 +24,7 @@ export function getDependantFiles(
   for (const file of files) {
     const ext = file.name.endsWith('js') ?
       module ? 'mjs' : 'cjs' :
-      file.name.split('.')[1];
+      (file.name.split('.').pop() as string);
 
     try {
       const parse = getParser(ext);
@@ -37,6 +37,7 @@ export function getDependantFiles(
         );
       }
     } catch (err) {
+      console.log(err.message);
       if (silent) {
         continue;
       } else {
