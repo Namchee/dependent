@@ -69,7 +69,10 @@ export function isInstalled(
   dependency: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const lsCheck = spawn('npm', ['ls', dependency])
+    const lsCheck = spawn(
+      /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
+      ['ls', dependency],
+    )
 
     lsCheck.stdout.on('data', (data) => {
       const isInstalled = data.includes(dependency) &&
