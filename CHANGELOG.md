@@ -1,3 +1,15 @@
+# v0.6.1 (Sun Aug 01 2021)
+
+#### 🐛 Bug Fix
+
+- fix: Use different script when executing on Windows-based machines [#12](https://github.com/Namchee/dependent/pull/12) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.2.0 (Sat Jul 31 2021)
 
 #### 🚀 Enhancement
