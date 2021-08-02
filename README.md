@@ -4,6 +4,8 @@
 
 Dependent is a simple utility CLI to find out which files in your NodeJS-based projects are using a certain dependency. 🚀
 
+![Demo](docs/demo.gif)
+
 ## Features
 
 - 📦 Analyze dependency usage from all files in your project.
@@ -55,7 +57,7 @@ After the command is given, `dependent` will produce a list of dependant files i
 ```bash
 ✔ Analysis completed successfully
 
-📦 There are 17 files in this project that depends on 'express'
+📦 There are 17 files in this project that depends on 'phaser'
  └── index.ts:1 → src/index.ts
  └── cherry.ts:1 → src/objects/cherry.ts
  └── flyer.ts:1 → src/objects/flyer.ts
