@@ -135,11 +135,13 @@ By default, `dependent` will take a look on your `package.json`. If `"type": "mo
 `.cjs` will always be parsed as CommonJS scripts while `.mjs` will always be parsed as ES Modules.
 ## Motivation
 
-Say, you want to uninstall some dependency since it is not needed anymore in file `x`. You proceed to execute `npm uninstall x`, the uninstallation completed successfully, and then you continue the development. Sadly, you realized that `x` is actually imported by another files. Your project now breaks by your careless mistake.
+It's Friday! Since tomorrow is free, you want to finish your work as soon as possible and enjoy your temporary holiday.After some refactoring, you realized package `x` is not used anymore in the files your refactored in your NodeJS based project. Realizing this, you proceed to execute `npm uninstall x` and then the uninstallation completed successfully.
 
-The above scenario is fine for small projects since they are easier to test and execute (and compile, if you're using a superset of JavaScript). But, what about big projects where it took so long to execute and compile? What about dynamic imports in not-fully-tested projects where the code may fail silently? This utility aims to fix those issues.
+Sadly, you don't realize that `x` is actually imported by another files that you didn't touch at all. Your project now breaks by your careless mistake 💥.
 
-Another use case is for new team member so they can analyze why and where a dependency is needed so the onboarding process can go faster.
+The above scenario is fine for small projects since they are easier to test and execute (and compile, if you're using a superset of JavaScript). But, what about big projects where it took so long to execute and compile? What about dynamic imports in not-fully-tested projects where the code may fail silently? What if there's a new team member who want to get onboard quickly but getting stuck on understanding why and where a dependency is needed?
+
+This utility aims to fix those issues by automatically analyzing dependency usage in your projects and produce human-readable logs. Focus on your actual code, not on your dependency management. Let `dependent` analyze what dependency is actually needed and what isn't.
 
 ## License
 
