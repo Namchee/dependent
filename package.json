@@ -18,7 +18,8 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "acorn": "^8.4.1",
