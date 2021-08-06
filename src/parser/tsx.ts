@@ -68,14 +68,14 @@ function parseNode(
 }
 
 /**
- * Analyze TypeScript file for all imports to `dependency`
+ * Analyze TypeScript's JSX  file for all imports to `dependency`
  *
  * @param {string} content File content
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getTSImportLines(
+export function getTSXImportLines(
   content: string,
   dependency: string,
 ): number[] {
@@ -84,6 +84,7 @@ export function getTSImportLines(
     content,
     ts.ScriptTarget.Latest,
     true,
+    ts.ScriptKind.TSX,
   );
 
   return parseNode(node, dependency);

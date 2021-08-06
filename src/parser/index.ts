@@ -1,19 +1,21 @@
 import { FileParser } from '../types';
 
-import { getCommonJSImportLines } from './cjs';
-import { getESModulesImportLines } from './mjs';
-import { getTypeScriptImportLines } from './ts';
+import { getCJSImportLines } from './cjs';
+import { getESMImportLines } from './mjs';
+import { getTSImportLines } from './ts';
 import { getJSXImportLines } from './jsx';
+import { getTSXImportLines } from './tsx';
 
 /**
  * Extension to parser map. Make sure to register the function here
  * when a new parser is added.
  */
 const PARSER_MAP: Record<string, FileParser> = {
-  cjs: getCommonJSImportLines,
-  mjs: getESModulesImportLines,
-  ts: getTypeScriptImportLines,
+  cjs: getCJSImportLines,
+  mjs: getESMImportLines,
+  ts: getTSImportLines,
   jsx: getJSXImportLines,
+  tsx: getTSXImportLines,
 };
 
 /**
