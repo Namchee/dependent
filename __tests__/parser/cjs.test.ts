@@ -1,4 +1,4 @@
-import { getCommonJSImportLines } from './../../src/parser/cjs';
+import { getCJSImportLines } from './../../src/parser/cjs';
 
 describe('CommonJS import test', () => {
   it('should be able to distinguish CommonJS imports', () => {
@@ -6,7 +6,7 @@ describe('CommonJS import test', () => {
 
     const app = express()`;
 
-    const dependants = getCommonJSImportLines(content, 'express');
+    const dependants = getCJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -24,7 +24,7 @@ describe('CommonJS import test', () => {
       return a;
     }`;
 
-    const dependants = getCommonJSImportLines(content, 'express');
+    const dependants = getCJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(4);
   });
@@ -42,7 +42,7 @@ describe('CommonJS import test', () => {
       return a;
     }`;
 
-    const dependants = getCommonJSImportLines(content, 'express');
+    const dependants = getCJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(4);
   });
@@ -60,7 +60,7 @@ describe('CommonJS import test', () => {
       return a;
     }`;
 
-    const dependants = getCommonJSImportLines(content, 'express');
+    const dependants = getCJSImportLines(content, 'express');
     expect(dependants.length).toBe(0);
   });
 
@@ -71,7 +71,7 @@ describe('CommonJS import test', () => {
 
     const app = express();`;
 
-    const dependants = getCommonJSImportLines(content, 'express');
+    const dependants = getCJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
