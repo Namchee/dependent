@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./bin",
     "module": "commonjs",
+    "importHelpers": true
   },
   "include": [
     "src/**/*.ts"
