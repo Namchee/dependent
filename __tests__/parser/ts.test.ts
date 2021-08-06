@@ -1,10 +1,10 @@
-import { getTypeScriptImportLines } from '../../src/parser/ts';
+import { getTSImportLines } from '../../src/parser/ts';
 
 describe('TypeScript parser test', () => {
   it('should be able to parse ES modules import', () => {
     const content = `import express from 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -13,7 +13,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse all modules import', () => {
     const content = `import * as express from 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -22,7 +22,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse named imports', () => {
     const content = `import { json } from 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -31,7 +31,7 @@ describe('TypeScript parser test', () => {
   it('should be able to aliased imports', () => {
     const content = `import { json as jeson } from 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -40,7 +40,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse nameless imports', () => {
     const content = `import 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -49,7 +49,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse type import', () => {
     const content = `import type { Application } from 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -58,7 +58,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse dynamic imports', () => {
     const content = `const a = import('express');`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -67,7 +67,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse CommonJS imports', () => {
     const content = `const a = require('express');`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -78,7 +78,7 @@ describe('TypeScript parser test', () => {
 
     import express from 'express';`;
 
-    const dependant = getTypeScriptImportLines(content, 'express');
+    const dependant = getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(3);
@@ -91,7 +91,7 @@ describe('TypeScript parser test', () => {
       }
     })();`;
 
-    const dependants = getTypeScriptImportLines(content, 'express');
+    const dependants = getTSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
@@ -103,7 +103,7 @@ describe('TypeScript parser test', () => {
 
     app.lister(3000, () => console.log('hello world'))`;
 
-    const dependants = getTypeScriptImportLines(content, 'express');
+    const dependants = getTSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
