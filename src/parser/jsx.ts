@@ -1,5 +1,5 @@
 import { Parser } from 'acorn';
-import { simple } from 'acorn-walk';
+import { simple, base } from 'acorn-walk';
 
 import jsx from 'acorn-jsx';
 
@@ -58,6 +58,11 @@ export function parseNode(sourceNode: Node, dependency: string): number[] {
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
+    },
+  }, {
+    ...base,
+    JSXElement: () => {
+      // empty
     },
   });
 
