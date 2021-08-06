@@ -37,11 +37,12 @@ export function getDependantFiles(
         );
       }
     } catch (err) {
-      console.log(err.message);
+      const error = err as Error;
+
       if (silent) {
         continue;
       } else {
-        throw new Error(`Failed to parse ${file.path}`);
+        throw new Error(`Failed to parse ${file.path}: ${error.message}`);
       }
     }
   }
