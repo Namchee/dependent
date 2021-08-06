@@ -1,3 +1,15 @@
+# v0.7.0 (Fri Aug 06 2021)
+
+#### 🚀 Enhancement
+
+- feat: Add minification process [#24](https://github.com/Namchee/dependent/pull/24) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.6.3 (Fri Aug 06 2021)
 
 #### 🐛 Bug Fix
