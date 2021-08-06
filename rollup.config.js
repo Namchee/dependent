@@ -7,10 +7,10 @@ export default {
   plugins: [
     shebang(),
     typescript(),
-    terser(),
+    terser({ format: { comments: false } }),
   ],
   output: [
     // will drop this later
-    { file: 'bin/index.js', format: 'es' },
-  ]
+    { file: 'bin/index.js', format: 'cjs' },
+  ],
 }

@@ -1,4 +1,4 @@
-import { cyan, cyanBright } from 'chalk';
+import chalk from 'chalk';
 
 import { DependantFile } from './types';
 
@@ -29,7 +29,7 @@ function logTable(files: DependantFile[]): void {
 function logLines(files: DependantFile[]): void {
   files.forEach(({ name, path, lineNumbers }) => {
     console.log(
-      cyan(
+      chalk.cyan(
         ` └── ${name}:${lineNumbers.join(', ')} → ${path}`,
       ),
     )
@@ -49,9 +49,8 @@ export function showDependantFiles(
   dependency: string,
   table: boolean,
 ): void {
-  console.log();
-  console.log(
-    cyanBright(
+  console.log('\n' +
+    chalk.cyanBright(
       // eslint-disable-next-line max-len
       `📦 There are ${files.length} files in this project that depends on '${dependency}'`,
     ),
