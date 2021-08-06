@@ -44,7 +44,7 @@ export function parseNode(
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getCommonJSImportLines(
+export function getCJSImportLines(
   content: string,
   dependency: string,
 ): number[] {

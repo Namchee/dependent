@@ -71,7 +71,7 @@ export function parseNode(
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getESModulesImportLines(
+export function getESMImportLines(
   content: string,
   dependency: string,
 ): number[] {
