@@ -2,8 +2,7 @@
   "extends": "eslint-config-namchee/tsconfig",
   "compilerOptions": {
     "outDir": "./bin",
-    "module": "commonjs",
-    "importHelpers": true
+    "module": "esnext"
   },
   "include": [
     "src/**/*.ts"
