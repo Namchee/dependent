@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "private": false,
+  "type": "module",
   "bin": {
     "dependent": "./bin/index.js"
   },

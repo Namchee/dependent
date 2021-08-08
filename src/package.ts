@@ -1,5 +1,5 @@
-import { existsSync } from 'fs';
 import { resolve } from 'path';
+import { existsSync, readFileSync } from 'fs';
 import { spawn } from 'child_process';
 
 import { ProjectDefinition } from './types';
@@ -10,8 +10,7 @@ import { ProjectDefinition } from './types';
  * @returns {ProjectDefinition} Project definition. Refer to the type.
  */
 export function resolvePackageJSON(): ProjectDefinition {
-  const workdir = process.cwd();
-  const path = resolve(workdir, 'package.json');
+  const path = resolve(process.cwd(), 'package.json');
 
   // check the existence of package.json or in layman terms,
   // is the current workdir a NodeJS project directory?
@@ -23,7 +22,7 @@ export function resolvePackageJSON(): ProjectDefinition {
   }
 
   try {
-    const projectDef = require(path);
+    const projectDef = JSON.parse(readFileSync(path, 'utf-8'));
 
     return {
       name: projectDef.name,

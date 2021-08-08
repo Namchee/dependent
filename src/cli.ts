@@ -1,9 +1,11 @@
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 /**
  * Command line interface definition.
  */
-export const cli = yargs
+export const cli = yargs(hideBin(process.argv))
+  .scriptName('dependent')
   .command(
     '$0 <package> [files...]',
     'Analyze package usage in your project directory.',

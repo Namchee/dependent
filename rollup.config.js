@@ -11,6 +11,6 @@ export default {
   ],
   output: [
     // will drop this later
-    { file: 'bin/index.js', format: 'cjs' },
+    { file: 'bin/index.js', format: 'esm' },
   ],
 }
