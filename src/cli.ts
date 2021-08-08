@@ -31,22 +31,6 @@ export const cli = yargs
     ],
   })
   .options({
-    module: {
-      alias: 'm',
-      describe: 'Parse all files as ES module files',
-      type: 'boolean',
-      default: undefined,
-      demandOption: false,
-      conflicts: 'script',
-    },
-    require: {
-      alias: 'r',
-      describe: 'Parse all files as JS scripts',
-      type: 'boolean',
-      default: undefined,
-      demandOption: false,
-      conflicts: 'module',
-    },
     silent: {
       alias: 's',
       // eslint-disable-next-line max-len
