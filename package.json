@@ -34,6 +34,7 @@
   "devDependencies": {
     "@auto-it/conventional-commits": "^10.30.0",
     "@auto-it/npm": "^10.30.0",
+    "@jest/types": "^27.0.6",
     "@types/acorn": "^4.0.6",
     "@types/glob": "^7.1.4",
     "@types/jest": "^26.0.24",
