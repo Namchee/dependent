@@ -1,7 +1,6 @@
 import { FileParser } from '../types';
 
-import { getCJSImportLines } from './cjs';
-import { getESMImportLines } from './mjs';
+import { getJSImportLines } from './js';
 import { getTSImportLines } from './ts';
 import { getJSXImportLines } from './jsx';
 import { getTSXImportLines } from './tsx';
@@ -11,8 +10,7 @@ import { getTSXImportLines } from './tsx';
  * when a new parser is added.
  */
 const PARSER_MAP: Record<string, FileParser> = {
-  cjs: getCJSImportLines,
-  mjs: getESMImportLines,
+  js: getJSImportLines,
   ts: getTSImportLines,
   jsx: getJSXImportLines,
   tsx: getTSXImportLines,

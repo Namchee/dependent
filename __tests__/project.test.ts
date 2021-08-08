@@ -12,7 +12,6 @@ describe('Parser tolerance test', () => {
     ];
 
     expect(() => getDependantFiles(files, 'express', {
-      module: true,
       silent: false,
     })).toThrowError('Failed to parse src/a.js');
   });
@@ -27,7 +26,6 @@ describe('Parser tolerance test', () => {
     ];
 
     const dependants = getDependantFiles(files, 'express', {
-      module: true,
       silent: true,
     });
 

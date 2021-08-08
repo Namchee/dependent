@@ -1,9 +1,11 @@
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 /**
  * Command line interface definition.
  */
-export const cli = yargs
+export const cli = yargs(hideBin(process.argv))
+  .scriptName('dependent')
   .command(
     '$0 <package> [files...]',
     'Analyze package usage in your project directory.',
@@ -22,35 +24,17 @@ export const cli = yargs
     default: [
       '!(node_modules|__tests__|test)/**/*!(.spec|test).js',
       '!(node_modules|__tests__|test)/**/*!(.spec|test).mjs',
-      '!(node_modules|__tests__|test)/**/*!(.spec|test).cjs',
       '!(node_modules|__tests__|test)/**/*!(.spec|test).ts',
       '!(node_modules|__tests__|test)/**/*!(.spec|test).jsx',
       '!(node_modules|__tests__|test)/**/*!(.spec|test).tsx',
       '*!(.spec|test).js',
       '*!(.spec|test).mjs',
-      '*!(.spec|test).cjs',
       '*!(.spec|test).ts',
       '*!(.spec|test).jsx',
       '*!(.spec|test).tsx',
     ],
   })
   .options({
-    module: {
-      alias: 'm',
-      describe: 'Parse all files as ES module files',
-      type: 'boolean',
-      default: undefined,
-      demandOption: false,
-      conflicts: 'script',
-    },
-    require: {
-      alias: 'r',
-      describe: 'Parse all files as JS scripts',
-      type: 'boolean',
-      default: undefined,
-      demandOption: false,
-      conflicts: 'module',
-    },
     silent: {
       alias: 's',
       // eslint-disable-next-line max-len

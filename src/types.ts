@@ -3,7 +3,6 @@ export interface ProjectDefinition {
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
   peerDependencies: Record<string, string>;
-  isModule: boolean;
 }
 
 export interface DependantFile {
@@ -19,7 +18,6 @@ export interface ProjectFile {
 }
 
 export interface ParserOptions {
-  module: boolean;
   silent: boolean;
 }
 
