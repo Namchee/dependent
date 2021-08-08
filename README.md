@@ -36,6 +36,8 @@ You can install `dependent` globally with your favorite package manager. Below i
 npm install -g @namchee/dependent
 ```
 
+> This package can only be executed on NodeJS 12 or later.
+
 ## Usage
 
 > Make sure that you have a working NodeJS installation! Refer to [this instruction](https://nodejs.org/en/download/) about how to setup NodeJS on your machine
