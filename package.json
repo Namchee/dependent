@@ -1,6 +1,6 @@
 {
   "name": "@namchee/dependent",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Simple utility CLI tool to analyze which files are using a Node dependency 🚀",
   "repository": "git@github.com:Namchee/dependent.git",
   "author": {
@@ -16,8 +16,8 @@
   "scripts": {
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build": "rollup -c rollup.config.js",
+    "build:watch": "rollup -c rollup.config.js -w",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -49,6 +49,10 @@
     "eslint-plugin-jsdoc": "^35.4.0",
     "jest": "^27.0.6",
     "prettier": "^2.3.2",
+    "rollup": "^2.56.0",
+    "rollup-plugin-preserve-shebang": "^1.0.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
     "ts-jest": "^27.0.4"

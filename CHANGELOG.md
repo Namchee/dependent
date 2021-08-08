@@ -1,3 +1,45 @@
+# v0.7.0 (Fri Aug 06 2021)
+
+#### 🚀 Enhancement
+
+- feat: Add minification process [#24](https://github.com/Namchee/dependent/pull/24) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
+# v0.6.3 (Fri Aug 06 2021)
+
+#### 🐛 Bug Fix
+
+- :white_check_mark: test: Add TSX parser test [#21](https://github.com/Namchee/dependent/pull/21) ([@Namchee](https://github.com/Namchee))
+- :sparkles: feat: Add TSX parser [#21](https://github.com/Namchee/dependent/pull/21) ([@Namchee](https://github.com/Namchee))
+- :white_check_mark: test: Add JSX parser test [#21](https://github.com/Namchee/dependent/pull/21) ([@Namchee](https://github.com/Namchee))
+- :sparkles: feat: Add react JSX parser [#21](https://github.com/Namchee/dependent/pull/21) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
+# v0.6.2 (Wed Aug 04 2021)
+
+#### 🐛 Bug Fix
+
+- :hammer: chore(test): Add watch mode to jest [#18](https://github.com/Namchee/dependent/pull/18) ([@Namchee](https://github.com/Namchee))
+- :memo: docs: Add parser contribution documentation [#18](https://github.com/Namchee/dependent/pull/18) ([@Namchee](https://github.com/Namchee))
+- docs: Add contributing guidelines [#16](https://github.com/Namchee/dependent/pull/16) ([@Namchee](https://github.com/Namchee))
+- docs: Rewrite documentation [#14](https://github.com/Namchee/dependent/pull/14) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.6.1 (Sun Aug 01 2021)
 
 #### 🐛 Bug Fix
