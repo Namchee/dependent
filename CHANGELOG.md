@@ -1,3 +1,16 @@
+# v0.7.1 (Sun Aug 08 2021)
+
+#### 🐛 Bug Fix
+
+- Fix/nested imports [#28](https://github.com/Namchee/dependent/pull/28) ([@Namchee](https://github.com/Namchee))
+- refactor: Migrate to native ESM [#26](https://github.com/Namchee/dependent/pull/26) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.7.0 (Fri Aug 06 2021)
 
 #### 🚀 Enhancement
