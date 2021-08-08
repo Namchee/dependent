@@ -1,6 +1,8 @@
 # Dependent
 
-[![NPM package version](https://img.shields.io/npm/v/@namchee/dependent)](https://www.npmjs.com/package/@namchee/dependent) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/namchee/telepon)
+[![NPM package version](https://img.shields.io/npm/v/@namchee/dependent)](https://www.npmjs.com/package/@namchee/dependent) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/namchee/dependent)
+
+> This project is still on active development. The API ***might** change without further notice.
 
 Dependent is a simple utility CLI to find out which files in your NodeJS-based projects are using a certain dependency. 🚀
 
@@ -9,7 +11,7 @@ Dependent is a simple utility CLI to find out which files in your NodeJS-based p
 ## Features
 
 - 📦 Analyze dependency usage from all files in your project.
-- 🚀 Blazing fast parsing, powered by [acorn](https://github.com/acornjs/acorn) and [TypeScript's Compiler API](https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API)
+- 🚀 Blazing fast file parsing.
 - 📁 Configurable path, analyze files that are actually relevant.
 - ☑️ Failsafe parsing mode, no more failure caused by single file error.
 - 📈 Expanding language support.
@@ -19,9 +21,9 @@ Dependent is a simple utility CLI to find out which files in your NodeJS-based p
 `dependent` is able to parse files with the following extensions:
 
 1. Standard JavaScript files, `.js`
-2. CommonJS scripts, `.cjs`
-3. ESModules, `.mjs`
-4. TypeScript files, `.ts`
+2. ESModules, `.mjs`
+3. TypeScript files, `.ts`
+4. React Extended JavaScript and TypeScript, `.jsx` and `.tsx`
 
 More language support are incoming! Submit your language support ideas [here](https://github.com/Namchee/dependent/issues/new/choose)
 
@@ -38,7 +40,7 @@ npm install -g @namchee/dependent
 
 > Make sure that you have a working NodeJS installation! Refer to [this instruction](https://nodejs.org/en/download/) about how to setup NodeJS on your machine
 
-`dependent` can be executed by your favorite terminal by executing `dependent` or `deps` and supplying the name of the package that you want to analyze. For example:
+`dependent` can be executed by your favorite terminal by executing `dependent` and supplying the name of the package that you want to analyze. For example:
 
 ```bash
 # Which files that requires `express` in my project?
@@ -110,31 +112,14 @@ dependent express src/**/*.js lib/**/*.js
 
 Show the help menu
 
-### `--module`, `-m`
-
-Parse all JavaScript files as ES Modules. May not be defined at the same time with `require`. All `require` calls will still be supported in this mode.
-
-### `--require`, `-r`
-
-Parse all JavaScript files as scripts, which only supports dependency imports with `require`. All `import` statement will be classified as error if `require` is defined.
-
-May not be defined at the same time with `require`.
-
 ### `--silent`, `-s`
 
 Suppress all parsing errors.
 
 ### `--table`, `-t`
 
-Outputs the result in table-style format.
+Outputs the result in table-style format instead of line per line format.
 
-## FAQ
-
-### If `module` and `require` are not defined, how does `dependent` handle dependency imports?
-
-By default, `dependent` will take a look on your `package.json`. If `"type": "module"` is defined, all JavaScript files will be parsed as ES Modules. Otherwise, it will be parsed as CommonJS scripts.
-
-`.cjs` will always be parsed as CommonJS scripts while `.mjs` will always be parsed as ES Modules.
 ## Motivation
 
 It's Friday! Since tomorrow is free, you want to finish your work as soon as possible and enjoy your temporary holiday.After some refactoring, you realized package `x` is not used anymore in the files your refactored in your NodeJS based project. Realizing this, you proceed to execute `npm uninstall x` and then the uninstallation completed successfully.
