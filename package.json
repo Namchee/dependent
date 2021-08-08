@@ -1,6 +1,6 @@
 {
   "name": "@namchee/dependent",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Simple utility CLI tool to analyze which files are using a Node dependency 🚀",
   "repository": "git@github.com:Namchee/dependent.git",
   "author": {
