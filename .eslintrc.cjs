@@ -1,5 +1,3 @@
-const config = {
+module.exports = {
   extends: ['eslint-config-namchee'],
 };
-
-export default config;
