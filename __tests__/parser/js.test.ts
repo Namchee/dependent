@@ -1,10 +1,10 @@
-import { getESMImportLines } from './../../src/parser/mjs';
+import { getJSImportLines } from '../../src/parser/js';
 
 describe('ESModule import test', () => {
   it('should be able to parse default imports', () => {
     const content = 'import express from \'express\'; const app = express();';
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -12,7 +12,7 @@ describe('ESModule import test', () => {
   it('should be able to parse named imports', () => {
     const content = 'import { json } from \'express\'; app.use(json());';
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -20,7 +20,7 @@ describe('ESModule import test', () => {
   it('should be able to parse aliased imports', () => {
     const content = 'import { json as jeson } from \'express\';';
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -28,7 +28,7 @@ describe('ESModule import test', () => {
   it('should be able to parse unnamed imports', () => {
     const content = 'import \'express\';';
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -36,7 +36,7 @@ describe('ESModule import test', () => {
   it('should be able to parse all-module import', () => {
     const content = 'import * as express from \'express\';';
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -44,7 +44,7 @@ describe('ESModule import test', () => {
   it('should be able to parse dynamic imports', () => {
     const content = 'const a = import(\'express\');';
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -56,7 +56,7 @@ describe('ESModule import test', () => {
       }
     })();`;
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
@@ -64,7 +64,7 @@ describe('ESModule import test', () => {
   it('should be able to parse false alarms', () => {
     const content = `const a = "import express from 'express'";`;
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(0);
   });
 
@@ -75,7 +75,7 @@ describe('ESModule import test', () => {
 
     const app = express();`;
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
@@ -85,7 +85,7 @@ describe('ESModule import test', () => {
 
     const app = express();`;
 
-    const dependants = getESMImportLines(content, 'express');
+    const dependants = getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });

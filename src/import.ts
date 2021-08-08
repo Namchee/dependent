@@ -17,14 +17,16 @@ import { DependantFile, ParserOptions, ProjectFile } from './types';
 export function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
-  { module, silent }: ParserOptions,
+  { silent }: ParserOptions,
 ): DependantFile[] {
   const dependant: DependantFile[] = [];
 
   for (const file of files) {
-    const ext = file.name.endsWith('js') ?
-      module ? 'mjs' : 'cjs' :
-      (file.name.split('.').pop() as string);
+    let ext = file.name.split('.').pop() as string;
+
+    if (ext === 'mjs') {
+      ext = 'js';
+    }
 
     try {
       const parse = getParser(ext);

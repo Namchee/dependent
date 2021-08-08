@@ -10,7 +10,7 @@ import type {
 } from 'estree';
 
 /**
- * Parse ESM nodes for imports to `dependency`
+ * Parse native JavaScript nodes for imports to `dependency`
  *
  * @param {Node} sourceNode AST representation of the file
  * @param {string} dependency Package name
@@ -64,14 +64,14 @@ export function parseNode(
 }
 
 /**
- * Analyze ES module for all imports to `dependency`
+ * Analyze JavaScript files for all imports to `dependency`
  *
  * @param {string} content File content
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getESMImportLines(
+export function getJSImportLines(
   content: string,
   dependency: string,
 ): number[] {

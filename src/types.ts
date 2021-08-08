@@ -19,7 +19,6 @@ export interface ProjectFile {
 }
 
 export interface ParserOptions {
-  module: boolean;
   silent: boolean;
 }
 
