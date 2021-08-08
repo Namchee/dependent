@@ -174,4 +174,14 @@ describe('React TSX test', () => {
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
+
+  it('should be able to detect nested modules', () => {
+    const content = `import { defineConfig } from 'windicss/helpers';
+
+    export default defineConfig({});`;
+
+    const dependants = getTSXImportLines(content, 'windicss');
+    expect(dependants.length).toBe(1);
+    expect(dependants[0]).toBe(1);
+  });
 })

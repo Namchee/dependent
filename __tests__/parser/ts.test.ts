@@ -107,4 +107,14 @@ describe('TypeScript parser test', () => {
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
+
+  it('should be able to detect nested modules', () => {
+    const content = `import { defineConfig } from 'windicss/helpers';
+
+    export default defineConfig({});`;
+
+    const dependants = getTSImportLines(content, 'windicss');
+    expect(dependants.length).toBe(1);
+    expect(dependants[0]).toBe(1);
+  });
 });
