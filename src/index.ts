@@ -21,7 +21,6 @@ import { showDependantFiles } from './logger';
     spinner.text = chalk.greenBright('Scanning project directory...');
 
     const projectDef = resolvePackageJSON();
-    const module = args.module || args.require || projectDef.isModule;
     const silent = args.silent;
     const table = args.table;
 
@@ -37,7 +36,6 @@ import { showDependantFiles } from './logger';
       files,
       dependency,
       {
-        module,
         silent,
       },
     );
