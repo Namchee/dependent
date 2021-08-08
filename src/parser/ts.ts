@@ -22,7 +22,7 @@ function parseNode(
 
         if (
           specifier.kind === ts.SyntaxKind.StringLiteral &&
-          specifier.getText().slice(1, -1) === dependency
+          specifier.getText().slice(1, -1).startsWith(dependency)
         ) {
           lineNumbers.push(
             sourceNode.getLineAndCharacterOfPosition(node.getStart()).line + 1,
@@ -41,13 +41,13 @@ function parseNode(
         const isImport = expression.kind === ts.SyntaxKind.ImportKeyword &&
           child.length === 1 &&
           child[0].kind === ts.SyntaxKind.StringLiteral &&
-          child[0].getText().slice(1, -1) === dependency;
+          child[0].getText().slice(1, -1).startsWith(dependency);
 
         const isRequire = expression.kind === ts.SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
           child[0].kind === ts.SyntaxKind.StringLiteral &&
-          child[0].getText().slice(1, -1) === dependency;
+          child[0].getText().slice(1, -1).startsWith(dependency);
 
         if (isImport || isRequire) {
           lineNumbers.push(
