@@ -2,7 +2,7 @@
   "extends": "eslint-config-namchee/tsconfig",
   "compilerOptions": {
     "outDir": "./bin",
-    "module": "es2020"
+    "module": "es2015"
   },
   "include": [
     "src/**/*.ts"

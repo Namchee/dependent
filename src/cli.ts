@@ -22,16 +22,16 @@ export const cli = yargs(hideBin(process.argv))
     // eslint-disable-next-line max-len
     description: 'Files to be analyzed in glob pattern relative to the current project directory.',
     default: [
-      '!(node_modules|__tests__|test)/**/*!(.spec|test).js',
-      '!(node_modules|__tests__|test)/**/*!(.spec|test).mjs',
-      '!(node_modules|__tests__|test)/**/*!(.spec|test).ts',
-      '!(node_modules|__tests__|test)/**/*!(.spec|test).jsx',
-      '!(node_modules|__tests__|test)/**/*!(.spec|test).tsx',
-      '*!(.spec|test).js',
-      '*!(.spec|test).mjs',
-      '*!(.spec|test).ts',
-      '*!(.spec|test).jsx',
-      '*!(.spec|test).tsx',
+      '!(node_modules)/**/*.js',
+      '!(node_modules)/**/*.mjs',
+      '!(node_modules)/**/*.ts',
+      '!(node_modules)/**/*.jsx',
+      '!(node_modules)/**/*.tsx',
+      '*.js',
+      '*.mjs',
+      '*.ts',
+      '*.jsx',
+      '*.tsx',
     ],
   })
   .options({

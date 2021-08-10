@@ -36,6 +36,12 @@ You can install `dependent` globally with your favorite package manager. Below i
 npm install -g @namchee/dependent
 ```
 
+Alternatively, you can execute `dependent` without installing it by using `npx`. Below is the example of executing `dependent` with `npx`
+
+```bash
+npx @namchee/dependent foo
+```
+
 > This package can only be executed on NodeJS 12 or later.
 
 ## Usage
