@@ -1,4 +1,4 @@
-import { getJSXImportLines } from './../../src/parser/jsx';
+import { getJSImportLines as getJSXImportLines } from './../../src/parser/js';
 
 describe('React JSX test', () => {
   it('should be able to parse default imports', () => {

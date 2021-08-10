@@ -1,5 +1,7 @@
-import { parse } from 'acorn';
-import { simple } from 'acorn-walk';
+import { Parser } from 'acorn';
+import { simple, base } from 'acorn-walk';
+
+import jsx from 'acorn-jsx';
 
 import type { Node } from 'acorn';
 import type {
@@ -8,6 +10,8 @@ import type {
   CallExpression,
   SourceLocation
 } from 'estree';
+
+const parser = Parser.extend(jsx());
 
 /**
  * Parse native JavaScript nodes for imports to `dependency`
@@ -58,6 +62,11 @@ export function parseNode(
         lines.push((node.loc as SourceLocation).start.line);
       }
     },
+  }, {
+    ...base,
+    JSXElement: () => {
+      // empty
+    },
   });
 
   return lines;
@@ -75,7 +84,7 @@ export function getJSImportLines(
   content: string,
   dependency: string,
 ): number[] {
-  const node: Node = parse(content, {
+  const node: Node = parser.parse(content, {
     ecmaVersion: 'latest',
     locations: true,
     allowHashBang: true,

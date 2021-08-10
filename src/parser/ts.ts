@@ -84,6 +84,7 @@ export function getTSImportLines(
     content,
     ts.ScriptTarget.Latest,
     true,
+    ts.ScriptKind.TSX,
   );
 
   return parseNode(node, dependency);

@@ -1,4 +1,4 @@
-import { getTSXImportLines } from './../../src/parser/tsx';
+import { getTSImportLines as getTSXImportLines } from './../../src/parser/ts';
 
 describe('React TSX test', () => {
   it('should be able to parse default imports', () => {

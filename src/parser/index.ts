@@ -2,8 +2,6 @@ import { FileParser } from '../types';
 
 import { getJSImportLines } from './js';
 import { getTSImportLines } from './ts';
-import { getJSXImportLines } from './jsx';
-import { getTSXImportLines } from './tsx';
 
 /**
  * Extension to parser map. Make sure to register the function here
@@ -12,8 +10,8 @@ import { getTSXImportLines } from './tsx';
 const PARSER_MAP: Record<string, FileParser> = {
   js: getJSImportLines,
   ts: getTSImportLines,
-  jsx: getJSXImportLines,
-  tsx: getTSXImportLines,
+  jsx: getJSImportLines,
+  tsx: getTSImportLines,
 };
 
 /**
