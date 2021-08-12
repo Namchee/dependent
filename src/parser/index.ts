@@ -15,15 +15,6 @@ const PARSER_FUNCTIONS: Record<string, FileParser> = {
 };
 
 /**
- * Extension to parser files. Make sure to register the package here
- * when a new extension support is added.
- */
-const PARSER_PACKAGE: Record<string, string> = {
-  ts: 'typescript',
-  tsx: 'typescript',
-};
-
-/**
  * Get the correct parser function for a file extension
  *
  * @param {string} ext File extension
@@ -37,20 +28,4 @@ export function getParser(ext: string): FileParser {
   }
 
   return PARSER_FUNCTIONS[ext];
-}
-
-/**
- * Get the required parser package for a file extension
- *
- * @param {string} ext File extension
- * @returns {string} Parser package
- * @throws {Error} Throws an `Error` if the specified type
- * is not supported yet.
- */
-export function getParserPackage(ext: string): string {
-  if (!(ext in PARSER_PACKAGE)) {
-    throw new Error(`.${ext} files are currently not supported`);
-  }
-
-  return PARSER_PACKAGE[ext];
 }
