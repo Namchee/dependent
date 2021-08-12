@@ -14,11 +14,11 @@ import type { DependantFile, ParserOptions, ProjectFile } from './types';
  * should ignore invalid files, `false` otherwise.
  * @returns {DependantFile[]} List of files which imports `dependency`.
  */
-export async function getDependantFiles(
+export function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
   { silent }: ParserOptions,
-): Promise<DependantFile[]> {
+): DependantFile[] {
   const dependant: DependantFile[] = [];
 
   for (const file of files) {
@@ -30,7 +30,7 @@ export async function getDependantFiles(
 
     try {
       const parse = getParser(ext);
-      const isDependant = await parse(file.content, dependency);
+      const isDependant = parse(file.content, dependency);
 
       if (isDependant.length) {
         dependant.push(

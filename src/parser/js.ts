@@ -80,10 +80,10 @@ export function parseNode(
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export async function getJSImportLines(
+export function getJSImportLines(
   content: string,
   dependency: string,
-): Promise<number[]> {
+): number[] {
   const node: Node = parser.parse(content, {
     ecmaVersion: 'latest',
     locations: true,

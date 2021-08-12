@@ -17,7 +17,7 @@ try {
     import.meta.url,
   );
   const npmPath = new URL(
-    resolve(globalDirectories.npm.packages, ...basePath),
+    resolve('globalDirectories.npm.packages', ...basePath),
     import.meta.url,
   );
   const yarnPath = new URL(
@@ -116,10 +116,10 @@ function parseNode(
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export async function getTSImportLines(
+export function getTSImportLines(
   content: string,
   dependency: string,
-): Promise<number[]> {
+): number[] {
   if (!ts) {
     throw new Error('No typescript parsers available');
   }

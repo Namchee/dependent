@@ -27,4 +27,4 @@ export interface ParserOptions {
 export type FileParser = (
   content: string,
   dependency: string,
-) => Promise<number[]>;
+) => number[];
