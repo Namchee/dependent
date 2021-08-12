@@ -2,12 +2,14 @@
   "extends": "eslint-config-namchee/tsconfig",
   "compilerOptions": {
     "outDir": "./bin",
-    "module": "es2015"
+    "target": "es2017",
+    "module": "esnext"
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.test.ts"
   ]
 }

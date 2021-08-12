@@ -1,27 +1,68 @@
-import ts from 'typescript';
+import globalDirectories from 'global-dirs';
+import { resolve } from 'path/posix';
+
+import type {
+  SourceFile,
+  Node,
+  ImportDeclaration,
+  CallExpression,
+} from 'typescript';
+
+let ts: typeof import('typescript');
+
+try {
+  const basePath = ['typescript', 'lib', 'typescript.js'];
+  const localPath = new URL(
+    resolve('node_modules', ...basePath),
+    import.meta.url,
+  );
+  const npmPath = new URL(
+    resolve('globalDirectories.npm.packages', ...basePath),
+    import.meta.url,
+  );
+  const yarnPath = new URL(
+    resolve(globalDirectories.yarn.packages, ...basePath),
+    import.meta.url,
+  );
+
+  const imports = await Promise.allSettled([
+    import(localPath.toString()),
+    import(npmPath.toString()),
+    import(yarnPath.toString()),
+  ]);
+
+  for (const impor of imports) {
+    if (impor.status === 'fulfilled') {
+      ts = impor.value.default as typeof import('typescript');
+      break;
+    }
+  }
+} catch (err) {
+  /* ignore for now */
+}
 
 /**
  * Parse TypeScript node for imports to `dependency`
  *
- * @param {ts.SourceFile} sourceNode AST representation of the file
+ * @param {SourceFile} sourceNode AST representation of the file
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
 function parseNode(
-  sourceNode: ts.SourceFile,
+  sourceNode: SourceFile,
   dependency: string,
 ): number[] {
   const lineNumbers: number[] = [];
 
-  const walk = (node: ts.Node) => {
+  const walk = (node: Node) => {
     switch (node.kind) {
       case ts.SyntaxKind.ImportDeclaration: {
-        const specifier = (node as ts.ImportDeclaration)
+        const specifier = (node as ImportDeclaration)
           .moduleSpecifier;
 
         if (
-          specifier.kind === ts.SyntaxKind.StringLiteral &&
+          specifier.kind === 10 &&
           specifier.getText().slice(1, -1).startsWith(dependency)
         ) {
           lineNumbers.push(
@@ -33,7 +74,7 @@ function parseNode(
       }
 
       case ts.SyntaxKind.CallExpression: {
-        const callExpr = node as ts.CallExpression;
+        const callExpr = node as CallExpression;
 
         const expression = callExpr.expression;
         const child = callExpr.arguments;
@@ -79,6 +120,10 @@ export function getTSImportLines(
   content: string,
   dependency: string,
 ): number[] {
+  if (!ts) {
+    throw new Error('No typescript parsers available');
+  }
+
   const node = ts.createSourceFile(
     '',
     content,

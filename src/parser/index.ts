@@ -7,7 +7,7 @@ import { getTSImportLines } from './ts';
  * Extension to parser map. Make sure to register the function here
  * when a new parser is added.
  */
-const PARSER_MAP: Record<string, FileParser> = {
+const PARSER_FUNCTIONS: Record<string, FileParser> = {
   js: getJSImportLines,
   ts: getTSImportLines,
   jsx: getJSImportLines,
@@ -23,9 +23,9 @@ const PARSER_MAP: Record<string, FileParser> = {
  * is not supported yet.
  */
 export function getParser(ext: string): FileParser {
-  if (!(ext in PARSER_MAP)) {
+  if (!(ext in PARSER_FUNCTIONS)) {
     throw new Error(`.${ext} files are currently not supported`);
   }
 
-  return PARSER_MAP[ext];
+  return PARSER_FUNCTIONS[ext];
 }

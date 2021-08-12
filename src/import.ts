@@ -1,6 +1,6 @@
 import { getParser } from './parser';
 
-import { DependantFile, ParserOptions, ProjectFile } from './types';
+import type { DependantFile, ParserOptions, ProjectFile } from './types';
 
 /**
  * Analyze all relevant files for imports to `dependency`
@@ -30,7 +30,6 @@ export function getDependantFiles(
 
     try {
       const parse = getParser(ext);
-
       const isDependant = parse(file.content, dependency);
 
       if (isDependant.length) {

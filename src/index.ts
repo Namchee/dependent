@@ -12,7 +12,6 @@ import { showDependantFiles } from './logger';
 
 (async () => {
   const args = cli.parseSync();
-
   const spinner = ora().start();
 
   try {
@@ -29,9 +28,10 @@ import { showDependantFiles } from './logger';
     isDefined(dependency, projectDef);
     await isInstalled(dependency);
 
+    const files = getProjectFiles(args.files, silent);
+
     spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-    const files = getProjectFiles(args.files, silent);
     const dependant = getDependantFiles(
       files,
       dependency,
