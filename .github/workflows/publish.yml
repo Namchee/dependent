@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Lint and test before release
-        run: yarn lint & yarn test
+        run: yarn lint
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
