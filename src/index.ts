@@ -5,7 +5,7 @@ import chalk from 'chalk';
 
 import { cli } from './cli';
 
-import { checkParserInstallation, isDefined, isInstalled, resolvePackageJSON } from './package';
+import { isDefined, isInstalled, resolvePackageJSON } from './package';
 import { getProjectFiles } from './file';
 import { getDependantFiles } from './import';
 import { showDependantFiles } from './logger';
@@ -29,16 +29,11 @@ import { showDependantFiles } from './logger';
     isDefined(dependency, projectDef);
     await isInstalled(dependency);
 
-    spinner.text = chalk.greenBright(
-      'Checking required package installation...',
-    );
-
     const files = getProjectFiles(args.files, silent);
-    const parsers = await checkParserInstallation(files);
 
     spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-    const dependant = getDependantFiles(
+    const dependant = await getDependantFiles(
       files,
       dependency,
       {

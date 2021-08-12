@@ -1,6 +1,8 @@
+import chalk from 'chalk';
+
 import { getParser } from './parser';
 
-import { DependantFile, ParserOptions, ProjectFile } from './types';
+import type { DependantFile, ParserOptions, ProjectFile } from './types';
 
 /**
  * Analyze all relevant files for imports to `dependency`
@@ -14,11 +16,11 @@ import { DependantFile, ParserOptions, ProjectFile } from './types';
  * should ignore invalid files, `false` otherwise.
  * @returns {DependantFile[]} List of files which imports `dependency`.
  */
-export function getDependantFiles(
+export async function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
   { silent }: ParserOptions,
-): DependantFile[] {
+): Promise<DependantFile[]> {
   const dependant: DependantFile[] = [];
 
   for (const file of files) {
@@ -30,8 +32,7 @@ export function getDependantFiles(
 
     try {
       const parse = getParser(ext);
-
-      const isDependant = parse(file.content, dependency);
+      const isDependant = await parse(file.content, dependency);
 
       if (isDependant.length) {
         dependant.push(
@@ -42,7 +43,11 @@ export function getDependantFiles(
       const error = err as Error;
 
       if (silent) {
-        continue;
+        console.log(
+          chalk.yellow(
+            `📁 Failed to parse ${file.name}: ${error.message}. Skipping...`,
+          ),
+        );
       } else {
         throw new Error(`Failed to parse ${file.path}: ${error.message}`);
       }

@@ -21,15 +21,10 @@ export interface ParserOptions {
   silent: boolean;
 }
 
-export interface InstallationStatus {
-  [dependency: string]: 'global' | 'local' | 'none';
-}
-
 /**
  * Base function for all file parsers
  */
 export type FileParser = (
   content: string,
   dependency: string,
-  installation: 'global' | 'local' | 'none',
-) => number[];
+) => Promise<number[]>;
