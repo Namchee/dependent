@@ -12,7 +12,6 @@ import { showDependantFiles } from './logger';
 
 (async () => {
   const args = cli.parseSync();
-
   const spinner = ora().start();
 
   try {

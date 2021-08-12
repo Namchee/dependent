@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-
 import { getParser } from './parser';
 
 import type { DependantFile, ParserOptions, ProjectFile } from './types';
@@ -43,11 +41,7 @@ export async function getDependantFiles(
       const error = err as Error;
 
       if (silent) {
-        console.log(
-          chalk.yellow(
-            `📁 Failed to parse ${file.name}: ${error.message}. Skipping...`,
-          ),
-        );
+        continue;
       } else {
         throw new Error(`Failed to parse ${file.path}: ${error.message}`);
       }
