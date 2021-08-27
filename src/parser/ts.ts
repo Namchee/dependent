@@ -17,7 +17,7 @@ try {
     import.meta.url,
   );
   const npmPath = new URL(
-    resolve('globalDirectories.npm.packages', ...basePath),
+    resolve(globalDirectories.npm.packages, ...basePath),
     import.meta.url,
   );
   const yarnPath = new URL(
@@ -121,7 +121,7 @@ export function getTSImportLines(
   dependency: string,
 ): number[] {
   if (!ts) {
-    throw new Error('No typescript parsers available');
+    throw new Error('No Typescript parsers available');
   }
 
   const node = ts.createSourceFile(

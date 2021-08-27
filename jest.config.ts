@@ -2,7 +2,7 @@ import type { Config } from '@jest/types';
 
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
 const config: Config.InitialOptions = {
-  preset: 'ts-jest/presets/js-with-ts-esm',
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   verbose: true,
   transform: {},
