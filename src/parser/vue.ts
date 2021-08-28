@@ -59,7 +59,7 @@ export function getVueImportLines(
   }
 
   const node = vue.parse(content);
-  const script = node.descriptor.script;
+  const script = node.descriptor.script ?? node.descriptor.scriptSetup;
 
   if (script) {
     const parser = getParser(script.lang || 'js');
