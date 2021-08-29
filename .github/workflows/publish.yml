@@ -13,8 +13,8 @@ jobs:
       - name: Checkout to repository
         uses: actions/checkout@v2
       - run: git fetch --unshallow --tags
-      - name: Setup node
-        uses: actions/setup-node@v1
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'

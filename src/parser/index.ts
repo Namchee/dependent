@@ -2,6 +2,7 @@ import { FileParser } from '../types';
 
 import { getJSImportLines } from './js';
 import { getTSImportLines } from './ts';
+import { getVueImportLines } from './vue';
 
 /**
  * Extension to parser map. Make sure to register the function here
@@ -12,6 +13,7 @@ const PARSER_FUNCTIONS: Record<string, FileParser> = {
   ts: getTSImportLines,
   jsx: getJSImportLines,
   tsx: getTSImportLines,
+  vue: getVueImportLines,
 };
 
 /**

@@ -24,6 +24,7 @@ Dependent is a simple utility CLI to find out which files in your NodeJS-based p
 2. ESModules, `.mjs`
 3. TypeScript files, `.ts`
 4. React Extended JavaScript and TypeScript, `.jsx` and `.tsx`
+5. Vue Single File Components, `.vue`
 
 More language support are incoming! Submit your language support ideas [here](https://github.com/Namchee/dependent/issues/new/choose)
 
@@ -127,6 +128,16 @@ Suppress all parsing errors.
 ### `--table`, `-t`
 
 Outputs the result in table-style format instead of line per line format.
+
+## FAQ
+
+### My vue files cannot be parsed. Help!
+
+`dependent` will only support Vue 3 projects. If you asking me to support Vue 2, then the answer is
+
+![No, I don't think I will](https://i.ytimg.com/vi/WIiHrfQq-bo/maxresdefault.jpg)
+
+Vue 3 is already stable, there's no reason to support Vue 2 at all. Feel free to create PR for this though!
 
 ## Motivation
 

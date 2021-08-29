@@ -26,11 +26,13 @@ export const cli = yargs(process.argv.slice(2))
       '!(node_modules)/**/*.ts',
       '!(node_modules)/**/*.jsx',
       '!(node_modules)/**/*.tsx',
+      '!(node_modules)/**/*.vue',
       '*.js',
       '*.mjs',
       '*.ts',
       '*.jsx',
       '*.tsx',
+      '*.vue',
     ],
   })
   .options({
