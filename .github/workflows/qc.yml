@@ -14,4 +14,4 @@ jobs:
       - name: Install all required dependencies
         run: yarn install --frozen-lockfile
       - name: Lint and test the files
-        run: yarn lint & yarn test
+        run: yarn lint && yarn test
