@@ -16,7 +16,7 @@ describe('Parser tolerance test', () => {
     })).toThrowError('Failed to parse src/a.js');
   });
 
-  it('should not throw an error when silent is true', async () => {
+  it('should not throw an error when silent is true', () => {
     const files: ProjectFile[] = [
       {
         name: 'a.js',
