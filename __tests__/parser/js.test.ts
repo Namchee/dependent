@@ -1,7 +1,3 @@
-import { jest } from '@jest/globals';
-
-jest.useFakeTimers();
-
 import { getJSImportLines } from '../../src/parser/js';
 
 describe('ESModule import test', () => {

@@ -1,7 +1,3 @@
-import { jest } from '@jest/globals';
-
-jest.useFakeTimers();
-
 import { cli } from './../src/cli';
 
 describe('CLI test', () => {

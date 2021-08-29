@@ -1,7 +1,3 @@
-import { jest } from '@jest/globals';
-
-jest.useFakeTimers();
-
 import { getTSImportLines } from '../../src/parser/ts';
 
 describe('TypeScript parser test', () => {
