@@ -10,8 +10,7 @@ afterEach(() => {
 
 describe('Vue parser test', () => {
   it('should be able to parse ES module import', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import Vue from 'vue';
 
     export default {
@@ -36,8 +35,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse named imports', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import { ref } from 'vue';
 
     export default {
@@ -62,8 +60,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse all module import', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import * as Vue from 'vue';
 
     export default {
@@ -88,8 +85,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse aliased imports', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import { ref as foo } from 'vue';
 
     export default {
@@ -114,8 +110,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse side-effect imports', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import { ref } from 'vue';
     import 'foo/dist/bar.css';
 
@@ -141,8 +136,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse dynamic imports', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import { ref } from 'vue';
 
     async function foo() {
@@ -171,8 +165,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to distinguish false alarms', () => {
-    const content = `
-    <script>
+    const content = `<script>
     import { ref } from 'vue';
     const foo = 'import bar from "baz";';
 
@@ -197,8 +190,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to tolerate CommonJS import', () => {
-    const content = `
-    <script>
+    const content = `<script>
     const vue = require('vue');
 
     export default {
@@ -223,8 +215,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse TypeScript based script', () => {
-    const content = `
-    <script lang="ts">
+    const content = `<script lang="ts">
     import { ref, Ref } from 'vue';
 
     export default {
@@ -249,8 +240,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse TypeScript type imports', () => {
-    const content = `
-    <script lang="ts">
+    const content = `<script lang="ts">
     import { ref } from 'vue';
     import type { Ref } from 'vue';
 
@@ -277,8 +267,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse `script setup`', () => {
-    const content = `
-    <script setup>
+    const content = `<script setup>
     import _ from 'lodash';
 
     const name = ref(_.capitalize('john doe'));
@@ -292,5 +281,71 @@ describe('Vue parser test', () => {
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
+  });
+
+  it('should be able to parse Options API', () => {
+    const content = `<script>
+    import _ from 'lodash';
+
+    export default {
+      data() {
+        return {
+          name: 'john doe',
+        };
+      },
+      computed: {
+        formattedName: () => {
+          return _.capitalize(this.name);
+        },
+      },
+      mounted() {
+        this.doIt();
+      },
+    };
+    </script>
+
+    <template>
+      Hello, {{ name }}
+    </template>`;
+
+    const result = getVueImportLines(content, 'lodash');
+
+    expect(result.length).toBe(1);
+    expect(result[0]).toBe(2);
+  });
+
+  it('should be able to parse class components', () => {
+    // straightly copy pasted from class component example
+    const content = `<template>
+      <div>
+        <button v-on:click="decrement">-</button>
+        {{ count }}
+        <button v-on:click="increment">+</button>
+      </div>
+    </template>
+
+    <script>
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
+
+    export default class Counter extends Vue {
+      // Class properties will be component data
+      count = 0
+
+      // Methods will be component methods
+      increment() {
+        this.count++
+      }
+
+      decrement() {
+        this.count--
+      }
+    }
+    </script>`;
+
+    const result = getVueImportLines(content, 'vue-class-component');
+
+    expect(result.length).toBe(1);
+    expect(result[0]).toBe(11);
   });
 });

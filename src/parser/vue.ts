@@ -1,5 +1,6 @@
 import globalDirectories from 'global-dirs';
-import { resolve } from 'path/posix';
+import path from 'path';
+
 import { getParser } from '.';
 
 let vue: typeof import('@vue/compiler-sfc');
@@ -12,15 +13,15 @@ try {
     'compiler-sfc.cjs.js',
   ];
   const localPath = new URL(
-    resolve('node_modules', ...basePath),
+    path.posix.resolve('node_modules', ...basePath),
     import.meta.url,
   );
   const npmPath = new URL(
-    resolve(globalDirectories.npm.packages, ...basePath),
+    path.posix.resolve(globalDirectories.npm.packages, ...basePath),
     import.meta.url,
   );
   const yarnPath = new URL(
-    resolve(globalDirectories.yarn.packages, ...basePath),
+    path.posix.resolve(globalDirectories.yarn.packages, ...basePath),
     import.meta.url,
   );
 
@@ -62,9 +63,11 @@ export function getVueImportLines(
   const script = node.descriptor.script ?? node.descriptor.scriptSetup;
 
   if (script) {
+    const startingLine = script.loc.start.line;
     const parser = getParser(script.lang || 'js');
 
-    return parser(script.content, dependency);
+    const lines = parser(script.content.trim(), dependency);
+    return lines.map(line => line + startingLine);
   }
 
   return [];
