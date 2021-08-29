@@ -8,8 +8,6 @@ import type { DependantFile, ParserOptions, ProjectFile } from './types';
  * @param {ProjectFile[]} files Relevant files
  * @param {string} dependency Package name
  * @param {ParserOptions} options Parsing options
- * @param {boolean} options.module `true` if all files should
- * be parsed as ES modules, `false` otherwise.
  * @param {boolean} options.silent `true` if the parser
  * should ignore invalid files, `false` otherwise.
  * @returns {DependantFile[]} List of files which imports `dependency`.
@@ -34,7 +32,7 @@ export function getDependantFiles(
 
       if (isDependant.length) {
         dependant.push(
-          { name: file.name, path: file.path, lineNumbers: isDependant }
+          { name: file.name, path: file.path, lineNumbers: isDependant },
         );
       }
     } catch (err) {
