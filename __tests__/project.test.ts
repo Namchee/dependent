@@ -1,3 +1,7 @@
+import { jest } from '@jest/globals';
+
+jest.useFakeTimers();
+
 import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/types';
 
