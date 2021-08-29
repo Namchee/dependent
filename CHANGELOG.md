@@ -1,3 +1,15 @@
+# v0.8.1 (Sun Aug 29 2021)
+
+#### 🐛 Bug Fix
+
+- fix: Use path splitter to replace `startsWith` to handle nested modules [#38](https://github.com/Namchee/dependent/pull/38) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.8.0 (Sun Aug 29 2021)
 
 #### 🚀 Enhancement
