@@ -1,7 +1,13 @@
+import { jest } from '@jest/globals';
+
 import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/types';
 
 jest.useFakeTimers();
+
+afterEach(() => {
+  jest.clearAllTimers();
+});
 
 describe('Parser tolerance test', () => {
   it('should throw an error when silent is false', () => {

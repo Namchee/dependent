@@ -1,6 +1,12 @@
+import { jest } from '@jest/globals';
+
 import { cli } from './../src/cli';
 
 jest.useFakeTimers();
+
+afterEach(() => {
+  jest.clearAllTimers();
+});
 
 describe('CLI test', () => {
   it('should be able to accomodate simple usage', () => {

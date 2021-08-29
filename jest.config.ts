@@ -14,7 +14,6 @@ const config: Config.InitialOptions = {
       useESM: true,
     },
   },
-  testEnvironment: 'node',
 };
 
 export default config;
