@@ -33,7 +33,7 @@ describe('ESModule import test', () => {
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse unnamed imports', () => {
+  it('should be able to parse side-effect imports', () => {
     const content = 'import \'express\';';
 
     const dependants = getJSImportLines(content, 'express');
@@ -168,7 +168,7 @@ describe('React JSX test', () => {
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse unnamed imports', () => {
+  it('should be able to parse side-effect imports', () => {
     const content = `import 'react';
 
     function Home() {

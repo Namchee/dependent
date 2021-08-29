@@ -45,7 +45,7 @@ describe('TypeScript parser test', () => {
     expect(dependant[0]).toBe(1);
   });
 
-  it('should be able to parse nameless imports', () => {
+  it('should be able to parse side-effect imports', () => {
     const content = `import 'express';`;
 
     const dependant = getTSImportLines(content, 'express');
@@ -205,7 +205,7 @@ describe('React TSX test', () => {
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse unnamed imports', () => {
+  it('should be able to parse side-effect imports', () => {
     const content = `import 'react';
 
     function Home(): JSX.Element {
