@@ -9,6 +9,7 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest/presets/js-with-ts-esm',
   extensionsToTreatAsEsm: ['.ts'],
   timers: 'fake',
+  maxWorkers: 2,
   globals: {
     'ts-jest': {
       useESM: true,
