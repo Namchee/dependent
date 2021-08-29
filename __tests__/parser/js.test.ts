@@ -107,6 +107,15 @@ describe('ESModule import test', () => {
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
+
+  it('should be able to distinguish dash separated modules', () => {
+    const content = `import { defineConfig } from 'windicss-helpers';
+
+    export default defineConfig({});`;
+
+    const dependants = getJSImportLines(content, 'windicss');
+    expect(dependants.length).toBe(0);
+  });
 });
 
 describe('React JSX test', () => {
