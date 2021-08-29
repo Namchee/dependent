@@ -1,10 +1,10 @@
 import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
+import yargsHelpers from 'yargs/helpers';
 
 /**
  * Command line interface definition.
  */
-export const cli = yargs(hideBin(process.argv))
+export const cli = yargs(yargsHelpers.hideBin(process.argv))
   .scriptName('dependent')
   .command(
     '$0 <package> [files...]',
