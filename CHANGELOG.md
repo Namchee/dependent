@@ -1,3 +1,17 @@
+# v0.7.2 (Sun Aug 29 2021)
+
+#### 🐛 Bug Fix
+
+- fix: Reconfigure jest to be able to execute native ES modules tests [#35](https://github.com/Namchee/dependent/pull/35) ([@Namchee](https://github.com/Namchee))
+- refactor: Migrate typescript parser into external packages [#32](https://github.com/Namchee/dependent/pull/32) ([@Namchee](https://github.com/Namchee))
+- refactor: Unify js extended parsers with base parserr [#30](https://github.com/Namchee/dependent/pull/30) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.7.1 (Sun Aug 08 2021)
 
 #### 🐛 Bug Fix

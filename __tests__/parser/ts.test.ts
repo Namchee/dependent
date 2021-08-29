@@ -1,4 +1,12 @@
+import { jest } from '@jest/globals';
+
 import { getTSImportLines } from '../../src/parser/ts';
+
+jest.useFakeTimers();
+
+afterEach(() => {
+  jest.clearAllTimers();
+});
 
 describe('TypeScript parser test', () => {
   it('should be able to parse ES modules import', () => {
