@@ -1,3 +1,15 @@
+# v0.8.0 (Sun Aug 29 2021)
+
+#### 🚀 Enhancement
+
+- feat: Add vue support [#36](https://github.com/Namchee/dependent/pull/36) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.7.2 (Sun Aug 29 2021)
 
 #### 🐛 Bug Fix
