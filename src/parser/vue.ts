@@ -66,8 +66,9 @@ export function getVueImportLines(
     const startingLine = script.loc.start.line;
     const parser = getParser(script.lang || 'js');
 
-    const lines = parser(script.content.trim(), dependency);
-    return lines.map(line => line + startingLine);
+    const lines = parser(script.content, dependency);
+    // -1, since the `<script>` block shouldn't count
+    return lines.map(line => line + startingLine - 1);
   }
 
   return [];
