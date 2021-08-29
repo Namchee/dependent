@@ -11,7 +11,12 @@ jobs:
     steps:
       - name: Connect workflow to repository
         uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install all required dependencies
         run: yarn install --frozen-lockfile
       - name: Lint and test the files
-        run: yarn lint & yarn test
+        run: yarn lint && yarn test

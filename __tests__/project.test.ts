@@ -1,5 +1,13 @@
+import { jest } from '@jest/globals';
+
 import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/types';
+
+jest.useFakeTimers();
+
+afterEach(() => {
+  jest.clearAllTimers();
+});
 
 describe('Parser tolerance test', () => {
   it('should throw an error when silent is false', () => {
@@ -11,12 +19,12 @@ describe('Parser tolerance test', () => {
       },
     ];
 
-    expect(async () => await getDependantFiles(files, 'express', {
+    expect(() => getDependantFiles(files, 'express', {
       silent: false,
     })).toThrowError('Failed to parse src/a.js');
   });
 
-  it('should not throw an error when silent is true', async () => {
+  it('should not throw an error when silent is true', () => {
     const files: ProjectFile[] = [
       {
         name: 'a.js',
@@ -25,7 +33,7 @@ describe('Parser tolerance test', () => {
       },
     ];
 
-    const dependants = await getDependantFiles(files, 'express', {
+    const dependants = getDependantFiles(files, 'express', {
       silent: true,
     });
 

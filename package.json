@@ -18,8 +18,8 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "rollup -c rollup.config.js",
     "build:watch": "rollup -c rollup.config.js -w",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
     "acorn": "^8.4.1",
@@ -49,7 +49,7 @@
     "eslint-config-namchee": "^1.0.7",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsdoc": "^35.4.0",
-    "jest": "^27.0.6",
+    "jest": "^27.1.0",
     "prettier": "^2.3.2",
     "rollup": "^2.56.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
@@ -57,7 +57,7 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
-    "ts-jest": "^27.0.4",
+    "ts-jest": "^27.0.5",
     "typescript": "^4.3.5"
   },
   "engines": {

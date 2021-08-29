@@ -10,7 +10,6 @@ export default {
     terser({ format: { comments: false } }),
   ],
   output: [
-    // will drop this later
     { file: 'bin/index.js', format: 'es' },
   ],
 }
