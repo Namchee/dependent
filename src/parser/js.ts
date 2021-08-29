@@ -33,7 +33,7 @@ export function parseNode(
 
       if (
         importExpr.source.type === 'Literal' &&
-        importExpr.source.value?.toString().startsWith(dependency)
+        importExpr.source.value?.toString().split('/')[0] === dependency
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
@@ -44,7 +44,7 @@ export function parseNode(
 
       if (
         importDec.source.type === 'Literal' &&
-        importDec.source.value?.toString().startsWith(dependency)
+        importDec.source.value?.toString().split('/')[0] === dependency
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
@@ -57,7 +57,7 @@ export function parseNode(
         callExpr.callee.type === 'Identifier' &&
         callExpr.callee.name === 'require' &&
         callExpr.arguments[0].type === 'Literal' &&
-        callExpr.arguments[0].value?.toString().startsWith(dependency)
+        callExpr.arguments[0].value?.toString().split('/')[0] === dependency
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
