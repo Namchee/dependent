@@ -1,5 +1,7 @@
 import { getJSImportLines } from '../../src/parser/js';
 
+jest.useFakeTimers();
+
 describe('ESModule import test', () => {
   it('should be able to parse default imports', () => {
     const content = 'import express from \'express\'; const app = express();';

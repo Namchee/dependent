@@ -1,6 +1,8 @@
 import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/types';
 
+jest.useFakeTimers();
+
 describe('Parser tolerance test', () => {
   it('should throw an error when silent is false', () => {
     const files: ProjectFile[] = [

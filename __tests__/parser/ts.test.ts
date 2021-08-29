@@ -1,5 +1,7 @@
 import { getTSImportLines } from '../../src/parser/ts';
 
+jest.useFakeTimers();
+
 describe('TypeScript parser test', () => {
   it('should be able to parse ES modules import', () => {
     const content = `import express from 'express';`;

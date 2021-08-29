@@ -1,5 +1,7 @@
 import { cli } from './../src/cli';
 
+jest.useFakeTimers();
+
 describe('CLI test', () => {
   it('should be able to accomodate simple usage', () => {
     const args = cli.parseSync('express');
