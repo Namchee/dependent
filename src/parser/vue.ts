@@ -31,7 +31,9 @@ try {
     import(yarnPath.toString()),
   ]);
 
-  for (const impor of imports) {
+  for (let i = 0; i < imports.length; i++) {
+    const impor = imports[i];
+
     if (impor.status === 'fulfilled') {
       vue = impor.value.default as typeof import('@vue/compiler-sfc');
       break;
