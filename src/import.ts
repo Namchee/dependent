@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 import { getParser } from './parser';
 
 import type { DependantFile, ParserOptions, ProjectFile } from './types';
@@ -12,39 +14,57 @@ import type { DependantFile, ParserOptions, ProjectFile } from './types';
  * should ignore invalid files, `false` otherwise.
  * @returns {DependantFile[]} List of files which imports `dependency`.
  */
-export function getDependantFiles(
+export async function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
   { silent }: ParserOptions,
-): DependantFile[] {
-  const dependant: DependantFile[] = [];
+): Promise<DependantFile[]> {
+  const dependants: Promise<DependantFile | null>[] = files.map(
+    async (file) => {
+      try {
+        let ext = file.name.split('.').pop() as string;
 
-  for (const file of files) {
-    let ext = file.name.split('.').pop() as string;
+        if (ext === 'mjs') {
+          ext = 'js';
+        }
 
-    if (ext === 'mjs') {
-      ext = 'js';
-    }
+        const parse = getParser(ext);
+        const isDependant = await parse(file.content, dependency);
 
-    try {
-      const parse = getParser(ext);
-      const isDependant = parse(file.content, dependency);
+        if (isDependant.length) {
+          return {
+            name: file.name,
+            path: file.path,
+            lineNumbers: isDependant,
+          } as DependantFile;
+        }
 
-      if (isDependant.length) {
-        dependant.push(
-          { name: file.name, path: file.path, lineNumbers: isDependant },
-        );
-      }
-    } catch (err) {
-      const error = err as Error;
-
-      if (silent) {
-        continue;
-      } else {
+        return null;
+      } catch (err) {
+        const error = err as Error;
+        console.error(error);
         throw new Error(`Failed to parse ${file.path}: ${error.message}`);
       }
-    }
-  }
+    },
+  );
 
-  return dependant;
+  if (!silent) {
+    const results = await Promise.all(dependants);
+    return results.filter(val => val !== null) as DependantFile[];
+  } else {
+    const rawResults = await Promise.allSettled(dependants);
+    const results = [];
+
+    for (const result of rawResults) {
+      if (result.status === 'rejected') {
+        console.log(
+          chalk.yellow(result.reason),
+        );
+      } else if (result.value) {
+        results.push(result.value);
+      }
+    }
+
+    return results;
+  }
 }

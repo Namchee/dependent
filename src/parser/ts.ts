@@ -51,10 +51,7 @@ try {
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-function parseNode(
-  sourceNode: SourceFile,
-  dependency: string,
-): number[] {
+function parseNode(sourceNode: SourceFile, dependency: string): number[] {
   const lineNumbers: number[] = [];
 
   const walk = (node: Node) => {
@@ -118,10 +115,10 @@ function parseNode(
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getTSImportLines(
+export async function getTSImportLines(
   content: string,
   dependency: string,
-): number[] {
+): Promise<number[]> {
   if (!ts) {
     throw new Error('No Typescript parsers available');
   }
