@@ -64,6 +64,10 @@ export async function getVueImportLines(
 
   if (script) {
     const startingLine = script.loc.start.line;
+    if (script.lang === 'vue') {
+      throw new Error('Circular parser dependency');
+    }
+
     const parser = getParser(script.lang || 'js');
 
     const lines = await parser(script.content, dependency);

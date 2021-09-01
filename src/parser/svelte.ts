@@ -9,7 +9,6 @@ import type {
 } from 'estree';
 import type { BaseNode } from 'estree-walker';
 
-
 let svelte: typeof import('svelte/compiler');
 
 try {
@@ -47,7 +46,6 @@ try {
 } catch (err) {
   /* ignore for now */
 }
-
 
 /**
  * Parse native JavaScript nodes for imports to `dependency`

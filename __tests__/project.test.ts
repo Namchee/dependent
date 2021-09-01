@@ -19,12 +19,12 @@ describe('Parser tolerance test', () => {
       },
     ];
 
-    expect(() => getDependantFiles(files, 'express', {
+    expect(getDependantFiles(files, 'express', {
       silent: false,
-    })).toThrowError('Failed to parse src/a.js');
+    })).rejects.toBeTruthy();
   });
 
-  it('should not throw an error when silent is true', () => {
+  it('should not throw an error when silent is true', async () => {
     const files: ProjectFile[] = [
       {
         name: 'a.js',
@@ -33,7 +33,7 @@ describe('Parser tolerance test', () => {
       },
     ];
 
-    const dependants = getDependantFiles(files, 'express', {
+    const dependants = await getDependantFiles(files, 'express', {
       silent: true,
     });
 

@@ -42,7 +42,6 @@ export async function getDependantFiles(
         return null;
       } catch (err) {
         const error = err as Error;
-        console.error(error);
         throw new Error(`Failed to parse ${file.path}: ${error.message}`);
       }
     },
