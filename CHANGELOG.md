@@ -1,3 +1,15 @@
+# v0.9.0 (Wed Sep 01 2021)
+
+#### 🚀 Enhancement
+
+- feat: Add svelte support [#40](https://github.com/Namchee/dependent/pull/40) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.8.1 (Sun Aug 29 2021)
 
 #### 🐛 Bug Fix
