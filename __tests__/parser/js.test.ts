@@ -9,117 +9,117 @@ afterEach(() => {
 });
 
 describe('ESModule import test', () => {
-  it('should be able to parse default imports', () => {
+  it('should be able to parse default imports', async () => {
     const content = 'import express from \'express\'; const app = express();';
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse named imports', () => {
+  it('should be able to parse named imports', async () => {
     const content = 'import { json } from \'express\'; app.use(json());';
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse aliased imports', () => {
+  it('should be able to parse aliased imports', async () => {
     const content = 'import { json as jeson } from \'express\';';
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse side-effect imports', () => {
+  it('should be able to parse side-effect imports', async () => {
     const content = 'import \'express\';';
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse all-module import', () => {
+  it('should be able to parse all-module import', async () => {
     const content = 'import * as express from \'express\';';
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse dynamic imports', () => {
+  it('should be able to parse dynamic imports', async () => {
     const content = 'const a = import(\'express\');';
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse module imports nested in code', () => {
+  it('should be able to parse module imports nested in code', async () => {
     const content = `(async () => {
       if (somethingIsTrue) {
         await import('express');
       }
     })();`;
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
 
-  it('should be able to parse false alarms', () => {
+  it('should be able to parse false alarms', async () => {
     const content = `const a = "import express from 'express'";`;
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(0);
   });
 
-  it('should be able to parse shebanged files', () => {
+  it('should be able to parse shebanged files', async () => {
     const content = `#!/usr/bin/env node
 
     import express from 'express';
 
     const app = express();`;
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
 
-  it('should be able to tolerate CommonJS imports', () => {
+  it('should be able to tolerate CommonJS imports', async () => {
     const content = `const express = require('express');
 
     const app = express();`;
 
-    const dependants = getJSImportLines(content, 'express');
+    const dependants = await await getJSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to detect nested modules', () => {
+  it('should be able to detect nested modules', async () => {
     const content = `import { defineConfig } from 'windicss/helpers';
 
     export default defineConfig({});`;
 
-    const dependants = getJSImportLines(content, 'windicss');
+    const dependants = await getJSImportLines(content, 'windicss');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to distinguish dash separated modules', () => {
+  it('should be able to distinguish dash separated modules', async () => {
     const content = `import { defineConfig } from 'windicss-helpers';
 
     export default defineConfig({});`;
 
-    const dependants = getJSImportLines(content, 'windicss');
+    const dependants = await getJSImportLines(content, 'windicss');
     expect(dependants.length).toBe(0);
   });
 });
 
 describe('React JSX test', () => {
-  it('should be able to parse default imports', () => {
+  it('should be able to parse default imports', async () => {
     const content = `import react from 'react';
 
     function Home() {
@@ -128,12 +128,12 @@ describe('React JSX test', () => {
 
     export default Home;`
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse default imports', () => {
+  it('should be able to parse default imports', async () => {
     const content = `import { useState } from 'react';
 
     function Home() {
@@ -143,12 +143,12 @@ describe('React JSX test', () => {
 
     export default Home;`
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse aliased imports', () => {
+  it('should be able to parse aliased imports', async () => {
     const content = `import { useState as a } from 'react';
 
     function Home() {
@@ -158,12 +158,12 @@ describe('React JSX test', () => {
 
     export default Home;`
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse namespace imports', () => {
+  it('should be able to parse namespace imports', async () => {
     const content = `import * as React from 'react';
 
     function Home() {
@@ -172,12 +172,12 @@ describe('React JSX test', () => {
 
     export default Home;`
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse side-effect imports', () => {
+  it('should be able to parse side-effect imports', async () => {
     const content = `import 'react';
 
     function Home() {
@@ -186,12 +186,12 @@ describe('React JSX test', () => {
 
     export default Home;`
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse dynamic imports', () => {
+  it('should be able to parse dynamic imports', async () => {
     const content = `const a = import('react');
 
     function Home() {
@@ -200,12 +200,12 @@ describe('React JSX test', () => {
 
     export default Home;`
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to parse imports nested in code', () => {
+  it('should be able to parse imports nested in code', async () => {
     const content = `import * as React from 'react';
 
     function Home() {
@@ -220,16 +220,16 @@ describe('React JSX test', () => {
 
     export default Home;`;
 
-    const dependants = getJSImportLines(content, 'b');
+    const dependants = await getJSImportLines(content, 'b');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(6);
   });
 
-  it('should be able to distinguish false alarms', () => {
+  it('should be able to distinguish false alarms', async () => {
     const content = `const react = "import * as React from 'react';";
 
     function Home() {
-      const isTest = () => {
+      const isTest = async () => {
         if (isDevelopment) {
           const a = require('b');
         }
@@ -240,11 +240,11 @@ describe('React JSX test', () => {
 
     export default Home;`;
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(0);
   });
 
-  it('should be able to tolerate CommonJS imports', () => {
+  it('should be able to tolerate CommonJS imports', async () => {
     const content = `import express from 'express';
 
     const react = require('react');
@@ -255,12 +255,12 @@ describe('React JSX test', () => {
 
     export default Home;`;
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
 
-  it('should be able to parse class-based components', () => {
+  it('should be able to parse class-based components', async () => {
     const content = `import * as React from 'react';
 
     export class Welcome extends React.Component {
@@ -269,17 +269,17 @@ describe('React JSX test', () => {
       }
     }`;
 
-    const dependants = getJSImportLines(content, 'react');
+    const dependants = await getJSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
 
-  it('should be able to detect nested modules', () => {
+  it('should be able to detect nested modules', async () => {
     const content = `import { defineConfig } from 'windicss/helpers';
 
     export default defineConfig({});`;
 
-    const dependants = getJSImportLines(content, 'windicss');
+    const dependants = await getJSImportLines(content, 'windicss');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });

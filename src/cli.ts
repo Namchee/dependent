@@ -27,12 +27,14 @@ export const cli = yargs(process.argv.slice(2))
       '!(node_modules)/**/*.jsx',
       '!(node_modules)/**/*.tsx',
       '!(node_modules)/**/*.vue',
+      '!(node_modules)/**/*.svelte',
       '*.js',
       '*.mjs',
       '*.ts',
       '*.jsx',
       '*.tsx',
       '*.vue',
+      '*.svelte',
     ],
   })
   .options({

@@ -24,7 +24,8 @@ Dependent is a simple utility CLI to find out which files in your NodeJS-based p
 2. ESModules, `.mjs`
 3. TypeScript files, `.ts`
 4. React Extended JavaScript and TypeScript, `.jsx` and `.tsx`
-5. Vue Single File Components, `.vue`
+5. Vue Single File Components, `.vue` (`.js` and `.ts` scripts only)
+6. Svelte Single File Components, `.svelte` (`.js` script only)
 
 More language support are incoming! Submit your language support ideas [here](https://github.com/Namchee/dependent/issues/new/choose)
 

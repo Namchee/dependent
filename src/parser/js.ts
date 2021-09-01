@@ -21,10 +21,7 @@ const parser = Parser.extend(jsx());
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function parseNode(
-  sourceNode: Node,
-  dependency: string,
-): number[] {
+function parseNode(sourceNode: Node, dependency: string): number[] {
   const lines: number[] = [];
 
   simple(sourceNode, {
@@ -80,10 +77,10 @@ export function parseNode(
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getJSImportLines(
+export async function getJSImportLines(
   content: string,
   dependency: string,
-): number[] {
+): Promise<number[]> {
   const node: Node = parser.parse(content, {
     ecmaVersion: 'latest',
     locations: true,

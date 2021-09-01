@@ -31,12 +31,12 @@ try {
     import(yarnPath.toString()),
   ]);
 
-  for (const impor of imports) {
+  for (let i = 0; i < imports.length; i++) {
+    const impor = imports[i];
+
     if (impor.status === 'fulfilled') {
       vue = impor.value.default as typeof import('@vue/compiler-sfc');
       break;
-    } else {
-      console.log (impor.reason);
     }
   }
 } catch (err) {
@@ -51,10 +51,10 @@ try {
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function getVueImportLines(
+export async function getVueImportLines(
   content: string,
   dependency: string,
-): number[] {
+): Promise<number[]> {
   if (!vue) {
     throw new Error('No Vue parsers available');
   }
@@ -64,9 +64,13 @@ export function getVueImportLines(
 
   if (script) {
     const startingLine = script.loc.start.line;
+    if (script.lang === 'vue') {
+      throw new Error('Circular parser dependency');
+    }
+
     const parser = getParser(script.lang || 'js');
 
-    const lines = parser(script.content, dependency);
+    const lines = await parser(script.content, dependency);
     // -1, since the `<script>` block shouldn't count
     return lines.map(line => line + startingLine - 1);
   }

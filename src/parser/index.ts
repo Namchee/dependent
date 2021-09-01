@@ -1,6 +1,7 @@
 import { FileParser } from '../types';
 
 import { getJSImportLines } from './js';
+import { getSvelteImportLines } from './svelte';
 import { getTSImportLines } from './ts';
 import { getVueImportLines } from './vue';
 
@@ -14,6 +15,7 @@ const PARSER_FUNCTIONS: Record<string, FileParser> = {
   jsx: getJSImportLines,
   tsx: getTSImportLines,
   vue: getVueImportLines,
+  svelte: getSvelteImportLines,
 };
 
 /**

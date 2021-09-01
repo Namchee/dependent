@@ -32,7 +32,7 @@ import { showDependantFiles } from './logger';
 
     spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-    const dependant = getDependantFiles(
+    const dependant = await getDependantFiles(
       files,
       dependency,
       {

@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 describe('Vue parser test', () => {
-  it('should be able to parse ES module import', () => {
+  it('should be able to parse ES module import', async () => {
     const content = `<script>
     import Vue from 'vue';
 
@@ -28,13 +28,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse named imports', () => {
+  it('should be able to parse named imports', async () => {
     const content = `<script>
     import { ref } from 'vue';
 
@@ -53,13 +53,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse all module import', () => {
+  it('should be able to parse all module import', async () => {
     const content = `<script>
     import * as Vue from 'vue';
 
@@ -78,13 +78,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse aliased imports', () => {
+  it('should be able to parse aliased imports', async () => {
     const content = `<script>
     import { ref as foo } from 'vue';
 
@@ -103,13 +103,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse side-effect imports', () => {
+  it('should be able to parse side-effect imports', async () => {
     const content = `<script>
     import { ref } from 'vue';
     import 'foo/dist/bar.css';
@@ -129,13 +129,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'foo');
+    const result = await getVueImportLines(content, 'foo');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(3);
   });
 
-  it('should be able to parse dynamic imports', () => {
+  it('should be able to parse dynamic imports', async () => {
     const content = `<script>
     import { ref } from 'vue';
 
@@ -158,13 +158,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'baz');
+    const result = await getVueImportLines(content, 'baz');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(5);
   });
 
-  it('should be able to distinguish false alarms', () => {
+  it('should be able to distinguish false alarms', async () => {
     const content = `<script>
     import { ref } from 'vue';
     const foo = 'import bar from "baz";';
@@ -184,12 +184,12 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'baz');
+    const result = await getVueImportLines(content, 'baz');
 
     expect(result.length).toBe(0);
   });
 
-  it('should be able to tolerate CommonJS import', () => {
+  it('should be able to tolerate CommonJS import', async () => {
     const content = `<script>
     const vue = require('vue');
 
@@ -208,13 +208,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse TypeScript based script', () => {
+  it('should be able to parse TypeScript based script', async () => {
     const content = `<script lang="ts">
     import { ref, Ref } from 'vue';
 
@@ -233,13 +233,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse TypeScript type imports', () => {
+  it('should be able to parse TypeScript type imports', async () => {
     const content = `<script lang="ts">
     import { ref } from 'vue';
     import type { Ref } from 'vue';
@@ -259,14 +259,14 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'vue');
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(2);
     expect(result[0]).toBe(2);
     expect(result[1]).toBe(3);
   });
 
-  it('should be able to parse `script setup`', () => {
+  it('should be able to parse `script setup`', async () => {
     const content = `<script setup>
     import _ from 'lodash';
 
@@ -277,13 +277,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'lodash');
+    const result = await getVueImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse Options API', () => {
+  it('should be able to parse Options API', async () => {
     const content = `<script>
     import _ from 'lodash';
 
@@ -294,7 +294,7 @@ describe('Vue parser test', () => {
         };
       },
       computed: {
-        formattedName: () => {
+        formattedName: async () => {
           return _.capitalize(this.name);
         },
       },
@@ -308,13 +308,13 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = getVueImportLines(content, 'lodash');
+    const result = await getVueImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
   });
 
-  it('should be able to parse class components', () => {
+  it('should be able to parse class components', async () => {
     // straightly copy pasted from class component example
     const content = `<template>
       <div>
@@ -343,7 +343,7 @@ describe('Vue parser test', () => {
     }
     </script>`;
 
-    const result = getVueImportLines(content, 'vue-class-component');
+    const result = await getVueImportLines(content, 'vue-class-component');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(11);
