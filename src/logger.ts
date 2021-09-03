@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { DependantFile } from './types';
+import { DependantFile } from './constants/types';
 
 /**
  * Outputs all dependant files to `stdout` in table

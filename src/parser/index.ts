@@ -1,4 +1,4 @@
-import { FileParser } from '../types';
+import { FileParser } from '../constants/types';
 
 import { getJSImportLines } from './js';
 import { getSvelteImportLines } from './svelte';
