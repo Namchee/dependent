@@ -2,7 +2,11 @@ import chalk from 'chalk';
 
 import { getParser } from './parser';
 
-import type { DependantFile, ParserOptions, ProjectFile } from './types';
+import type {
+  DependantFile,
+  ParserOptions,
+  ProjectFile,
+} from './constants/types';
 
 /**
  * Analyze all relevant files for imports to `dependency`

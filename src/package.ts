@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { existsSync, readFileSync } from 'fs';
 import { spawn } from 'child_process';
 
-import { ProjectDefinition } from './types';
+import { ProjectDefinition } from './constants/types';
 
 /**
  * Get all information of the project from `package.json`

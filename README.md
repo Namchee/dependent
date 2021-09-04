@@ -70,23 +70,25 @@ After the command is given, `dependent` will produce a list of dependant files i
 ✔ Analysis completed successfully
 
 📦 There are 17 files in this project that depends on 'phaser'
- └── index.ts:1 → src/index.ts
- └── cherry.ts:1 → src/objects/cherry.ts
- └── flyer.ts:1 → src/objects/flyer.ts
- └── mushroom.ts:1 → src/objects/mushroom.ts
- └── player.ts:1 → src/objects/player.ts
- └── saw.ts:1 → src/objects/saw.ts
- └── spike.ts:1 → src/objects/spike.ts
- └── trophy.ts:1 → src/objects/trophy.ts
- └── game.ts:1 → src/scenes/game.ts
- └── pause.ts:1 → src/scenes/pause.ts
- └── preload.ts:1 → src/scenes/preload.ts
- └── result.ts:1 → src/scenes/result.ts
- └── splash.ts:1 → src/scenes/splash.ts
- └── title.ts:1 → src/scenes/title.ts
- └── assets.ts:1 → src/utils/assets.ts
- └── background.ts:1 → src/utils/background.ts
- └── ui.ts:1 → src/utils/ui.ts
+
+📁 TypeScript Files
+└── index.ts:1 → src/index.ts
+└── assets.ts:1 → src/utils/assets.ts
+└── background.ts:1 → src/utils/background.ts
+└── cherry.ts:1 → src/objects/cherry.ts
+└── flyer.ts:1 → src/objects/flyer.ts
+└── game.ts:1 → src/scenes/game.ts
+└── mushroom.ts:1 → src/objects/mushroom.ts
+└── pause.ts:1 → src/scenes/pause.ts
+└── player.ts:1 → src/objects/player.ts
+└── preload.ts:1 → src/scenes/preload.ts
+└── result.ts:1 → src/scenes/result.ts
+└── saw.ts:1 → src/objects/saw.ts
+└── spike.ts:1 → src/objects/spike.ts
+└── splash.ts:1 → src/scenes/splash.ts
+└── title.ts:1 → src/scenes/title.ts
+└── trophy.ts:1 → src/objects/trophy.ts
+└── ui.ts:1 → src/utils/ui.ts
 ```
 
 Congratulation, you've used `dependent` successfully! 🎉
@@ -109,8 +111,7 @@ Dependency name to be analyzed. Must be defined in `package.json` and installed 
 
 A list of glob patterns that specifies the directories to be analyzed. Space separated.
 
-For example, the argument below will make `dependent` to analyze all JavaScript files that dependes on `express`
-in `src` and `lib` directory.
+For example, the argument below will make `dependent` to analyze all JavaScript files that depends on `express` in `src` and `lib` directory.
 
 ```bash
 dependent express src/**/*.js lib/**/*.js
@@ -120,25 +121,25 @@ dependent express src/**/*.js lib/**/*.js
 
 ### `--help`, `-h`
 
-Show the help menu
+Show the help menu.
 
 ### `--silent`, `-s`
 
-Suppress all parsing errors.
+Suppress all parsing errors. Default: `false`
 
 ### `--table`, `-t`
 
-Outputs the result in table-style format instead of line per line format.
+Outputs the result in table-style format instead of line per line format. Default `false`
 
 ## FAQ
 
 ### My vue files cannot be parsed. Help!
 
-`dependent` will only support Vue 3 projects. If you asking me to support Vue 2, then the answer is
+`dependent` will only support Vue 3 projects. I don't plan to add Vue 2 support as Vue 3 is already stable. Feel free to create PR for this though!
 
-![No, I don't think I will](https://i.ytimg.com/vi/WIiHrfQq-bo/maxresdefault.jpg)
+### `dependent` does not support TypeScript on Svelte files!
 
-Vue 3 is already stable, there's no reason to support Vue 2 at all. Feel free to create PR for this though!
+Svelte compiler won't parse anything that is not a JavaScript. Technically, this can be mitigated by doing preprocessing steps like compilation or transpilation. However, this may lead to inaccurate analysis as the code changes which leads to line number changes. We are still looking for the best solution for this.
 
 ## Motivation
 
