@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 
 import { getDependantFiles } from '../src/import';
-import { ProjectFile } from './../src/types';
+import { ProjectFile } from './../src/constants/types';
 
 jest.useFakeTimers();
 
