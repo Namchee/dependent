@@ -1,3 +1,15 @@
+# v0.10.0 (Sat Sep 04 2021)
+
+#### 🚀 Enhancement
+
+- feat: Add categorized logging to dependant files [#42](https://github.com/Namchee/dependent/pull/42) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.9.0 (Wed Sep 01 2021)
 
 #### 🚀 Enhancement
