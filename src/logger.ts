@@ -64,7 +64,7 @@ function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
  * @param {DependantFile[]} files Dependant files
  */
 function logTable(files: DependantFile[]): void {
-  const tableFriendlyObjects = files.map((file) => {
+  const tableFriendlyFiles = files.map((file) => {
     return {
       'File name': file.name,
       'File path': file.path,
@@ -72,27 +72,27 @@ function logTable(files: DependantFile[]): void {
     };
   });
 
-  console.table(tableFriendlyObjects);
+  console.table(tableFriendlyFiles);
 }
 
 /**
  * Outputs all dependant files to `stdout` in line-per-line
  * format.
  *
- * @param {DependantFile[]} files Dependant files
+ * @param {DependantFile[]} files Dependant files.
  */
 function logLines(files: DependantFile[]): void {
   files.forEach(({ name, path, lineNumbers }) => {
     console.log(
       chalk.cyan(
-        ` └── ${name}:${lineNumbers.join(', ')} → ${path}`,
+        `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
       ),
     )
   });
 }
 
 /**
- * Outputs all dependant files to `stdout`
+ * Outputs all dependant files to `stdout` with `console`
  *
  * @param {DependantFile[]} files Dependant files
  * @param {string} dependency Package name
@@ -111,9 +111,18 @@ export function showDependantFiles(
     ),
   );
 
-  const fileMaps = categorize(files);
-
   if (files.length) {
-    table ? logTable(files) : logLines(files);
+    console.log(); // new line
+    const fileMaps = categorize(files);
+
+    for (const [ext, files] of Object.entries(fileMaps)) {
+      const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
+
+      if (files.length) {
+        console.log(`📁 ${alias}`);
+        table ? logTable(files) : logLines(files);
+        console.log(); // empty lines
+      }
+    }
   }
 }

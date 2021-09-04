@@ -8,6 +8,6 @@ export const FILE_TYPES = {
   jsx: 'React\'s Extended JavaScript Files',
   ts: 'TypeScript Files',
   tsx: 'React\'s TypeScript Component',
-  vue: 'Vue Single File Component',
-  svelte: 'Svelte Single File Component',
+  vue: 'Vue\'s Single File Component',
+  svelte: 'Svelte\'s Single File Component',
 };
