@@ -1,9 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { getDependantFiles } from '@/service/import';
 import { ProjectFile } from '@/constant/types';
 
 describe('Parser tolerance test', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  })
+
   it('should throw an error when silent is false', () => {
     const files: ProjectFile[] = [
       {
