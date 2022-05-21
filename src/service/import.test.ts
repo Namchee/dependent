@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
-import { getDependantFiles } from '../src/import';
-import { ProjectFile } from './../src/constants/types';
+import { getDependantFiles } from '@/service/import';
+import { ProjectFile } from '@/constant/types';
 
 describe('Parser tolerance test', () => {
   it('should throw an error when silent is false', () => {

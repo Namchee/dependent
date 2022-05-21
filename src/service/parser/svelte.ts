@@ -43,7 +43,7 @@ try {
       break;
     }
   }
-} catch (err) {
+} catch (_) {
   /* ignore for now */
 }
 
@@ -73,6 +73,7 @@ export function parseNode(sourceNode: BaseNode, dependency: string): number[] {
 
           break;
         }
+
         case 'ImportExpression': {
           const importExpr = node as ImportExpression;
 
@@ -100,6 +101,8 @@ export function parseNode(sourceNode: BaseNode, dependency: string): number[] {
 
           break;
         }
+
+        default: break;
       }
     }
   })
@@ -125,7 +128,7 @@ export async function getSvelteImportLines(
 
   const node = svelte.parse(content);
   return [
-    ...parseNode(node.instance, dependency),
-    ...parseNode(node.module, dependency),
+    ...parseNode(node.instance as BaseNode, dependency),
+    ...parseNode(node.module as BaseNode, dependency),
   ];
 }

@@ -61,8 +61,8 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
     },
   }, {
     ...base,
-    JSXElement: () => {
-      // empty
+    JSXElement() {
+      // Empty
     },
   });
 

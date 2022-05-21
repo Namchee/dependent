@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getJSImportLines } from '../../src/parser/js';
+import { getJSImportLines } from '@/service/parser/js';
 
 describe('ESModule import test', () => {
   it('should be able to parse default imports', async () => {

@@ -3,12 +3,13 @@
 import ora from 'ora';
 import chalk from 'chalk';
 
-import { cli } from './cli';
+import { cli } from '@/cli';
 
-import { isDefined, isInstalled, resolvePackageJSON } from './package';
-import { getProjectFiles } from './file';
-import { getDependantFiles } from './import';
-import { showDependantFiles } from './logger';
+import { isDefined, isInstalled, resolvePackageJSON } from '@/service/package';
+import { getProjectFiles } from '@/service/file';
+
+import { getDependantFiles } from './service/import';
+import { showDependantFiles } from './service/log';
 
 (async () => {
   const args = cli.parseSync();
@@ -20,8 +21,8 @@ import { showDependantFiles } from './logger';
     spinner.text = chalk.greenBright('Scanning project directory...');
 
     const projectDef = resolvePackageJSON();
-    const silent = args.silent;
-    const table = args.table;
+    const { silent } = args;
+    const { table } = args;
 
     spinner.text = chalk.greenBright('Checking package installation...');
 

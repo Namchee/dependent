@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getVueImportLines } from '../../src/parser/vue';
+import { getVueImportLines } from '@/service/parser/vue';
 
 describe('Vue parser test', () => {
   it('should be able to parse ES module import', async () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getTSImportLines } from '../../src/parser/ts';
+import { getTSImportLines } from '@/service/parser/ts';
 
 describe('TypeScript parser test', () =>{
   it('should be able to parse ES modules import', async () =>{

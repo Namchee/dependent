@@ -39,7 +39,7 @@ try {
       break;
     }
   }
-} catch (err) {
+} catch (_) {
   /* ignore for now */
 }
 
@@ -97,6 +97,8 @@ function parseNode(sourceNode: SourceFile, dependency: string): number[] {
 
         break;
       }
+
+      default: break;
     }
 
     ts.forEachChild(node, walk);

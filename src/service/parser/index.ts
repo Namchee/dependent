@@ -1,9 +1,9 @@
-import { FileParser } from '../constants/types';
+import { FileParser } from '@/constant/types';
 
-import { getJSImportLines } from './js';
-import { getSvelteImportLines } from './svelte';
-import { getTSImportLines } from './ts';
-import { getVueImportLines } from './vue';
+import { getJSImportLines } from '@/service/parser/js';
+import { getSvelteImportLines } from '@/service/parser/svelte';
+import { getTSImportLines } from '@/service/parser/ts';
+import { getVueImportLines } from '@/service/parser/vue';
 
 /**
  * Extension to parser map. Make sure to register the function here

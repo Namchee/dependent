@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { cli } from './../src/cli';
+import { cli } from '@/cli';
 
 describe('CLI test', () => {
   it('should be able to accomodate simple usage', () => {

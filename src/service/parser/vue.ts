@@ -39,7 +39,7 @@ try {
       break;
     }
   }
-} catch (err) {
+} catch (_) {
   /* ignore for now */
 }
 

@@ -1,12 +1,12 @@
 import chalk from 'chalk';
 
-import { getParser } from './parser';
+import { getParser } from '@/service/parser';
 
 import type {
   DependantFile,
   ParserOptions,
   ProjectFile,
-} from './constants/types';
+} from '@/constant/types';
 
 /**
  * Analyze all relevant files for imports to `dependency`
@@ -54,20 +54,21 @@ export async function getDependantFiles(
   if (!silent) {
     const results = await Promise.all(dependants);
     return results.filter(val => val !== null) as DependantFile[];
-  } else {
-    const rawResults = await Promise.allSettled(dependants);
-    const results = [];
-
-    for (const result of rawResults) {
-      if (result.status === 'rejected') {
-        console.log(
-          chalk.yellow(result.reason),
-        );
-      } else if (result.value) {
-        results.push(result.value);
-      }
-    }
-
-    return results;
   }
+
+  const rawResults = await Promise.allSettled(dependants);
+  const results = [];
+
+  for (const result of rawResults) {
+    if (result.status === 'rejected') {
+      console.log(
+        chalk.yellow(result.reason),
+      );
+    } else if (result.value) {
+      results.push(result.value);
+    }
+  }
+
+  return results;
+
 }

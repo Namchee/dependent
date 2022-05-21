@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { existsSync, readFileSync } from 'fs';
 import { spawn } from 'child_process';
 
-import { ProjectDefinition } from './constants/types';
+import { ProjectDefinition } from '../constant/types';
 
 /**
  * Get all information of the project from `package.json`
@@ -12,10 +12,8 @@ import { ProjectDefinition } from './constants/types';
 export function resolvePackageJSON(): ProjectDefinition {
   const path = resolve(process.cwd(), 'package.json');
 
-  // check the existence of package.json or in layman terms,
-  // is the current workdir a NodeJS project directory?
+  // Check package.json existence
   if (!existsSync(path)) {
-    // eslint-disable-next-line max-len
     throw new Error(
       'The current project directory is not a NodeJS-based project',
     );
@@ -31,7 +29,9 @@ export function resolvePackageJSON(): ProjectDefinition {
       peerDependencies: projectDef.peerDependencies,
     };
   } catch (err) {
-    throw new Error('Invalid package.json schema');
+    const { message } = err as Error;
+
+    throw new Error(`Failed to read package.json: ${message}`);
   }
 }
 
