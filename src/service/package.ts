@@ -70,17 +70,19 @@ export function isInstalled(
     const lsCheck = spawn(
       /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
       ['ls', dependency],
-    )
+    );
 
-    lsCheck.stdout.on('data', (data) => {
+    lsCheck.stdout.on('data', (data: string) => {
       const isInstalled = data.includes(dependency) &&
         data.lastIndexOf(dependency) !== 0;
 
-      isInstalled ?
-        resolve() :
-        reject(
-          new Error(`Package ${dependency} is not installed in this project`),
-        );
+      if (isInstalled) {
+        resolve();
+      }
+
+      reject(
+        new Error(`Package ${dependency} is not installed in this project`),
+      );
     });
   });
 }
