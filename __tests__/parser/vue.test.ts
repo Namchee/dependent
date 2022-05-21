@@ -1,12 +1,6 @@
-import { jest } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 import { getVueImportLines } from '../../src/parser/vue';
-
-jest.useFakeTimers();
-
-afterEach(() => {
-  jest.clearAllTimers();
-});
 
 describe('Vue parser test', () => {
   it('should be able to parse ES module import', async () => {
@@ -315,7 +309,7 @@ describe('Vue parser test', () => {
   });
 
   it('should be able to parse class components', async () => {
-    // straightly copy pasted from class component example
+    // Straightly copy pasted from class component example
     const content = `<template>
       <div>
         <button v-on:click="decrement">-</button>

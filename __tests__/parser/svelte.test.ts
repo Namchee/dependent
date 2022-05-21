@@ -1,12 +1,6 @@
-import { jest } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 import { getSvelteImportLines } from './../../src/parser/svelte';
-
-jest.useFakeTimers();
-
-afterEach(() => {
-  jest.clearAllTimers();
-});
 
 describe('Svelte parser test', () => {
   it('should be able to parse ES module import', async () => {

@@ -1,13 +1,7 @@
-import { jest } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 import { getDependantFiles } from '../src/import';
 import { ProjectFile } from './../src/constants/types';
-
-jest.useFakeTimers();
-
-afterEach(() => {
-  jest.clearAllTimers();
-});
 
 describe('Parser tolerance test', () => {
   it('should throw an error when silent is false', () => {

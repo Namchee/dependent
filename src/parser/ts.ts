@@ -75,7 +75,7 @@ function parseNode(sourceNode: SourceFile, dependency: string): number[] {
       case ts.SyntaxKind.CallExpression: {
         const callExpr = node as CallExpression;
 
-        const expression = callExpr.expression;
+        const { expression } = callExpr;
         const child = callExpr.arguments;
 
         const isImport = expression.kind === ts.SyntaxKind.ImportKeyword &&
