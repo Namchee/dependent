@@ -1,5 +1,6 @@
-import globalDirectories from 'global-dirs';
-import path from 'path';
+import { resolve } from 'path';
+
+import globalDirs from 'global-dirs';
 
 import { getParser } from '.';
 
@@ -12,23 +13,14 @@ try {
     'dist',
     'compiler-sfc.cjs.js',
   ];
-  const localPath = new URL(
-    path.posix.resolve('node_modules', ...basePath),
-    import.meta.url,
-  );
-  const npmPath = new URL(
-    path.posix.resolve(globalDirectories.npm.packages, ...basePath),
-    import.meta.url,
-  );
-  const yarnPath = new URL(
-    path.posix.resolve(globalDirectories.yarn.packages, ...basePath),
-    import.meta.url,
-  );
+  const localPath = resolve(process.cwd(), 'node_modules', ...basePath);
+  const npmPath = resolve(globalDirs.npm.packages, ...basePath);
+  const yarnPath = resolve(globalDirs.yarn.packages, ...basePath);
 
   const imports = await Promise.allSettled([
-    import(localPath.toString()),
-    import(npmPath.toString()),
-    import(yarnPath.toString()),
+    import(localPath),
+    import(npmPath),
+    import(yarnPath),
   ]);
 
   for (let i = 0; i < imports.length; i++) {

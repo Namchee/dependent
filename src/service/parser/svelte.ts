@@ -1,5 +1,6 @@
-import globalDirectories from 'global-dirs';
-import path from 'path';
+import { resolve } from 'path';
+
+import globalDirs from 'global-dirs';
 
 import type {
   ImportDeclaration,
@@ -12,27 +13,15 @@ import type { BaseNode } from 'estree-walker';
 let svelte: typeof import('svelte/compiler');
 
 try {
-  const baseCompilerPath = [
-    'svelte',
-    'compiler.js',
-  ];
-  const localCompilerPath = new URL(
-    path.posix.resolve('node_modules', ...baseCompilerPath),
-    import.meta.url,
-  );
-  const npmCompilerPath = new URL(
-    path.posix.resolve(globalDirectories.npm.packages, ...baseCompilerPath),
-    import.meta.url,
-  );
-  const yarnCompilerPath = new URL(
-    path.posix.resolve(globalDirectories.yarn.packages, ...baseCompilerPath),
-    import.meta.url,
-  );
+  const basePath = ['svelte', 'compiler.js'];
+  const localPath = resolve(process.cwd(), 'node_modules', ...basePath);
+  const npmPath = resolve(globalDirs.npm.packages, ...basePath);
+  const yarnPath = resolve(globalDirs.yarn.packages, ...basePath);
 
   const compilerImports = await Promise.allSettled([
-    import(localCompilerPath.toString()),
-    import(npmCompilerPath.toString()),
-    import(yarnCompilerPath.toString()),
+    import(localPath),
+    import(npmPath),
+    import(yarnPath),
   ]);
 
   for (let i = 0; i < compilerImports.length; i++) {
