@@ -1,39 +1,59 @@
 import { resolve } from 'path';
-
-import globalDirs from 'global-dirs';
+import { pathToFileURL } from 'url';
 
 import { getParser } from '.';
 
-let vue: typeof import('@vue/compiler-sfc');
+import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
 
-try {
-  const basePath = [
+let compiler: typeof import('@vue/compiler-sfc');
+
+/**
+ * Get available Vue 3 compiler. Will prioritize locally-installed
+ * compiler instead of the global one.
+ *
+ * @returns {Promise<typeof compiler>} Vue 3 compiler
+ */
+async function getCompiler(): Promise<typeof compiler> {
+  if (compiler) {
+    return compiler;
+  }
+
+  const compilerPath = [
     '@vue',
     'compiler-sfc',
     'dist',
     'compiler-sfc.cjs.js',
-  ];
-  const localPath = resolve(process.cwd(), 'node_modules', ...basePath);
-  const npmPath = resolve(globalDirs.npm.packages, ...basePath);
-  const yarnPath = resolve(globalDirs.yarn.packages, ...basePath);
+  ];;
+  const globalManagerPath = await Promise.all([
+    getGlobalNPMPath(),
+    getGlobalYarnPath(),
+    getGlobalPnpmPath(),
+  ]);
+
+  const localPath = resolve(process.cwd(), 'node_modules', ...compilerPath);
+  const npmPath = resolve(globalManagerPath[0], ...compilerPath);
+  const yarnPath = resolve(globalManagerPath[1], ...compilerPath);
+  const pnpmPath = resolve(globalManagerPath[2], ...compilerPath);
 
   const imports = await Promise.allSettled([
-    import(localPath),
-    import(npmPath),
-    import(yarnPath),
+    import(pathToFileURL(localPath).toString()),
+    import(pathToFileURL(npmPath).toString()),
+    import(pathToFileURL(yarnPath).toString()),
+    import(pathToFileURL(pnpmPath).toString()),
   ]);
 
   for (let i = 0; i < imports.length; i++) {
-    const impor = imports[i];
+    const fileModule = imports[i];
 
-    if (impor.status === 'fulfilled') {
-      vue = impor.value.default as typeof import('@vue/compiler-sfc');
+    if (fileModule.status === 'fulfilled') {
+      compiler = fileModule.value.default as typeof import('@vue/compiler-sfc');
       break;
     }
   }
-} catch (_) {
-  /* ignore for now */
+
+  return compiler;
 }
+
 
 /**
  * Analyze Vue file for all imports to `dependency`
@@ -47,8 +67,9 @@ export async function getVueImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
+  const vue = await getCompiler();
   if (!vue) {
-    throw new Error('No Vue parsers available');
+    throw new Error('No Vue 3 parsers available');
   }
 
   const node = vue.parse(content);
@@ -56,9 +77,6 @@ export async function getVueImportLines(
 
   if (script) {
     const startingLine = script.loc.start.line;
-    if (script.lang === 'vue') {
-      throw new Error('Circular parser dependency');
-    }
 
     const parser = getParser(script.lang || 'js');
 

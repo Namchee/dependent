@@ -1,6 +1,5 @@
 import { resolve } from 'path';
-
-import globalDirs from 'global-dirs';
+import { pathToFileURL } from 'url';
 
 import type {
   ImportDeclaration,
@@ -8,43 +7,63 @@ import type {
   CallExpression,
   SourceLocation
 } from 'estree';
+
+import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
+
 import type { BaseNode } from 'estree-walker';
 
-let svelte: typeof import('svelte/compiler');
+let compiler: typeof import('svelte/compiler');
 
-try {
-  const basePath = ['svelte', 'compiler.js'];
-  const localPath = resolve(process.cwd(), 'node_modules', ...basePath);
-  const npmPath = resolve(globalDirs.npm.packages, ...basePath);
-  const yarnPath = resolve(globalDirs.yarn.packages, ...basePath);
+/**
+ * Get available Svelte compiler. Will priori
+ */
+async function getCompiler(): Promise<typeof compiler> {
+  const compilerPath = ['svelte', 'compiler.js'];
+
+  const globalManagerPath = await Promise.all([
+    getGlobalNPMPath(),
+    getGlobalYarnPath(),
+    getGlobalPnpmPath(),
+  ]);
+
+  const localPath = resolve(process.cwd(), 'node_modules', ...compilerPath);
+  const npmPath = resolve(globalManagerPath[0], ...compilerPath);
+  const yarnPath = resolve(globalManagerPath[1], ...compilerPath);
+  const pnpmPath = resolve(globalManagerPath[2], ...compilerPath);
 
   const compilerImports = await Promise.allSettled([
-    import(localPath),
-    import(npmPath),
-    import(yarnPath),
+    import(pathToFileURL(localPath).toString()),
+    import(pathToFileURL(npmPath).toString()),
+    import(pathToFileURL(yarnPath).toString()),
+    import(pathToFileURL(pnpmPath).toString()),
   ]);
 
   for (let i = 0; i < compilerImports.length; i++) {
-    const impor = compilerImports[i];
+    const fileModule = compilerImports[i];
 
-    if (impor.status === 'fulfilled') {
-      svelte = impor.value.default as typeof import('svelte/compiler');
+    if (fileModule.status === 'fulfilled') {
+      compiler = fileModule.value.default as typeof import('svelte/compiler');
       break;
     }
   }
-} catch (_) {
-  /* ignore for now */
+
+  return compiler;
 }
 
 /**
  * Parse native JavaScript nodes for imports to `dependency`
  *
+ * @param {typeof compiler} svelte svelte compiler
  * @param {Node} sourceNode AST representation of the file
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function parseNode(sourceNode: BaseNode, dependency: string): number[] {
+export function parseNode(
+  svelte: typeof compiler,
+  sourceNode: BaseNode,
+  dependency: string,
+): number[] {
   const lines: number[] = [];
 
   svelte.walk(sourceNode, {
@@ -111,13 +130,14 @@ export async function getSvelteImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
-  if (!svelte) {
+  const compiler = await getCompiler();
+  if (!compiler) {
     throw new Error('No Svelte parsers available');
   }
 
-  const node = svelte.parse(content);
+  const node = compiler.parse(content);
   return [
-    ...parseNode(node.instance as BaseNode, dependency),
-    ...parseNode(node.module as BaseNode, dependency),
+    ...parseNode(compiler, node.instance as BaseNode, dependency),
+    ...parseNode(compiler, node.module as BaseNode, dependency),
   ];
 }

@@ -7,6 +7,7 @@ describe('CLI test', () => {
     const args = cli.parseSync('express');
 
     expect(args.package).toBe('express');
+    expect(args.precheck).toBe(true);
   });
 
   it('should be able to parse file pattern option', () => {
@@ -14,6 +15,7 @@ describe('CLI test', () => {
 
     expect(args.package).toBe('express');
     expect(args.files).toContain('src/**/*.js');
+    expect(args.precheck).toBe(true);
   });
 
   it('should be able to parse multi file patterns option', () => {
@@ -31,11 +33,39 @@ describe('CLI test', () => {
     expect(args.silent).toBe(true);
   });
 
+  it('should be able to parse silent option in alias', () => {
+    const args = cli.parseSync('express -s');
+
+    expect(args.package).toBe('express');
+    expect(args.silent).toBe(true);
+  });
+
   it('should be able to parse table option', () => {
     const args = cli.parseSync('express --table');
 
     expect(args.package).toBe('express');
     expect(args.table).toBe(true);
+  });
+
+  it('should be able to parse table option in alias', () => {
+    const args = cli.parseSync('express -t');
+
+    expect(args.package).toBe('express');
+    expect(args.table).toBe(true);
+  });
+
+  it('should be able to parse precheck option', () => {
+    const args = cli.parseSync('express --precheck=false');
+
+    expect(args.package).toBe('express');
+    expect(args.precheck).toBe(false);
+  });
+
+  it('should be able to parse precheck option', () => {
+    const args = cli.parseSync('express -c=false');
+
+    expect(args.package).toBe('express');
+    expect(args.precheck).toBe(false);
   });
 
   it('should be able to accomodate complex usage', () => {

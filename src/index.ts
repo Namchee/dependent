@@ -20,14 +20,15 @@ import { showDependantFiles } from './service/log';
 
     spinner.text = chalk.greenBright('Scanning project directory...');
 
-    const projectDef = resolvePackageJSON();
     const { silent } = args;
     const { table } = args;
 
     spinner.text = chalk.greenBright('Checking package installation...');
 
-    isDefined(dependency, projectDef);
-    await isInstalled(dependency);
+    if (args.precheck) {
+      isDefined(dependency, resolvePackageJSON());
+      await isInstalled(dependency);
+    }
 
     const files = getProjectFiles(args.files, silent);
 

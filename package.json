@@ -17,8 +17,6 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "rollup -c rollup.config.js",
-    "build:no-minify": "tsc",
-    "build:watch": "rollup -c rollup.config.js -w",
     "test": "vitest"
   },
   "dependencies": {

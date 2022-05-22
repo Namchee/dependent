@@ -1,6 +1,5 @@
 import { resolve } from 'path';
-
-import globalDirs from 'global-dirs';
+import { pathToFileURL } from 'url';
 
 import type {
   SourceFile,
@@ -9,41 +8,66 @@ import type {
   CallExpression,
 } from 'typescript';
 
-let ts: typeof import('typescript');
+import { getGlobalNPMPath, getGlobalPnpmPath, getGlobalYarnPath } from '@/utils/global';
 
-try {
-  const basePath = ['typescript', 'lib', 'typescript.js'];
-  const localPath = resolve(process.cwd(), 'node_modules', ...basePath);
-  const npmPath = resolve(globalDirs.npm.packages, ...basePath);
-  const yarnPath = resolve(globalDirs.yarn.packages, ...basePath);
+let compiler: typeof import('typescript');
+
+/**
+ * Get available TypeScript compiler. Will prioritize locally-installed
+ * compiler instead of the global one.
+ *
+ * @returns {Promise<typeof compiler>} Typescript compiler
+ */
+async function getCompiler(): Promise<typeof compiler> {
+  if (compiler) {
+    return compiler;
+  }
+
+  const compilerPath = ['typescript', 'lib', 'typescript.js'];
+  const globalManagerPath = await Promise.all([
+    getGlobalNPMPath(),
+    getGlobalYarnPath(),
+    getGlobalPnpmPath(),
+  ]);
+
+  const localPath = resolve(process.cwd(), 'node_modules', ...compilerPath);
+  const npmPath = resolve(globalManagerPath[0], ...compilerPath);
+  const yarnPath = resolve(globalManagerPath[1], ...compilerPath);
+  const pnpmPath = resolve(globalManagerPath[2], ...compilerPath);
 
   const imports = await Promise.allSettled([
-    import(localPath),
-    import(npmPath),
-    import(yarnPath),
+    import(pathToFileURL(localPath).toString()),
+    import(pathToFileURL(npmPath).toString()),
+    import(pathToFileURL(yarnPath).toString()),
+    import(pathToFileURL(pnpmPath).toString()),
   ]);
 
   for (let i = 0; i < imports.length; i++) {
-    const impor = imports[i];
+    const fileModule = imports[i];
 
-    if (impor.status === 'fulfilled') {
-      ts = impor.value.default as typeof import('typescript');
+    if (fileModule.status === 'fulfilled') {
+      compiler = fileModule.value.default as typeof import('typescript');
       break;
     }
   }
-} catch (_) {
-  /* ignore for now */
+
+  return compiler;
 }
 
 /**
  * Parse TypeScript node for imports to `dependency`
  *
+ * @param {typeof compiler} ts typescript compiler
  * @param {SourceFile} sourceNode AST representation of the file
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-function parseNode(sourceNode: SourceFile, dependency: string): number[] {
+function parseNode(
+  ts: typeof compiler,
+  sourceNode: SourceFile,
+  dependency: string,
+): number[] {
   const lineNumbers: number[] = [];
 
   const walk = (node: Node) => {
@@ -113,17 +137,18 @@ export async function getTSImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
-  if (!ts) {
+  const compiler = await getCompiler();
+  if (!compiler) {
     throw new Error('No Typescript parsers available');
   }
 
-  const node = ts.createSourceFile(
+  const node = compiler.createSourceFile(
     '',
     content,
-    ts.ScriptTarget.Latest,
+    compiler.ScriptTarget.Latest,
     true,
-    ts.ScriptKind.TSX,
+    compiler.ScriptKind.TSX,
   );
 
-  return parseNode(node, dependency);
+  return parseNode(compiler, node, dependency);
 }

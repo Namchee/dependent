@@ -1,8 +1,35 @@
 import { resolve } from 'path';
 import { existsSync, readFileSync } from 'fs';
-import { spawn } from 'child_process';
 
-import { ProjectDefinition } from '../constant/types';
+import { executeCommand } from '@/utils/cmd';
+
+import { ProjectDefinition } from '@/constant/types';
+
+type PackageManager = 'npm' | 'yarn' | 'pnpm';
+const pmCommands: Record<PackageManager, string> = {
+  npm: 'ls',
+  pnpm: 'ls',
+  yarn: 'why',
+}
+
+/**
+ * Get the current package manager used in the current project
+ *
+ * @returns {PackageManager} package manager
+ */
+function getPackageManager(): PackageManager {
+  const npmPath = resolve(process.cwd(), 'package-lock.json');
+  if (existsSync(npmPath)) {
+    return 'npm';
+  }
+
+  const yarnPath = resolve(process.cwd(), 'yarn.lock');
+  if (existsSync(yarnPath)) {
+    return 'yarn';
+  }
+
+  return 'pnpm';
+}
 
 /**
  * Get all information of the project from `package.json`
@@ -63,26 +90,22 @@ export function isDefined(
  * @returns {Promise<void>} Resolves if `dependency` is installed.
  * Rejects otherwise.
  */
-export function isInstalled(
+export async function isInstalled(
   dependency: string,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const lsCheck = spawn(
-      /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
-      ['ls', dependency],
-    );
+): Promise<boolean> {
+  let baseCommand = getPackageManager();
+  const command = pmCommands[baseCommand];
 
-    lsCheck.stdout.on('data', (data: string) => {
-      const isInstalled = data.includes(dependency) &&
-        data.lastIndexOf(dependency) !== 0;
+  if (/^win/.test(process.platform)) {
+    // Resolve windows quirks
+    baseCommand = `${baseCommand}.cmd` as PackageManager;
+  }
 
-      if (isInstalled) {
-        resolve();
-      }
+  const lsCheck = await executeCommand(
+    baseCommand,
+    [command, dependency],
+  );
 
-      reject(
-        new Error(`Package ${dependency} is not installed in this project`),
-      );
-    });
-  });
+  return lsCheck.includes(dependency) &&
+    lsCheck.lastIndexOf(dependency) !== 0;
 }
