@@ -13,4 +13,13 @@ export default {
   output: [
     { file: 'bin/index.js', format: 'es' },
   ],
+  external: [
+    'ora',
+    'chalk',
+    'glob',
+    'yargs',
+    'acorn',
+    'acorn-walk',
+    'acorn-jsx',
+  ]
 }
