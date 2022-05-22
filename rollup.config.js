@@ -14,6 +14,10 @@ export default {
     { file: 'bin/index.js', format: 'es' },
   ],
   external: [
+    'fs',
+    'path',
+    'child_process',
+    'url',
     'ora',
     'chalk',
     'glob',
