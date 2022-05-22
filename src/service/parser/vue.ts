@@ -1,9 +1,9 @@
 import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
-import { getParser } from '.';
-
 import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
+import { getTSImportLines } from '@/service/parser/ts';
+import { getJSImportLines } from '@/service/parser/js';
 
 let compiler: typeof import('@vue/compiler-sfc');
 
@@ -78,7 +78,7 @@ export async function getVueImportLines(
   if (script) {
     const startingLine = script.loc.start.line;
 
-    const parser = getParser(script.lang || 'js');
+    const parser = script.lang === 'ts' ? getTSImportLines : getJSImportLines;
 
     const lines = await parser(script.content, dependency);
     // -1, since the `<script>` block shouldn't count
