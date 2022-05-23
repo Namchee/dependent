@@ -1,8 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import { getVueImportLines } from '@/service/parser/vue';
+import { getVueImportLines, loadVueCompiler } from '@/service/parser/vue';
+import { loadTSCompiler } from './ts';
 
 describe('Vue parser test', () => {
+  beforeAll(async () => {
+    await loadTSCompiler();
+    await loadVueCompiler();
+  });
+
   it('should be able to parse ES module import', async () => {
     const content = `<script>
     import Vue from 'vue';

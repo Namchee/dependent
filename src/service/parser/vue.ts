@@ -11,11 +11,13 @@ let compiler: typeof import('@vue/compiler-sfc');
  * Get available Vue 3 compiler. Will prioritize locally-installed
  * compiler instead of the global one.
  *
- * @returns {Promise<typeof compiler>} Vue 3 compiler
+ * @returns {Promise<void>}
  */
-async function getCompiler(): Promise<typeof compiler> {
+export async function loadVueCompiler(): Promise<void> {
+  console.log('Load Vue compiler');
+  // Do not load the compiler twice
   if (compiler) {
-    return compiler;
+    return;
   }
 
   const compilerPath = [
@@ -47,13 +49,12 @@ async function getCompiler(): Promise<typeof compiler> {
 
     if (fileModule.status === 'fulfilled') {
       compiler = fileModule.value.default as typeof import('@vue/compiler-sfc');
-      break;
+      return;
     }
   }
 
-  return compiler;
+  throw new Error('No Vue 3 parser available');
 }
-
 
 /**
  * Analyze Vue file for all imports to `dependency`
@@ -67,12 +68,11 @@ export async function getVueImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
-  const vue = await getCompiler();
-  if (!vue) {
-    throw new Error('No Vue 3 parsers available');
+  if (!compiler) {
+    throw new Error('Vue 3 compiler has not been loaded yet');
   }
 
-  const node = vue.parse(content);
+  const node = compiler.parse(content);
   const script = node.descriptor.script ?? node.descriptor.scriptSetup;
 
   if (script) {

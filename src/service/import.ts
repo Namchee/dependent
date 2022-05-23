@@ -1,12 +1,13 @@
 import chalk from 'chalk';
 
-import { getParser } from '@/service/parser';
+import { getCompiler, getParser } from '@/service/parser';
 
 import type {
   DependantFile,
   ParserOptions,
   ProjectFile,
 } from '@/constant/types';
+import { FILE_TYPES } from '@/constant/files';
 
 /**
  * Analyze all relevant files for imports to `dependency`
@@ -23,6 +24,25 @@ export async function getDependantFiles(
   dependency: string,
   { silent }: ParserOptions,
 ): Promise<DependantFile[]> {
+  const compilers = files.map((file) => {
+    let ext = file.name.split('.').pop() as string;
+
+    if (ext === 'mjs') {
+      ext = 'js';
+    }
+
+    return ext;
+  }).filter(ext => ext !== 'js').map((ext: string) => {
+    try {
+      return getCompiler(ext)();
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(`Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`);
+    }
+  });
+
+  await Promise.all(compilers);
+
   const dependants: Promise<DependantFile | null>[] = files.map(
     async (file) => {
       try {

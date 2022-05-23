@@ -23,9 +23,9 @@ import { showDependantFiles } from './service/log';
     const { silent } = args;
     const { table } = args;
 
-    spinner.text = chalk.greenBright('Checking package installation...');
-
     if (args.precheck) {
+      spinner.text = chalk.greenBright('Checking package installation...');
+
       isDefined(dependency, resolvePackageJSON());
       await isInstalled(dependency);
     }

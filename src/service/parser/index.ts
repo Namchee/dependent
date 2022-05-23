@@ -1,15 +1,15 @@
 import { FileParser } from '@/constant/types';
 
 import { getJSImportLines } from '@/service/parser/js';
-import { getSvelteImportLines } from '@/service/parser/svelte';
-import { getTSImportLines } from '@/service/parser/ts';
-import { getVueImportLines } from '@/service/parser/vue';
+import { getSvelteImportLines, loadSvelteCompiler } from '@/service/parser/svelte';
+import { getTSImportLines, loadTSCompiler } from '@/service/parser/ts';
+import { getVueImportLines, loadVueCompiler } from '@/service/parser/vue';
 
 /**
  * Extension to parser map. Make sure to register the function here
  * when a new parser is added.
  */
-const PARSER_FUNCTIONS: Record<string, FileParser> = {
+const PARSER_MAP: Record<string, FileParser> = {
   js: getJSImportLines,
   ts: getTSImportLines,
   jsx: getJSImportLines,
@@ -18,8 +18,15 @@ const PARSER_FUNCTIONS: Record<string, FileParser> = {
   svelte: getSvelteImportLines,
 };
 
+const COMPILER_MAP: Record<string, () => Promise<void> >  = {
+  ts: loadTSCompiler,
+  tsx: loadTSCompiler,
+  vue: loadVueCompiler,
+  svelte: loadSvelteCompiler,
+};
+
 /**
- * Get the correct parser function for a file extension
+ * Get the parser function for a file extension
  *
  * @param {string} ext File extension
  * @returns {FileParser} Parser function
@@ -27,9 +34,23 @@ const PARSER_FUNCTIONS: Record<string, FileParser> = {
  * is not supported yet.
  */
 export function getParser(ext: string): FileParser {
-  if (!(ext in PARSER_FUNCTIONS)) {
+  if (!(ext in PARSER_MAP)) {
     throw new Error(`.${ext} files are currently not supported`);
   }
 
-  return PARSER_FUNCTIONS[ext];
+  return PARSER_MAP[ext];
+}
+
+/**
+ * Get the compiler for a file extension
+ *
+ * @param {string} ext file extension
+ * @returns {() => Promise<void>} loader function
+ */
+export function getCompiler(ext: string): () => Promise<void> {
+  if (!(ext in COMPILER_MAP)) {
+    throw new Error(`.${ext} files are currently not supported`);
+  }
+
+  return COMPILER_MAP[ext];
 }

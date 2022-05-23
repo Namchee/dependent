@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import { getTSImportLines } from '@/service/parser/ts';
+import { getTSImportLines, loadTSCompiler } from '@/service/parser/ts';
 
-describe('TypeScript parser test', () =>{
+describe('TypeScript parser test', () => {
+  beforeAll(async () => {
+    await loadTSCompiler();
+  });
+
   it('should be able to parse ES modules import', async () =>{
     const content = `import express from 'express';`;
 

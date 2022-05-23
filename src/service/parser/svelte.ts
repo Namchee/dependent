@@ -15,9 +15,17 @@ import type { BaseNode } from 'estree-walker';
 let compiler: typeof import('svelte/compiler');
 
 /**
- * Get available Svelte compiler. Will priori
+ * Get available Svelte compiler. Will prioritize locally-installed
+ * compiler.
+ *
+ * @returns {Promise<void>}
  */
-async function getCompiler(): Promise<typeof compiler> {
+export async function loadSvelteCompiler(): Promise<void> {
+  // Do not load the compiler twice
+  if (compiler) {
+    return;
+  }
+
   const compilerPath = ['svelte', 'compiler.js'];
 
   const globalManagerPath = await Promise.all([
@@ -43,11 +51,11 @@ async function getCompiler(): Promise<typeof compiler> {
 
     if (fileModule.status === 'fulfilled') {
       compiler = fileModule.value.default as typeof import('svelte/compiler');
-      break;
+      return;
     }
   }
 
-  return compiler;
+  throw new Error('No Svelte compiler available');
 }
 
 /**
@@ -130,9 +138,8 @@ export async function getSvelteImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
-  const compiler = await getCompiler();
   if (!compiler) {
-    throw new Error('No Svelte parsers available');
+    throw new Error('Svelte compiler has not been loaded');
   }
 
   const node = compiler.parse(content);

@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import { getSvelteImportLines } from '@/service/parser/svelte';
+import { getSvelteImportLines, loadSvelteCompiler } from '@/service/parser/svelte';
 
 describe('Svelte parser test', () => {
+  beforeAll(async () => {
+    await loadSvelteCompiler();
+  });
+
   it('should be able to parse ES module import', async () => {
     const content = `<script>
       import _ from 'lodash';

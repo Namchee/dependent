@@ -16,11 +16,12 @@ let compiler: typeof import('typescript');
  * Get available TypeScript compiler. Will prioritize locally-installed
  * compiler instead of the global one.
  *
- * @returns {Promise<typeof compiler>} Typescript compiler
+ * @returns {Promise<void>}
  */
-async function getCompiler(): Promise<typeof compiler> {
+export async function loadTSCompiler(): Promise<void> {
+  // Do not load the compiler twice
   if (compiler) {
-    return compiler;
+    return;
   }
 
   const compilerPath = ['typescript', 'lib', 'typescript.js'];
@@ -47,24 +48,22 @@ async function getCompiler(): Promise<typeof compiler> {
 
     if (fileModule.status === 'fulfilled') {
       compiler = fileModule.value.default as typeof import('typescript');
-      break;
+      return;
     }
   }
 
-  return compiler;
+  throw new Error('No TypeScript parsers available');
 }
 
 /**
  * Parse TypeScript node for imports to `dependency`
  *
- * @param {typeof compiler} ts typescript compiler
  * @param {SourceFile} sourceNode AST representation of the file
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
 function parseNode(
-  ts: typeof compiler,
   sourceNode: SourceFile,
   dependency: string,
 ): number[] {
@@ -72,7 +71,7 @@ function parseNode(
 
   const walk = (node: Node) => {
     switch (node.kind) {
-      case ts.SyntaxKind.ImportDeclaration: {
+      case compiler.SyntaxKind.ImportDeclaration: {
         const specifier = (node as ImportDeclaration)
           .moduleSpecifier;
 
@@ -88,21 +87,22 @@ function parseNode(
         break;
       }
 
-      case ts.SyntaxKind.CallExpression: {
+      case compiler.SyntaxKind.CallExpression: {
         const callExpr = node as CallExpression;
 
         const { expression } = callExpr;
         const child = callExpr.arguments;
 
-        const isImport = expression.kind === ts.SyntaxKind.ImportKeyword &&
+        const isImport =
+          expression.kind === compiler.SyntaxKind.ImportKeyword &&
           child.length === 1 &&
-          child[0].kind === ts.SyntaxKind.StringLiteral &&
+          child[0].kind === compiler.SyntaxKind.StringLiteral &&
           child[0].getText().slice(1, -1).split('/')[0] === dependency;
 
-        const isRequire = expression.kind === ts.SyntaxKind.Identifier &&
+        const isRequire = expression.kind === compiler.SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
-          child[0].kind === ts.SyntaxKind.StringLiteral &&
+          child[0].kind === compiler.SyntaxKind.StringLiteral &&
           child[0].getText().slice(1, -1).split('/')[0] === dependency;
 
         if (isImport || isRequire) {
@@ -117,7 +117,7 @@ function parseNode(
       default: break;
     }
 
-    ts.forEachChild(node, walk);
+    compiler.forEachChild(node, walk);
   }
 
   walk(sourceNode);
@@ -137,9 +137,8 @@ export async function getTSImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
-  const compiler = await getCompiler();
   if (!compiler) {
-    throw new Error('No Typescript parsers available');
+    throw new Error('TypeScript compiler has not been loaded');
   }
 
   const node = compiler.createSourceFile(
@@ -150,5 +149,5 @@ export async function getTSImportLines(
     compiler.ScriptKind.TSX,
   );
 
-  return parseNode(compiler, node, dependency);
+  return parseNode(node, dependency);
 }
