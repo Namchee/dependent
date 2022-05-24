@@ -20,7 +20,10 @@ export async function getGlobalNPMPath(): Promise<string> {
     /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
     ['root', '--global'],
   );
-  npmPath = path.toString().trim();
+
+  if (path) {
+    npmPath = path.toString().trim();
+  }
 
   return npmPath;
 }
@@ -39,7 +42,10 @@ export async function getGlobalYarnPath(): Promise<string> {
     /^win/.test(process.platform) ? 'yarn.cmd' : 'yarn',
     ['global', 'dir'],
   );
-  yarnPath = resolve(path.toString().trim(), 'node_modules');
+
+  if (path) {
+    yarnPath = resolve(path.toString().trim(), 'node_modules');
+  }
 
   return yarnPath;
 }
@@ -58,7 +64,10 @@ export async function getGlobalPnpmPath(): Promise<string> {
     /^win/.test(process.platform) ? 'pnpm.cmd' : 'pnpm',
     ['root', '--global'],
   );
-  pnpmPath = path.toString().trim();
+
+  if (path) {
+    pnpmPath = path.toString().trim();
+  }
 
   return pnpmPath;
 }
