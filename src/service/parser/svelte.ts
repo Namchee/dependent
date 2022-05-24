@@ -82,7 +82,7 @@ export function parseNode(
 
           if (
             importDec.source.type === 'Literal' &&
-            importDec.source.value?.toString().split('/')[0] === dependency
+            importDec.source.value?.toString().startsWith(dependency)
           ) {
             lines.push((node.loc as SourceLocation).start.line);
           }
@@ -95,7 +95,7 @@ export function parseNode(
 
           if (
             importExpr.source.type === 'Literal' &&
-            importExpr.source.value?.toString().split('/')[0] === dependency
+            importExpr.source.value?.toString().startsWith(dependency)
           ) {
             lines.push((node.loc as SourceLocation).start.line);
           }

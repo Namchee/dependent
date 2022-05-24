@@ -77,7 +77,7 @@ function parseNode(
 
         if (
           specifier.kind === 10 &&
-          specifier.getText().slice(1, -1).split('/')[0] === dependency
+          specifier.getText().startsWith(dependency)
         ) {
           lineNumbers.push(
             sourceNode.getLineAndCharacterOfPosition(node.getStart()).line + 1,
@@ -97,13 +97,13 @@ function parseNode(
           expression.kind === compiler.SyntaxKind.ImportKeyword &&
           child.length === 1 &&
           child[0].kind === compiler.SyntaxKind.StringLiteral &&
-          child[0].getText().slice(1, -1).split('/')[0] === dependency;
+          child[0].getText().startsWith(dependency)
 
         const isRequire = expression.kind === compiler.SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
           child[0].kind === compiler.SyntaxKind.StringLiteral &&
-          child[0].getText().slice(1, -1).split('/')[0] === dependency;
+          child[0].getText().startsWith(dependency);
 
         if (isImport || isRequire) {
           lineNumbers.push(

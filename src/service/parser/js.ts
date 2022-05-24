@@ -30,7 +30,7 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
 
       if (
         importExpr.source.type === 'Literal' &&
-        importExpr.source.value?.toString().split('/')[0] === dependency
+        importExpr.source.value?.toString().startsWith(dependency)
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
@@ -41,7 +41,7 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
 
       if (
         importDec.source.type === 'Literal' &&
-        importDec.source.value?.toString().split('/')[0] === dependency
+        importDec.source.value?.toString().startsWith(dependency)
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
@@ -54,7 +54,7 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
         callExpr.callee.type === 'Identifier' &&
         callExpr.callee.name === 'require' &&
         callExpr.arguments[0].type === 'Literal' &&
-        callExpr.arguments[0].value?.toString().split('/')[0] === dependency
+        callExpr.arguments[0].value?.toString().startsWith(dependency)
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
