@@ -110,7 +110,7 @@ export function parseNode(
             callExpr.callee.type === 'Identifier' &&
             callExpr.callee.name === 'require' &&
             callExpr.arguments[0].type === 'Literal' &&
-            callExpr.arguments[0].value?.toString().split('/')[0] === dependency
+            callExpr.arguments[0].value?.toString().startsWith(dependency)
           ) {
             lines.push((node.loc as SourceLocation).start.line);
           }
