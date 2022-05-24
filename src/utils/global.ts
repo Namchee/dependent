@@ -16,8 +16,6 @@ export async function getGlobalNPMPath(): Promise<string> {
     return npmPath;
   }
 
-  console.log(`path: ${npmPath}`);
-
   const path = await executeCommand(
     /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
     ['root', '--global'],

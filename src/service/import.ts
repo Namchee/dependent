@@ -9,6 +9,8 @@ import type {
 } from '@/constant/types';
 import { FILE_TYPES } from '@/constant/files';
 
+import { getFileExtension } from '@/utils/file';
+
 /**
  * Analyze all relevant files for imports to `dependency`
  *
@@ -24,20 +26,19 @@ export async function getDependantFiles(
   dependency: string,
   { silent }: ParserOptions,
 ): Promise<DependantFile[]> {
-  const compilers = files.map((file) => {
-    let ext = file.name.split('.').pop() as string;
-
-    if (ext === 'mjs') {
-      ext = 'js';
-    }
-
-    return ext;
-  }).filter(ext => ext !== 'js').map((ext: string) => {
+  const compilers = [
+    ...new Set(
+      files.map(file => getFileExtension(file))
+        .filter(ext => ext !== 'js')
+    ),
+  ].map((ext: string) => {
     try {
       return getCompiler(ext)();
     } catch (err) {
       const error = err as Error;
-      throw new Error(`Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`);
+      throw new Error(
+        `Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`,
+      );
     }
   });
 
@@ -46,11 +47,7 @@ export async function getDependantFiles(
   const dependants: Promise<DependantFile | null>[] = files.map(
     async (file) => {
       try {
-        let ext = file.name.split('.').pop() as string;
-
-        if (ext === 'mjs') {
-          ext = 'js';
-        }
+        const ext = getFileExtension(file);
 
         const parse = getParser(ext);
         const isDependant = await parse(file.content, dependency);
@@ -60,7 +57,7 @@ export async function getDependantFiles(
             name: file.name,
             path: file.path,
             lineNumbers: isDependant,
-          } as DependantFile;
+          };
         }
 
         return null;

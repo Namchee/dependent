@@ -14,7 +14,6 @@ let compiler: typeof import('@vue/compiler-sfc');
  * @returns {Promise<void>}
  */
 export async function loadVueCompiler(): Promise<void> {
-  console.log('Load Vue compiler');
   // Do not load the compiler twice
   if (compiler) {
     return;

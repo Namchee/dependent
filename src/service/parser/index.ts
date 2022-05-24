@@ -12,8 +12,6 @@ import { getVueImportLines, loadVueCompiler } from '@/service/parser/vue';
 const PARSER_MAP: Record<string, FileParser> = {
   js: getJSImportLines,
   ts: getTSImportLines,
-  jsx: getJSImportLines,
-  tsx: getTSImportLines,
   vue: getVueImportLines,
   svelte: getSvelteImportLines,
 };
