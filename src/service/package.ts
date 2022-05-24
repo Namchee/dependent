@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, stat } from 'fs';
 
 import { executeCommand } from '@/utils/cmd';
 
@@ -92,7 +92,7 @@ export function isDefined(
  */
 export async function isInstalled(
   dependency: string,
-): Promise<boolean> {
+): Promise<void> {
   let baseCommand = getPackageManager();
   const command = pmCommands[baseCommand];
 
@@ -106,6 +106,10 @@ export async function isInstalled(
     [command, dependency],
   );
 
-  return lsCheck.includes(dependency) &&
+  const status = lsCheck.includes(dependency) &&
     lsCheck.lastIndexOf(dependency) !== 0;
+
+  if (!status) {
+    throw new Error(`Package ${dependency} has not been installed in this project`)
+  }
 }
