@@ -11,6 +11,8 @@ import type {
   SourceLocation
 } from 'estree';
 
+import { getRootPackage } from '@/utils/package';
+
 const parser = Parser.extend(jsx());
 
 /**
@@ -30,7 +32,9 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
 
       if (
         importExpr.source.type === 'Literal' &&
-        importExpr.source.value?.toString().startsWith(dependency)
+        getRootPackage(
+          importExpr.source.value?.toString() as string
+        ) === dependency
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
@@ -41,7 +45,9 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
 
       if (
         importDec.source.type === 'Literal' &&
-        importDec.source.value?.toString().startsWith(dependency)
+        getRootPackage(
+          importDec.source.value?.toString() as string
+        ) === dependency
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }
@@ -54,7 +60,9 @@ function parseNode(sourceNode: Node, dependency: string): number[] {
         callExpr.callee.type === 'Identifier' &&
         callExpr.callee.name === 'require' &&
         callExpr.arguments[0].type === 'Literal' &&
-        callExpr.arguments[0].value?.toString().startsWith(dependency)
+        getRootPackage(
+          callExpr.arguments[0].value?.toString() as string
+        ) === dependency
       ) {
         lines.push((node.loc as SourceLocation).start.line);
       }

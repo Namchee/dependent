@@ -9,6 +9,7 @@ import type {
 } from 'typescript';
 
 import { getGlobalNPMPath, getGlobalPnpmPath, getGlobalYarnPath } from '@/utils/global';
+import { getRootPackage } from '@/utils/package';
 
 let compiler: typeof import('typescript');
 
@@ -77,7 +78,7 @@ function parseNode(
 
         if (
           specifier.kind === 10 &&
-          specifier.getText().slice(1, -1).startsWith(dependency)
+          getRootPackage(specifier.getText().slice(1, -1)) === dependency
         ) {
           lineNumbers.push(
             sourceNode.getLineAndCharacterOfPosition(node.getStart()).line + 1,
@@ -97,13 +98,13 @@ function parseNode(
           expression.kind === compiler.SyntaxKind.ImportKeyword &&
           child.length === 1 &&
           child[0].kind === compiler.SyntaxKind.StringLiteral &&
-          child[0].getText().slice(1, -1).startsWith(dependency)
+          getRootPackage(child[0].getText().slice(1, -1)) === dependency
 
         const isRequire = expression.kind === compiler.SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
           child[0].kind === compiler.SyntaxKind.StringLiteral &&
-          child[0].getText().slice(1, -1).startsWith(dependency);
+          getRootPackage(child[0].getText().slice(1, -1)) === dependency;
 
         if (isImport || isRequire) {
           lineNumbers.push(
