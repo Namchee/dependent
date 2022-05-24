@@ -8,9 +8,10 @@ import { spawn } from 'child_process';
  * @returns {Promise<Buffer>} output
  */
 export function executeCommand(cmd: string, args: string[]): Promise<Buffer> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const childProcess = spawn(cmd, args);
 
     childProcess.stdout.on('data', (data: Buffer) => resolve(data));
+    childProcess.on('error', () => reject(new Error('Command not found')));
   });
 }

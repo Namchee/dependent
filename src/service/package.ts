@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { existsSync, readFileSync, stat } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 
 import { executeCommand } from '@/utils/cmd';
 
