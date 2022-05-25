@@ -21,9 +21,7 @@ export async function getGlobalNPMPath(): Promise<string> {
     ['root', '--global'],
   );
 
-  if (path) {
-    npmPath = path.toString().trim();
-  }
+  npmPath = path.toString().trim();
 
   return npmPath;
 }
@@ -43,9 +41,7 @@ export async function getGlobalYarnPath(): Promise<string> {
     ['global', 'dir'],
   );
 
-  if (path) {
-    yarnPath = resolve(path.toString().trim(), 'node_modules');
-  }
+  yarnPath = resolve(path.toString().trim(), 'node_modules');
 
   return yarnPath;
 }
@@ -65,9 +61,7 @@ export async function getGlobalPnpmPath(): Promise<string> {
     ['root', '--global'],
   );
 
-  if (path) {
-    pnpmPath = path.toString().trim();
-  }
+  pnpmPath = path.toString().trim();
 
   return pnpmPath;
 }

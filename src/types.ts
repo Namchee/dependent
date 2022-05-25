@@ -33,3 +33,14 @@ export interface ProjectFile {
 export interface ParserOptions {
   silent: boolean;
 }
+
+/**
+ * Base function for all file parsers
+ */
+export type FileParser = (
+  content: string,
+  dependency: string,
+) => Promise<number[]>;
+
+// Loader function for compilers
+export type CompilerLoader = (paths: string[]) => Promise<void>;

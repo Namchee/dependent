@@ -4,7 +4,7 @@ import { getTSImportLines, loadTSCompiler } from '@/service/parser/ts';
 
 describe('TypeScript parser test', () => {
   beforeAll(async () => {
-    await loadTSCompiler();
+    await loadTSCompiler([]);
   });
 
   it('should be able to parse ES modules import', async () =>{

@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'fs';
 
 import { executeCommand } from '@/utils/cmd';
 
-import { ProjectDefinition } from '@/constant/types';
+import type { ProjectDefinition } from '@/types';
 
 type PackageManager = 'npm' | 'yarn' | 'pnpm';
 const pmCommands: Record<PackageManager, string> = {

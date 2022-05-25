@@ -1,6 +1,8 @@
 import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
+import { getRootPackage } from '@/utils/package';
+
 import type {
   SourceFile,
   Node,
@@ -8,44 +10,33 @@ import type {
   CallExpression,
 } from 'typescript';
 
-import { getGlobalNPMPath, getGlobalPnpmPath, getGlobalYarnPath } from '@/utils/global';
-import { getRootPackage } from '@/utils/package';
-
 let compiler: typeof import('typescript');
 
 /**
  * Get available TypeScript compiler. Will prioritize locally-installed
  * compiler instead of the global one.
  *
+ * @param {string[]} globs global package manager path
  * @returns {Promise<void>}
  */
-export async function loadTSCompiler(): Promise<void> {
+export async function loadTSCompiler(globs: string[]): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
   }
 
   const compilerPath = ['typescript', 'lib', 'typescript.js'];
-  const globalManagerPath = await Promise.all([
-    getGlobalNPMPath(),
-    getGlobalYarnPath(),
-    getGlobalPnpmPath(),
-  ]);
 
-  const localPath = resolve(process.cwd(), 'node_modules', ...compilerPath);
-  const npmPath = resolve(globalManagerPath[0], ...compilerPath);
-  const yarnPath = resolve(globalManagerPath[1], ...compilerPath);
-  const pnpmPath = resolve(globalManagerPath[2], ...compilerPath);
+  const paths = [
+    resolve(process.cwd(), 'node_modules', ...compilerPath),
+    ...globs.map(path => resolve(path, ...compilerPath)),
+  ];
 
-  const imports = await Promise.allSettled([
-    import(pathToFileURL(localPath).toString()),
-    import(pathToFileURL(npmPath).toString()),
-    import(pathToFileURL(yarnPath).toString()),
-    import(pathToFileURL(pnpmPath).toString()),
-  ]);
+  const imports = paths.map(path => import(pathToFileURL(path).toString()));
+  const compilerImports = await Promise.allSettled(imports);
 
-  for (let i = 0; i < imports.length; i++) {
-    const fileModule = imports[i];
+  for (let i = 0; i < compilerImports.length; i++) {
+    const fileModule = compilerImports[i];
 
     if (fileModule.status === 'fulfilled') {
       compiler = fileModule.value.default as typeof import('typescript');

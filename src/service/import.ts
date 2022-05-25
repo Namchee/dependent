@@ -6,10 +6,11 @@ import type {
   DependantFile,
   ParserOptions,
   ProjectFile,
-} from '@/constant/types';
+} from '@/types';
 import { FILE_TYPES } from '@/constant/files';
 
 import { getFileExtension } from '@/utils/file';
+import { getGlobalNPMPath, getGlobalYarnPath } from '@/utils/global';
 
 /**
  * Analyze all relevant files for imports to `dependency`
@@ -26,23 +27,7 @@ export async function getDependantFiles(
   dependency: string,
   { silent }: ParserOptions,
 ): Promise<DependantFile[]> {
-  const compilers = [
-    ...new Set(
-      files.map(file => getFileExtension(file))
-        .filter(ext => ext !== 'js')
-    ),
-  ].map((ext: string) => {
-    try {
-      return getCompiler(ext)();
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(
-        `Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`,
-      );
-    }
-  });
-
-  await Promise.all(compilers);
+  await loadCompilers(files);
 
   const dependants: Promise<DependantFile | null>[] = files.map(
     async (file) => {
@@ -87,5 +72,44 @@ export async function getDependantFiles(
   }
 
   return results;
+}
 
+/**
+ * Preload all required compilers based on file types
+ *
+ * @param {ProjectFile[]} files list of file types
+ * @returns {Promise<void>}
+ */
+async function loadCompilers(files: ProjectFile[]) {
+  const managerPaths = await Promise.allSettled([
+    getGlobalNPMPath(),
+    getGlobalYarnPath(),
+    getGlobalYarnPath(),
+  ]);
+
+  const globals = managerPaths.map((result) => {
+    if (result.status === 'fulfilled') {
+      return result.value;
+    }
+
+    return '';
+  }).filter(Boolean);
+
+  const compilers = [
+    ...new Set(
+      files.map(file => getFileExtension(file))
+        .filter(ext => ext !== 'js')
+    ),
+  ].map((ext: string) => {
+    try {
+      return getCompiler(ext)(globals);
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(
+        `Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`,
+      );
+    }
+  });
+
+  await Promise.all(compilers);
 }

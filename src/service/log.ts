@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 
 import { FILE_TYPES } from '@/constant/files';
-import { DependantFile } from '@/constant/types';
+
+import type { DependantFile } from '@/types';
 
 /**
  * Sorter function when sorting dependant files by depth

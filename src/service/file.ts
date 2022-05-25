@@ -3,7 +3,7 @@ import glob from 'glob';
 import { readFileSync } from 'fs';
 import { basename } from 'path';
 
-import { ProjectFile } from '@/constant/types';
+import type { ProjectFile } from '@/types';
 
 /**
  * Get all files in the project directory that matches

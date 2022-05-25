@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
-import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
 import { getTSImportLines } from '@/service/parser/ts';
 import { getJSImportLines } from '@/service/parser/js';
 
@@ -11,9 +10,10 @@ let compiler: typeof import('@vue/compiler-sfc');
  * Get available Vue 3 compiler. Will prioritize locally-installed
  * compiler instead of the global one.
  *
+ * @param {string[]} globs global package manager paths
  * @returns {Promise<void>}
  */
-export async function loadVueCompiler(): Promise<void> {
+export async function loadVueCompiler(globs: string[]): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
@@ -24,27 +24,18 @@ export async function loadVueCompiler(): Promise<void> {
     'compiler-sfc',
     'dist',
     'compiler-sfc.cjs.js',
-  ];;
-  const globalManagerPath = await Promise.all([
-    getGlobalNPMPath(),
-    getGlobalYarnPath(),
-    getGlobalPnpmPath(),
-  ]);
+  ];
 
-  const localPath = resolve(process.cwd(), 'node_modules', ...compilerPath);
-  const npmPath = resolve(globalManagerPath[0], ...compilerPath);
-  const yarnPath = resolve(globalManagerPath[1], ...compilerPath);
-  const pnpmPath = resolve(globalManagerPath[2], ...compilerPath);
+  const paths = [
+    resolve(process.cwd(), 'node_modules', ...compilerPath),
+    ...globs.map(path => resolve(path, ...compilerPath)),
+  ];
 
-  const imports = await Promise.allSettled([
-    import(pathToFileURL(localPath).toString()),
-    import(pathToFileURL(npmPath).toString()),
-    import(pathToFileURL(yarnPath).toString()),
-    import(pathToFileURL(pnpmPath).toString()),
-  ]);
+  const imports = paths.map(path => import(pathToFileURL(path).toString()));
+  const compilerImports = await Promise.allSettled(imports);
 
-  for (let i = 0; i < imports.length; i++) {
-    const fileModule = imports[i];
+  for (let i = 0; i < compilerImports.length; i++) {
+    const fileModule = compilerImports[i];
 
     if (fileModule.status === 'fulfilled') {
       compiler = fileModule.value.default as typeof import('@vue/compiler-sfc');

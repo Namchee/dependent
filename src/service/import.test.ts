@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { getDependantFiles } from '@/service/import';
-import { ProjectFile } from '@/constant/types';
+
+import type { ProjectFile } from '@/types';
 
 describe('Parser tolerance test', () => {
   beforeEach(() => {

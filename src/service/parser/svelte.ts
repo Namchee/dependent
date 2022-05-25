@@ -8,9 +8,8 @@ import type {
   SourceLocation
 } from 'estree';
 
-import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
-
 import type { BaseNode } from 'estree-walker';
+
 import { getRootPackage } from '@/utils/package';
 
 let compiler: typeof import('svelte/compiler');
@@ -19,33 +18,23 @@ let compiler: typeof import('svelte/compiler');
  * Get available Svelte compiler. Will prioritize locally-installed
  * compiler.
  *
+ * @param {string[]} globs global package manager paths
  * @returns {Promise<void>}
  */
-export async function loadSvelteCompiler(): Promise<void> {
+export async function loadSvelteCompiler(globs: string[]): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
   }
 
   const compilerPath = ['svelte', 'compiler.js'];
+  const paths = [
+    resolve(process.cwd(), 'node_modules', ...compilerPath),
+    ...globs.map(path => resolve(path, ...compilerPath)),
+  ];
 
-  const globalManagerPath = await Promise.all([
-    getGlobalNPMPath(),
-    getGlobalYarnPath(),
-    getGlobalPnpmPath(),
-  ]);
-
-  const localPath = resolve(process.cwd(), 'node_modules', ...compilerPath);
-  const npmPath = resolve(globalManagerPath[0], ...compilerPath);
-  const yarnPath = resolve(globalManagerPath[1], ...compilerPath);
-  const pnpmPath = resolve(globalManagerPath[2], ...compilerPath);
-
-  const compilerImports = await Promise.allSettled([
-    import(pathToFileURL(localPath).toString()),
-    import(pathToFileURL(npmPath).toString()),
-    import(pathToFileURL(yarnPath).toString()),
-    import(pathToFileURL(pnpmPath).toString()),
-  ]);
+  const imports = paths.map(path => import(pathToFileURL(path).toString()));
+  const compilerImports = await Promise.allSettled(imports);
 
   for (let i = 0; i < compilerImports.length; i++) {
     const fileModule = compilerImports[i];

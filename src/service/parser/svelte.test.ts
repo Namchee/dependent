@@ -4,7 +4,7 @@ import { getSvelteImportLines, loadSvelteCompiler } from '@/service/parser/svelt
 
 describe('Svelte parser test', () => {
   beforeAll(async () => {
-    await loadSvelteCompiler();
+    await loadSvelteCompiler([]);
   });
 
   it('should be able to parse ES module import', async () => {

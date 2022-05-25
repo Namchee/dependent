@@ -5,8 +5,8 @@ import { loadTSCompiler } from './ts';
 
 describe('Vue parser test', () => {
   beforeAll(async () => {
-    await loadTSCompiler();
-    await loadVueCompiler();
+    await loadTSCompiler([]);
+    await loadVueCompiler([]);
   });
 
   it('should be able to parse ES module import', async () => {

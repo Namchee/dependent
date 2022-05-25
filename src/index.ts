@@ -20,8 +20,7 @@ import { showDependantFiles } from './service/log';
 
     spinner.text = chalk.greenBright('Scanning project directory...');
 
-    const { silent } = args;
-    const { table } = args;
+    const { silent, table } = args;
 
     if (args.precheck) {
       spinner.text = chalk.greenBright('Checking package installation...');
