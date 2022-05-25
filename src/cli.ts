@@ -18,7 +18,6 @@ export const cli = yargs(process.argv.slice(2))
   .positional('files', {
     alias: 'f',
     type: 'string',
-    // eslint-disable-next-line max-len
     description: 'Files to be analyzed in glob pattern relative to the current project directory.',
     default: [
       '!(node_modules)/**/*.js',
@@ -40,7 +39,6 @@ export const cli = yargs(process.argv.slice(2))
   .options({
     silent: {
       alias: 's',
-      // eslint-disable-next-line max-len
       describe: 'Skip all unreadable and unparseable files instead of throwing errors',
       type: 'boolean',
       default: false,
@@ -53,4 +51,11 @@ export const cli = yargs(process.argv.slice(2))
       default: false,
       demandOption: false,
     },
+    precheck: {
+      alias: 'c',
+      describe: 'Check if the package is installed locally',
+      type: 'boolean',
+      default: true,
+      demandOption: false,
+    }
   });

@@ -1,8 +1,35 @@
 import { resolve } from 'path';
 import { existsSync, readFileSync } from 'fs';
-import { spawn } from 'child_process';
 
-import { ProjectDefinition } from './constants/types';
+import { executeCommand } from '@/utils/cmd';
+
+import type { ProjectDefinition } from '@/types';
+
+type PackageManager = 'npm' | 'yarn' | 'pnpm';
+const pmCommands: Record<PackageManager, string> = {
+  npm: 'ls',
+  pnpm: 'ls',
+  yarn: 'why',
+}
+
+/**
+ * Get the current package manager used in the current project
+ *
+ * @returns {PackageManager} package manager
+ */
+function getPackageManager(): PackageManager {
+  const npmPath = resolve(process.cwd(), 'package-lock.json');
+  if (existsSync(npmPath)) {
+    return 'npm';
+  }
+
+  const yarnPath = resolve(process.cwd(), 'yarn.lock');
+  if (existsSync(yarnPath)) {
+    return 'yarn';
+  }
+
+  return 'pnpm';
+}
 
 /**
  * Get all information of the project from `package.json`
@@ -12,10 +39,8 @@ import { ProjectDefinition } from './constants/types';
 export function resolvePackageJSON(): ProjectDefinition {
   const path = resolve(process.cwd(), 'package.json');
 
-  // check the existence of package.json or in layman terms,
-  // is the current workdir a NodeJS project directory?
+  // Check package.json existence
   if (!existsSync(path)) {
-    // eslint-disable-next-line max-len
     throw new Error(
       'The current project directory is not a NodeJS-based project',
     );
@@ -31,7 +56,9 @@ export function resolvePackageJSON(): ProjectDefinition {
       peerDependencies: projectDef.peerDependencies,
     };
   } catch (err) {
-    throw new Error('Invalid package.json schema');
+    const { message } = err as Error;
+
+    throw new Error(`Failed to read package.json: ${message}`);
   }
 }
 
@@ -63,24 +90,26 @@ export function isDefined(
  * @returns {Promise<void>} Resolves if `dependency` is installed.
  * Rejects otherwise.
  */
-export function isInstalled(
+export async function isInstalled(
   dependency: string,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const lsCheck = spawn(
-      /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
-      ['ls', dependency],
-    )
+  let baseCommand = getPackageManager();
+  const command = pmCommands[baseCommand];
 
-    lsCheck.stdout.on('data', (data) => {
-      const isInstalled = data.includes(dependency) &&
-        data.lastIndexOf(dependency) !== 0;
+  if (/^win/.test(process.platform)) {
+    // Resolve windows quirks
+    baseCommand = `${baseCommand}.cmd` as PackageManager;
+  }
 
-      isInstalled ?
-        resolve() :
-        reject(
-          new Error(`Package ${dependency} is not installed in this project`),
-        );
-    });
-  });
+  const lsCheck = await executeCommand(
+    baseCommand,
+    [command, dependency],
+  );
+
+  const status = lsCheck.includes(dependency) &&
+    lsCheck.lastIndexOf(dependency) !== 0;
+
+  if (!status) {
+    throw new Error(`Package ${dependency} has not been installed in this project`)
+  }
 }

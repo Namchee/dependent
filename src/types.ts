@@ -41,3 +41,6 @@ export type FileParser = (
   content: string,
   dependency: string,
 ) => Promise<number[]>;
+
+// Loader function for compilers
+export type CompilerLoader = (paths: string[]) => Promise<void>;

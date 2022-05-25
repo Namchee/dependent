@@ -1,15 +1,18 @@
-import { jest } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import { getDependantFiles } from '../src/import';
-import { ProjectFile } from './../src/constants/types';
+import { getDependantFiles } from '@/service/import';
 
-jest.useFakeTimers();
-
-afterEach(() => {
-  jest.clearAllTimers();
-});
+import type { ProjectFile } from '@/types';
 
 describe('Parser tolerance test', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  })
+
   it('should throw an error when silent is false', () => {
     const files: ProjectFile[] = [
       {

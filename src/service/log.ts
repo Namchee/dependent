@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 
-import { FILE_TYPES } from './constants/files';
-import { DependantFile } from './constants/types';
+import { FILE_TYPES } from '@/constant/files';
+
+import type { DependantFile } from '@/types';
 
 /**
  * Sorter function when sorting dependant files by depth
@@ -9,7 +10,7 @@ import { DependantFile } from './constants/types';
  *
  * @param {DependantFile} a Source file
  * @param {DependantFile} b File to be compared with `a`
- * @returns `-1` if `a` should be prioritized, `1` otherwise.
+ * @returns {number} `-1` if `a` should be prioritized, `1` otherwise.
  */
 function sortFiles(a: DependantFile, b: DependantFile): number {
   const depthA = a.path.split('/').length;
@@ -29,7 +30,7 @@ function sortFiles(a: DependantFile, b: DependantFile): number {
 /**
  * Categorize files to buckets based on their extension.
  *
- * @param {DependantFiles[]} files list of dependant files.
+ * @param {DependantFile[]} files list of dependant files.
  * @returns {Record<string, DependantFile[]>} extension to file mapping,
  * sorted with the `sortFiles` function.
  */
@@ -64,13 +65,11 @@ function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
  * @param {DependantFile[]} files Dependant files
  */
 function logTable(files: DependantFile[]): void {
-  const tableFriendlyFiles = files.map((file) => {
-    return {
-      'File name': file.name,
-      'File path': file.path,
-      'Line number': file.lineNumbers.join(', '),
-    };
-  });
+  const tableFriendlyFiles = files.map(file => ({
+    'File name': file.name,
+    'File path': file.path,
+    'Line number': file.lineNumbers.join(', '),
+  }));
 
   console.table(tableFriendlyFiles);
 }
@@ -106,22 +105,26 @@ export function showDependantFiles(
 ): void {
   console.log('\n' +
     chalk.cyanBright(
-      // eslint-disable-next-line max-len
       `📦 There are ${files.length} files in this project that depends on '${dependency}'`,
     ),
   );
 
   if (files.length) {
-    console.log(); // new line
+    console.log(); // New line
     const fileMaps = categorize(files);
 
     for (const [ext, files] of Object.entries(fileMaps)) {
       const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
+      let logger = logTable;
+      if (!table) {
+        logger = logLines;
+      }
+
       if (files.length) {
         console.log(`📁 ${alias}`);
-        table ? logTable(files) : logLines(files);
-        console.log(); // empty lines
+        logger(files);
+        console.log(); // Empty lines
       }
     }
   }

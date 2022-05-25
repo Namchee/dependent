@@ -1,5 +1,5 @@
-import globalDirectories from 'global-dirs';
-import path from 'path';
+import { resolve } from 'path';
+import { pathToFileURL } from 'url';
 
 import type {
   ImportDeclaration,
@@ -7,55 +7,61 @@ import type {
   CallExpression,
   SourceLocation
 } from 'estree';
+
 import type { BaseNode } from 'estree-walker';
 
-let svelte: typeof import('svelte/compiler');
+import { getRootPackage } from '@/utils/package';
 
-try {
-  const baseCompilerPath = [
-    'svelte',
-    'compiler.js',
+let compiler: typeof import('svelte/compiler');
+
+/**
+ * Get available Svelte compiler. Will prioritize locally-installed
+ * compiler.
+ *
+ * @param {string[]} globs global package manager paths
+ * @returns {Promise<void>}
+ */
+export async function loadSvelteCompiler(globs: string[]): Promise<void> {
+  // Do not load the compiler twice
+  if (compiler) {
+    return;
+  }
+
+  const compilerPath = ['svelte', 'compiler.js'];
+  const paths = [
+    resolve(process.cwd(), 'node_modules', ...compilerPath),
+    ...globs.map(path => resolve(path, ...compilerPath)),
   ];
-  const localCompilerPath = new URL(
-    path.posix.resolve('node_modules', ...baseCompilerPath),
-    import.meta.url,
-  );
-  const npmCompilerPath = new URL(
-    path.posix.resolve(globalDirectories.npm.packages, ...baseCompilerPath),
-    import.meta.url,
-  );
-  const yarnCompilerPath = new URL(
-    path.posix.resolve(globalDirectories.yarn.packages, ...baseCompilerPath),
-    import.meta.url,
-  );
 
-  const compilerImports = await Promise.allSettled([
-    import(localCompilerPath.toString()),
-    import(npmCompilerPath.toString()),
-    import(yarnCompilerPath.toString()),
-  ]);
+  const imports = paths.map(path => import(pathToFileURL(path).toString()));
+  const compilerImports = await Promise.allSettled(imports);
 
   for (let i = 0; i < compilerImports.length; i++) {
-    const impor = compilerImports[i];
+    const fileModule = compilerImports[i];
 
-    if (impor.status === 'fulfilled') {
-      svelte = impor.value.default as typeof import('svelte/compiler');
-      break;
+    if (fileModule.status === 'fulfilled') {
+      compiler = fileModule.value.default as typeof import('svelte/compiler');
+      return;
     }
   }
-} catch (err) {
-  /* ignore for now */
+
+  throw new Error('No Svelte compiler available');
 }
 
 /**
  * Parse native JavaScript nodes for imports to `dependency`
  *
+ * @param {typeof compiler} svelte svelte compiler
  * @param {Node} sourceNode AST representation of the file
  * @param {string} dependency Package name
  * @returns {number[]} List of line numbers where `dependency`
  * is imported.
  */
-export function parseNode(sourceNode: BaseNode, dependency: string): number[] {
+export function parseNode(
+  svelte: typeof compiler,
+  sourceNode: BaseNode,
+  dependency: string,
+): number[] {
   const lines: number[] = [];
 
   svelte.walk(sourceNode, {
@@ -66,19 +72,24 @@ export function parseNode(sourceNode: BaseNode, dependency: string): number[] {
 
           if (
             importDec.source.type === 'Literal' &&
-            importDec.source.value?.toString().split('/')[0] === dependency
+            getRootPackage(
+              importDec.source.value?.toString() as string
+            ) === dependency
           ) {
             lines.push((node.loc as SourceLocation).start.line);
           }
 
           break;
         }
+
         case 'ImportExpression': {
           const importExpr = node as ImportExpression;
 
           if (
             importExpr.source.type === 'Literal' &&
-            importExpr.source.value?.toString().split('/')[0] === dependency
+            getRootPackage(
+              importExpr.source.value?.toString() as string
+            ) === dependency
           ) {
             lines.push((node.loc as SourceLocation).start.line);
           }
@@ -93,13 +104,17 @@ export function parseNode(sourceNode: BaseNode, dependency: string): number[] {
             callExpr.callee.type === 'Identifier' &&
             callExpr.callee.name === 'require' &&
             callExpr.arguments[0].type === 'Literal' &&
-            callExpr.arguments[0].value?.toString().split('/')[0] === dependency
+            getRootPackage(
+              callExpr.arguments[0].value?.toString() as string,
+            ) === dependency
           ) {
             lines.push((node.loc as SourceLocation).start.line);
           }
 
           break;
         }
+
+        default: break;
       }
     }
   })
@@ -119,13 +134,13 @@ export async function getSvelteImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
-  if (!svelte) {
-    throw new Error('No Svelte parsers available');
+  if (!compiler) {
+    throw new Error('Svelte compiler has not been loaded');
   }
 
-  const node = svelte.parse(content);
+  const node = compiler.parse(content);
   return [
-    ...parseNode(node.instance, dependency),
-    ...parseNode(node.module, dependency),
+    ...parseNode(compiler, node.instance as BaseNode, dependency),
+    ...parseNode(compiler, node.module as BaseNode, dependency),
   ];
 }

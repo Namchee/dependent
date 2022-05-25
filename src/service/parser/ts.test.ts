@@ -1,14 +1,12 @@
-import { jest } from '@jest/globals';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import { getTSImportLines } from '../../src/parser/ts';
+import { getTSImportLines, loadTSCompiler } from '@/service/parser/ts';
 
-jest.useFakeTimers();
+describe('TypeScript parser test', () => {
+  beforeAll(async () => {
+    await loadTSCompiler([]);
+  });
 
-afterEach(() =>{
-  jest.clearAllTimers();
-});
-
-describe('TypeScript parser test', () =>{
   it('should be able to parse ES modules import', async () =>{
     const content = `import express from 'express';`;
 
