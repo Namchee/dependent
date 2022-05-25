@@ -5,6 +5,7 @@ specifiers:
   '@auto-it/npm': ^10.30.0
   '@octokit/core': ^3.6.0
   '@types/acorn': ^4.0.6
+  '@types/estree': ^0.0.51
   '@types/glob': ^7.1.4
   '@types/node': ^16.4.2
   '@types/yargs': ^17.0.2
@@ -52,6 +53,7 @@ devDependencies:
   '@auto-it/npm': 10.37.0_f3dirzwzmzcyak5vikwyv7yrhe
   '@octokit/core': 3.6.0
   '@types/acorn': 4.0.6
+  '@types/estree': 0.0.51
   '@types/glob': 7.2.0
   '@types/node': 16.11.36
   '@types/yargs': 17.0.10
