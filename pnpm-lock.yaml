@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@auto-it/conventional-commits': ^10.30.0
-  '@auto-it/npm': ^10.30.0
+  '@auto-it/conventional-commits': ^10.37.0
+  '@auto-it/npm': ^10.37.0
   '@octokit/core': ^3.6.0
   '@rollup/plugin-typescript': ^8.3.2
   '@types/acorn': ^4.0.6
@@ -16,7 +16,7 @@ specifiers:
   acorn: ^8.4.1
   acorn-jsx: ^5.3.2
   acorn-walk: ^8.1.1
-  auto: ^10.30.0
+  auto: ^10.37.0
   chalk: ^4.1.1
   eslint: ^8.16.0
   eslint-config-namchee: ^1.0.13
