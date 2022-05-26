@@ -33,4 +33,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           pnpm run build
-          npx auto shipit
+          pnpx auto shipit
