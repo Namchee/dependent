@@ -1,3 +1,23 @@
+# v0.11.0 (Thu May 26 2022)
+
+#### 🚀 Enhancement
+
+- chore: add estree-walker as devDependency [#50](https://github.com/Namchee/dependent/pull/50) ([@Namchee](https://github.com/Namchee))
+- fix: revert back to process.cwd [#44](https://github.com/Namchee/dependent/pull/44) ([@Namchee](https://github.com/Namchee))
+
+#### 🐛 Bug Fix
+
+- chore(ci): bump auto release [#49](https://github.com/Namchee/dependent/pull/49) ([@Namchee](https://github.com/Namchee))
+- refactor: migrate to official rollup typescript plugin [#48](https://github.com/Namchee/dependent/pull/48) ([@Namchee](https://github.com/Namchee))
+- fix: add @types/estree to ensure compilation [#47](https://github.com/Namchee/dependent/pull/47) ([@Namchee](https://github.com/Namchee))
+- fix(ci): prioritize setup-pnpm [#46](https://github.com/Namchee/dependent/pull/46) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.10.0 (Sat Sep 04 2021)
 
 #### 🚀 Enhancement
