@@ -24,6 +24,7 @@ specifiers:
   eslint-config-xo: ^0.41.0
   eslint-plugin-jsdoc: ^39.3.0
   eslint-plugin-prettier: ^4.0.0
+  estree-walker: ^3.0.1
   glob: ^7.1.7
   global-dirs: ^3.0.0
   ora: ^5.4.1
@@ -69,6 +70,7 @@ devDependencies:
   eslint-config-xo: 0.41.0_eslint@8.16.0
   eslint-plugin-jsdoc: 39.3.0_eslint@8.16.0
   eslint-plugin-prettier: 4.0.0_j7rsahgqtkecno6yauhsgsglf4
+  estree-walker: 3.0.1
   prettier: 2.6.2
   rollup: 2.74.1
   rollup-plugin-preserve-shebang: 1.0.1
@@ -1818,6 +1820,10 @@ packages:
 
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
+    dev: true
+
+  /estree-walker/3.0.1:
+    resolution: {integrity: sha512-woY0RUD87WzMBUiZLx8NsYr23N5BKsOMZHhu2hoNRVh6NXGfoiT1KOL8G3UHlJAnEDGmfa5ubNA/AacfG+Kb0g==}
     dev: true
 
   /esutils/2.0.3:

@@ -50,6 +50,7 @@
     "eslint-config-xo": "^0.41.0",
     "eslint-plugin-jsdoc": "^39.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "estree-walker": "^3.0.1",
     "prettier": "^2.3.2",
     "rollup": "^2.74.1",
     "rollup-plugin-preserve-shebang": "^1.0.1",
