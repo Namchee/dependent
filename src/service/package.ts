@@ -32,7 +32,7 @@ function getPackageManager(): PackageManager {
 }
 
 /**
- * Get all information of the project from `package.json`
+ * Get all information of the current project from `package.json`
  *
  * @returns {ProjectDefinition} Project definition. Refer to the type.
  */
@@ -51,6 +51,44 @@ export function resolvePackageJSON(): ProjectDefinition {
 
     return {
       name: projectDef.name,
+      executables: projectDef.bin,
+      scripts: projectDef.scripts,
+      dependencies: projectDef.dependencies,
+      devDependencies: projectDef.devDependencies,
+      peerDependencies: projectDef.peerDependencies,
+    };
+  } catch (err) {
+    const { message } = err as Error;
+
+    throw new Error(`Failed to read package.json: ${message}`);
+  }
+}
+
+/**
+ * Get all information of a dependency from its `package.json`
+ *
+ * @param {string} dependency dependency name
+ * @returns {ProjectDefinition} Project definition. Refer to the type.
+ */
+export function resolveDependantPackageJSON(
+  dependency: string,
+): ProjectDefinition {
+  const path = resolve(process.cwd(), 'node_modules', dependency, 'package.json');
+
+  // Check package.json existence
+  if (!existsSync(path)) {
+    throw new Error(
+      'The current project directory is not a NodeJS-based project',
+    );
+  }
+
+  try {
+    const projectDef = JSON.parse(readFileSync(path, 'utf-8'));
+
+    return {
+      name: projectDef.name,
+      executables: projectDef.bin,
+      scripts: projectDef.scripts,
       dependencies: projectDef.dependencies,
       devDependencies: projectDef.devDependencies,
       peerDependencies: projectDef.peerDependencies,

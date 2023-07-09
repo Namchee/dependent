@@ -8,8 +8,8 @@ import { cli } from '@/cli';
 import { isDefined, isInstalled, resolvePackageJSON } from '@/service/package';
 import { getProjectFiles } from '@/service/file';
 
-import { getDependantFiles } from './service/import';
-import { showDependantFiles } from './service/log';
+import { getDependantFiles } from '@/service/import';
+import { showDependantFiles } from '@/service/log';
 
 (async () => {
   const args = cli.parseSync();
@@ -20,9 +20,9 @@ import { showDependantFiles } from './service/log';
 
     spinner.text = chalk.greenBright('Scanning project directory...');
 
-    const { silent, table } = args;
+    const { silent, table, precheck } = args;
 
-    if (args.precheck) {
+    if (precheck) {
       spinner.text = chalk.greenBright('Checking package installation...');
 
       isDefined(dependency, resolvePackageJSON());

@@ -3,6 +3,8 @@
  */
 export interface ProjectDefinition {
   name: string;
+  executables: Record<string, string>;
+  scripts: Record<string, string>;
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
   peerDependencies: Record<string, string>;
