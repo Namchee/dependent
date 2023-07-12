@@ -13,12 +13,12 @@ export function getDependantScript(
   const { scripts } = resolvePackageJSON();
   const { executables } = resolveDependantPackageJSON(dependency);
 
-  const pattern = new RegExp(`(${Object.keys(executables).join('|')})`, 'ig');
+  const pattern = `(${Object.keys(executables).join('|')})`;
 
   const result = [];
 
   for (const [script, value] of Object.entries(scripts)) {
-    if (pattern.exec(value)) {
+    if (value.match(pattern)) {
       result.push(script);
     }
   }

@@ -129,3 +129,36 @@ export function showDependantFiles(
     }
   }
 }
+
+/**
+ *
+ * @param scripts
+ * @param dependency
+ * @param table
+ */
+export function showDependantScript(
+  scripts: string[],
+  dependency: string,
+  table: boolean,
+): void {
+  console.log('\n' +
+    chalk.cyanBright(
+      `📜 There are ${scripts.length} scripts in this project that depends on '${dependency}'`,
+    ),
+  );
+
+  if (scripts.length) {
+    console.log(); // New line
+
+    let logger = logTable;
+    if (!table) {
+      logger = logLines;
+    }
+
+    if (files.length) {
+      console.log(`📁 ${alias}`);
+      logger(files);
+      console.log(); // Empty lines
+    }
+  }
+}
