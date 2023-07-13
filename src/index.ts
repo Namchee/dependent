@@ -9,7 +9,8 @@ import { isDefined, isInstalled, resolvePackageJSON } from '@/service/package';
 import { getProjectFiles } from '@/service/file';
 
 import { getDependantFiles } from '@/service/import';
-import { showDependantFiles } from '@/service/log';
+import { showDependants } from '@/service/log';
+import { getDependantScript } from '@/service/shell';
 
 (async () => {
   const args = cli.parseSync();
@@ -33,17 +34,23 @@ import { showDependantFiles } from '@/service/log';
 
     spinner.text = chalk.greenBright('Analyzing package dependency...');
 
-    const dependant = await getDependantFiles(
-      files,
-      dependency,
-      {
-        silent,
-      },
-    );
+    const dependant = await Promise.all([
+      getDependantFiles(
+        files,
+        dependency,
+        {
+          silent,
+        },
+      ),
+      getDependantScript(dependency),
+    ]);
 
     spinner.succeed(chalk.greenBright('Analysis completed successfully'));
 
-    showDependantFiles(dependant, dependency, table);
+    showDependants({
+      files: dependant[0],
+      scripts: dependant[1],
+    }, dependency, table);
   } catch (err) {
     const error = err as Error;
 

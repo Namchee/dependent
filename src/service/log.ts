@@ -2,7 +2,7 @@ import chalk from 'chalk';
 
 import { FILE_TYPES } from '@/constant/files';
 
-import type { DependantFile } from '@/types';
+import type { DependantFile, Dependants } from '@/types';
 
 /**
  * Sorter function when sorting dependant files by depth
@@ -58,57 +58,26 @@ function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
   return result;
 }
 
-/**
- * Outputs all dependant files to `stdout` in table
- * format.
- *
- * @param {DependantFile[]} files Dependant files
- */
-function logTable(files: DependantFile[]): void {
-  const tableFriendlyFiles = files.map(file => ({
-    'File name': file.name,
-    'File path': file.path,
-    'Line number': file.lineNumbers.join(', '),
-  }));
-
-  console.table(tableFriendlyFiles);
-}
-
-/**
- * Outputs all dependant files to `stdout` in line-per-line
- * format.
- *
- * @param {DependantFile[]} files Dependant files.
- */
-function logLines(files: DependantFile[]): void {
-  files.forEach(({ name, path, lineNumbers }) => {
-    console.log(
-      chalk.cyan(
-        `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
-      ),
-    )
-  });
-}
-
-/**
- * Outputs all dependant files to `stdout` with `console`
- *
- * @param {DependantFile[]} files Dependant files
- * @param {string} dependency Package name
- * @param {boolean} table `true` if the table output is desired,
- * `false` if line-per-line output is desired.
- */
-export function showDependantFiles(
-  files: DependantFile[],
+function writeHeader(
+  type: 'files' | 'scripts',
   dependency: string,
-  table: boolean,
+  count: number,
 ): void {
+  const emojiMap: Record<typeof type, string> = {
+    files: '📦',
+    scripts: '📜',
+  }
+
   console.log('\n' +
     chalk.cyanBright(
-      `📦 There are ${files.length} files in this project that depends on '${dependency}'`,
+      `${emojiMap[type]} There are ${count} ${type} in this project that depends on '${dependency}'`,
     ),
   );
+}
 
+function showDependantFilesInTables(
+  files: DependantFile[],
+): void {
   if (files.length) {
     console.log(); // New line
     const fileMaps = categorize(files);
@@ -116,49 +85,92 @@ export function showDependantFiles(
     for (const [ext, files] of Object.entries(fileMaps)) {
       const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
-      let logger = logTable;
-      if (!table) {
-        logger = logLines;
-      }
-
       if (files.length) {
         console.log(`📁 ${alias}`);
-        logger(files);
+        const tableDef = files.map(file => ({
+          'File name': file.name,
+          'File path': file.path,
+          'Line number': file.lineNumbers.join(', '),
+        }));
+
+        console.table(tableDef);
         console.log(); // Empty lines
       }
     }
   }
 }
 
-/**
- *
- * @param scripts
- * @param dependency
- * @param table
- */
-export function showDependantScript(
-  scripts: string[],
-  dependency: string,
-  table: boolean,
+function showDependantFilesInLines(
+  files: DependantFile[],
 ): void {
-  console.log('\n' +
-    chalk.cyanBright(
-      `📜 There are ${scripts.length} scripts in this project that depends on '${dependency}'`,
-    ),
-  );
+  if (files.length) {
+    console.log(); // New line
+    const fileMaps = categorize(files);
 
+    for (const [ext, files] of Object.entries(fileMaps)) {
+      const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
+
+      if (files.length) {
+        console.log(`📁 ${alias}`);
+        files.forEach(({ name, path, lineNumbers }) => {
+          console.log(
+            chalk.cyan(
+              `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
+            ),
+          )
+        });
+        console.log(); // Empty lines
+      }
+    }
+  }
+}
+
+function showDependantScriptsInLines(
+  scripts: string[],
+): void {
   if (scripts.length) {
     console.log(); // New line
 
-    let logger = logTable;
-    if (!table) {
-      logger = logLines;
-    }
+    scripts.forEach((script) => {
+      console.log(
+        chalk.cyan(
+          `─ ${script}`,
+        ),
+      )
+    });
+  }
+}
 
-    if (files.length) {
-      console.log(`📁 ${alias}`);
-      logger(files);
-      console.log(); // Empty lines
-    }
+function showDependantScriptsInTables(scripts: string[],): void {
+  if (scripts.length) {
+    console.log(); // New line
+
+    const tableDef = scripts.map(script => ({
+      'Script': script,
+    }));
+
+    console.table(tableDef);
+  }
+}
+
+export function showDependants(
+  { scripts, files }: Dependants,
+  dependency: string,
+  table: boolean,
+): void {
+  writeHeader('files', dependency, files.length);
+
+  if (table) {
+    showDependantFilesInTables(files);
+  } else {
+    showDependantFilesInLines(files);
+  }
+
+  writeHeader('scripts', dependency, scripts.length);
+
+  if (table) {
+    showDependantScriptsInTables(scripts);
+  } else {
+    showDependantScriptsInLines(scripts);
   }
 }

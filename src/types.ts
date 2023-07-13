@@ -19,6 +19,11 @@ export interface DependantFile {
   lineNumbers: number[];
 }
 
+export interface Dependants {
+  scripts: string[];
+  files: DependantFile[];
+}
+
 /**
  * A matching file in the current directory.
  */
