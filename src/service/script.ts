@@ -1,4 +1,4 @@
-import { resolveDependantPackageJSON, resolvePackageJSON } from '@/service/package';
+import { resolveDependencyPackageJSON, resolvePackageJSON } from '@/service/package';
 
 /**
  * Returns a list of script in the current working directory that
@@ -11,7 +11,7 @@ export function getDependantScript(
   dependency: string,
 ): string[] {
   const { scripts } = resolvePackageJSON();
-  const { executables } = resolveDependantPackageJSON(dependency);
+  const { executables } = resolveDependencyPackageJSON(dependency);
 
   const pattern = `(${Object.keys(executables).join('|')})`;
 

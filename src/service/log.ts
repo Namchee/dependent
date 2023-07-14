@@ -2,7 +2,7 @@ import chalk from 'chalk';
 
 import { FILE_TYPES } from '@/constant/files';
 
-import type { DependantFile, Dependants } from '@/types';
+import type { DependantFile, LoggerConfig } from '@/types';
 
 /**
  * Sorter function when sorting dependant files by depth
@@ -68,7 +68,8 @@ function writeHeader(
     scripts: '📜',
   }
 
-  console.log('\n' +
+  console.log(
+    '\n' +
     chalk.cyanBright(
       `${emojiMap[type]} There are ${count} ${type} in this project that depends on '${dependency}'`,
     ),
@@ -76,101 +77,98 @@ function writeHeader(
 }
 
 function showDependantFilesInTables(
-  files: DependantFile[],
+  fileMap: Record<string, DependantFile[]>,
 ): void {
-  if (files.length) {
-    console.log(); // New line
-    const fileMaps = categorize(files);
+  for (const [ext, extFiles] of Object.entries(fileMap)) {
+    const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
-    for (const [ext, files] of Object.entries(fileMaps)) {
-      const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
+    if (extFiles.length) {
+      console.log(`📁 ${alias}`);
+      const tableDef = extFiles.map(file => ({
+        'File name': file.name,
+        'File path': file.path,
+        'Line number': file.lineNumbers.join(', '),
+      }));
 
-      if (files.length) {
-        console.log(`📁 ${alias}`);
-        const tableDef = files.map(file => ({
-          'File name': file.name,
-          'File path': file.path,
-          'Line number': file.lineNumbers.join(', '),
-        }));
-
-        console.table(tableDef);
-        console.log(); // Empty lines
-      }
+      console.table(tableDef);
+      console.log(); // Empty lines
     }
   }
 }
 
 function showDependantFilesInLines(
-  files: DependantFile[],
+  fileMap: Record<string, DependantFile[]>,
 ): void {
-  if (files.length) {
-    console.log(); // New line
-    const fileMaps = categorize(files);
+  for (const [ext, extFiles] of Object.entries(fileMap)) {
+    const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
-    for (const [ext, files] of Object.entries(fileMaps)) {
-      const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
-
-      if (files.length) {
-        console.log(`📁 ${alias}`);
-        files.forEach(({ name, path, lineNumbers }) => {
-          console.log(
-            chalk.cyan(
-              `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
-            ),
-          )
-        });
-        console.log(); // Empty lines
-      }
+    if (extFiles.length) {
+      console.log(`📁 ${alias}`);
+      extFiles.forEach(({ name, path, lineNumbers }) => {
+        console.log(
+          chalk.cyan(
+            `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
+          ),
+        )
+      });
+      console.log(); // Empty lines
     }
   }
+
 }
 
 function showDependantScriptsInLines(
   scripts: string[],
 ): void {
-  if (scripts.length) {
-    console.log(); // New line
-
-    scripts.forEach((script) => {
-      console.log(
-        chalk.cyan(
-          `─ ${script}`,
-        ),
-      )
-    });
-  }
+  scripts.forEach((script) => {
+    console.log(
+      chalk.cyan(
+        `─ ${script}`,
+      ),
+    )
+  });
 }
 
 function showDependantScriptsInTables(scripts: string[],): void {
-  if (scripts.length) {
-    console.log(); // New line
+  const tableDef = scripts.map(script => ({
+    'Script': script,
+  }));
 
-    const tableDef = scripts.map(script => ({
-      'Script': script,
-    }));
-
-    console.table(tableDef);
-  }
+  console.table(tableDef);
 }
 
-export function showDependants(
-  { scripts, files }: Dependants,
+export function showDependantFiles(
+  files: DependantFile[],
   dependency: string,
-  table: boolean,
+  { format }: LoggerConfig,
 ): void {
   writeHeader('files', dependency, files.length);
 
-  if (table) {
-    showDependantFilesInTables(files);
-  } else {
-    showDependantFilesInLines(files);
-  }
+  const method = {
+    lines: showDependantFilesInLines,
+    table: showDependantFilesInTables
+  };
 
+  const fileMaps = categorize(files);
+
+  if (files.length) {
+    method[format](fileMaps);
+  }
+}
+
+export function showDependantScripts(
+  scripts: string[],
+  dependency: string,
+  { format }: LoggerConfig,
+): void {
   writeHeader('scripts', dependency, scripts.length);
 
-  if (table) {
-    showDependantScriptsInTables(scripts);
-  } else {
-    showDependantScriptsInLines(scripts);
+  const method = {
+    lines: showDependantScriptsInLines,
+    table: showDependantScriptsInTables,
+  };
+
+  if (scripts.length) {
+    method[format](scripts);
   }
 }

@@ -53,9 +53,15 @@ export const cli = yargs(process.argv.slice(2))
     },
     precheck: {
       alias: 'c',
-      describe: 'Check if the package is installed locally',
+      describe: 'Check if the package is installed',
       type: 'boolean',
       default: true,
       demandOption: false,
-    }
+    },
+    include: {
+      describe: 'Type of possible dependant to be scanned for dependency. Defaults to files and scripts',
+      type: 'array',
+      default: ['script', 'file'],
+      demandOption: false,
+    },
   });

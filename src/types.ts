@@ -51,3 +51,6 @@ export type FileParser = (
 
 // Loader function for compilers
 export type CompilerLoader = (paths: string[]) => Promise<void>;
+export interface LoggerConfig {
+  format: 'lines' | 'table';
+}

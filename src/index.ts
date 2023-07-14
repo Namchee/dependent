@@ -9,8 +9,8 @@ import { isDefined, isInstalled, resolvePackageJSON } from '@/service/package';
 import { getProjectFiles } from '@/service/file';
 
 import { getDependantFiles } from '@/service/import';
-import { showDependants } from '@/service/log';
-import { getDependantScript } from '@/service/shell';
+import { getDependantScript } from '@/service/script';
+import { showDependantFiles, showDependantScripts } from './service/log';
 
 (async () => {
   const args = cli.parseSync();
@@ -21,7 +21,7 @@ import { getDependantScript } from '@/service/shell';
 
     spinner.text = chalk.greenBright('Scanning project directory...');
 
-    const { silent, table, precheck } = args;
+    const { silent, table, precheck, include } = args;
 
     if (precheck) {
       spinner.text = chalk.greenBright('Checking package installation...');
@@ -32,25 +32,29 @@ import { getDependantScript } from '@/service/shell';
 
     const files = getProjectFiles(args.files, silent);
 
-    spinner.text = chalk.greenBright('Analyzing package dependency...');
+    if (include.includes('files')) {
+      spinner.text = chalk.greenBright('Analyzing project files for dependency...');
 
-    const dependant = await Promise.all([
-      getDependantFiles(
+      const dependantFiles = await getDependantFiles(
         files,
         dependency,
         {
           silent,
         },
-      ),
-      getDependantScript(dependency),
-    ]);
+      );
+
+      showDependantFiles(dependantFiles, dependency, { format: table ? 'table' : 'lines' });
+    }
+
+    if (include.includes('scripts')) {
+      spinner.text = chalk.greenBright('Analyzing project scripts for dependency...');
+
+      const dependantScripts = getDependantScript(dependency);
+
+      showDependantScripts(dependantScripts, dependency, { format: table ? 'table' : 'lines' });
+    }
 
     spinner.succeed(chalk.greenBright('Analysis completed successfully'));
-
-    showDependants({
-      files: dependant[0],
-      scripts: dependant[1],
-    }, dependency, table);
   } catch (err) {
     const error = err as Error;
 

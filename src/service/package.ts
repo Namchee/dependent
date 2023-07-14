@@ -70,7 +70,7 @@ export function resolvePackageJSON(): ProjectDefinition {
  * @param {string} dependency dependency name
  * @returns {ProjectDefinition} Project definition. Refer to the type.
  */
-export function resolveDependantPackageJSON(
+export function resolveDependencyPackageJSON(
   dependency: string,
 ): ProjectDefinition {
   const path = resolve(process.cwd(), 'node_modules', dependency, 'package.json');
