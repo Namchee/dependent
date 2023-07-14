@@ -32,9 +32,9 @@ import { showDependantFiles, showDependantScripts } from './service/log';
 
     const files = getProjectFiles(args.files, silent);
 
-    if (include.includes('files')) {
-      spinner.text = chalk.greenBright('Analyzing project files for dependency...');
+    spinner.text = chalk.greenBright('Analyzing project for dependency...');
 
+    if (include.includes('files')) {
       const dependantFiles = await getDependantFiles(
         files,
         dependency,
@@ -47,8 +47,6 @@ import { showDependantFiles, showDependantScripts } from './service/log';
     }
 
     if (include.includes('scripts')) {
-      spinner.text = chalk.greenBright('Analyzing project scripts for dependency...');
-
       const dependantScripts = getDependantScript(dependency);
 
       showDependantScripts(dependantScripts, dependency, { format: table ? 'table' : 'lines' });

@@ -123,7 +123,7 @@ function showDependantScriptsInLines(
   scripts.forEach((script) => {
     console.log(
       chalk.cyan(
-        `─ ${script}`,
+        `└── ${script}`,
       ),
     )
   });

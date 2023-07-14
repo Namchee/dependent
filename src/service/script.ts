@@ -13,13 +13,15 @@ export function getDependantScript(
   const { scripts } = resolvePackageJSON();
   const { executables } = resolveDependencyPackageJSON(dependency);
 
-  const pattern = `(${Object.keys(executables).join('|')})`;
-
   const result = [];
 
-  for (const [script, value] of Object.entries(scripts)) {
-    if (value.match(pattern)) {
-      result.push(script);
+  if (Object.keys(executables).length) {
+    const pattern = `(${Object.keys(executables).join('|')})`;
+
+    for (const [script, value] of Object.entries(scripts)) {
+      if (value.match(pattern)) {
+        result.push(script);
+      }
     }
   }
 

@@ -50,12 +50,12 @@ export function resolvePackageJSON(): ProjectDefinition {
     const projectDef = JSON.parse(readFileSync(path, 'utf-8'));
 
     return {
-      name: projectDef.name,
-      executables: projectDef.bin,
-      scripts: projectDef.scripts,
-      dependencies: projectDef.dependencies,
-      devDependencies: projectDef.devDependencies,
-      peerDependencies: projectDef.peerDependencies,
+      name: projectDef.name ?? '',
+      executables: projectDef.bin ?? {},
+      scripts: projectDef.scripts ?? {},
+      dependencies: projectDef.dependencies ?? {},
+      devDependencies: projectDef.devDependencies ?? {},
+      peerDependencies: projectDef.peerDependencies ?? {},
     };
   } catch (err) {
     const { message } = err as Error;
@@ -86,12 +86,12 @@ export function resolveDependencyPackageJSON(
     const projectDef = JSON.parse(readFileSync(path, 'utf-8'));
 
     return {
-      name: projectDef.name,
-      executables: projectDef.bin,
-      scripts: projectDef.scripts,
-      dependencies: projectDef.dependencies,
-      devDependencies: projectDef.devDependencies,
-      peerDependencies: projectDef.peerDependencies,
+      name: projectDef.name ?? '',
+      executables: projectDef.bin ?? {},
+      scripts: projectDef.scripts ?? {},
+      dependencies: projectDef.dependencies ?? {},
+      devDependencies: projectDef.devDependencies ?? {},
+      peerDependencies: projectDef.peerDependencies ?? {},
     };
   } catch (err) {
     const { message } = err as Error;
