@@ -64,15 +64,15 @@ function writeHeader(
   count: number,
 ): void {
   const emojiMap: Record<typeof type, string> = {
-    files: '📦',
+    files: '📁',
     scripts: '📜',
   }
 
   console.log(
-    '\n' +
     chalk.cyanBright(
       `${emojiMap[type]} There are ${count} ${type} in this project that depends on '${dependency}'`,
-    ),
+    ) +
+    '\n'
   );
 }
 
@@ -83,7 +83,7 @@ function showDependantFilesInTables(
     const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
     if (extFiles.length) {
-      console.log(`📁 ${alias}`);
+      console.log(`📜 ${alias}`);
       const tableDef = extFiles.map(file => ({
         'File name': file.name,
         'File path': file.path,
@@ -103,7 +103,7 @@ function showDependantFilesInLines(
     const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
     if (extFiles.length) {
-      console.log(`📁 ${alias}`);
+      console.log(`📜 ${alias}`);
       extFiles.forEach(({ name, path, lineNumbers }) => {
         console.log(
           chalk.cyan(
