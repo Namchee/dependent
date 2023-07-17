@@ -12,16 +12,6 @@ import { FILE_TYPES } from '@/constant/files';
 import { getFileExtension } from '@/utils/file';
 import { getGlobalNPMPath, getGlobalYarnPath } from '@/utils/global';
 
-/**
- * Analyze all relevant files for imports to `dependency`
- *
- * @param {ProjectFile[]} files Relevant files
- * @param {string} dependency Package name
- * @param {ParserOptions} options Parsing options
- * @param {boolean} options.silent `true` if the parser
- * should ignore invalid files, `false` otherwise.
- * @returns {DependantFile[]} List of files which imports `dependency`.
- */
 export async function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
@@ -74,12 +64,6 @@ export async function getDependantFiles(
   return results;
 }
 
-/**
- * Preload all required compilers based on file types
- *
- * @param {ProjectFile[]} files list of file types
- * @returns {Promise<void>}
- */
 async function loadCompilers(files: ProjectFile[]) {
   const managerPaths = await Promise.allSettled([
     getGlobalNPMPath(),
@@ -98,7 +82,7 @@ async function loadCompilers(files: ProjectFile[]) {
   const compilers = [
     ...new Set(
       files.map(file => getFileExtension(file))
-        .filter(ext => ext !== 'js')
+        .filter(ext => !['js', 'cjs', 'mjs', 'jsx'].includes(ext))
     ),
   ].map((ext: string) => {
     try {

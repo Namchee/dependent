@@ -7,10 +7,5 @@ import { ProjectFile } from '@/types';
  * @returns {string} file extension
  */
 export function getFileExtension(file: ProjectFile): string {
-  let ext = file.name.split('.').pop() as string;
-  if (ext.endsWith('x')) {
-    ext = ext.slice(0, ext.length - 1);
-  }
-
-  return ext;
+  return file.name.split('.').pop() as string;
 }

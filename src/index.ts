@@ -8,8 +8,9 @@ import { cli } from '@/cli';
 import { isDefined, isInstalled, resolvePackageJSON } from '@/service/package';
 import { getProjectFiles } from '@/service/file';
 
-import { getDependantFiles } from './service/import';
-import { showDependantFiles } from './service/log';
+import { getDependantFiles } from '@/service/import';
+import { getDependantScript } from '@/service/script';
+import { showDependantFiles, showDependantScripts } from './service/log';
 
 (async () => {
   const args = cli.parseSync();
@@ -20,9 +21,9 @@ import { showDependantFiles } from './service/log';
 
     spinner.text = chalk.greenBright('Scanning project directory...');
 
-    const { silent, table } = args;
+    const { silent, table, precheck, include } = args;
 
-    if (args.precheck) {
+    if (precheck) {
       spinner.text = chalk.greenBright('Checking package installation...');
 
       isDefined(dependency, resolvePackageJSON());
@@ -31,19 +32,34 @@ import { showDependantFiles } from './service/log';
 
     const files = getProjectFiles(args.files, silent);
 
-    spinner.text = chalk.greenBright('Analyzing package dependency...');
+    spinner.text = chalk.greenBright('Analyzing project for dependency...');
+    const result = [];
 
-    const dependant = await getDependantFiles(
-      files,
-      dependency,
-      {
-        silent,
-      },
-    );
+    if (include.includes('files')) {
+      const dependantFiles = await getDependantFiles(
+        files,
+        dependency,
+        {
+          silent,
+        },
+      );
+
+      result.push(
+        showDependantFiles(dependantFiles, dependency, { format: table ? 'table' : 'lines' }),
+      );
+    }
+
+    if (include.includes('scripts')) {
+      const dependantScripts = getDependantScript(dependency);
+
+      result.push(
+        showDependantScripts(dependantScripts, dependency, { format: table ? 'table' : 'lines' }),
+      );
+    }
 
     spinner.succeed(chalk.greenBright('Analysis completed successfully'));
 
-    showDependantFiles(dependant, dependency, table);
+    console.log(result.join('\n\n'));
   } catch (err) {
     const error = err as Error;
 

@@ -3,6 +3,8 @@
  */
 export interface ProjectDefinition {
   name: string;
+  executables: Record<string, string>;
+  scripts: Record<string, string>;
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
   peerDependencies: Record<string, string>;
@@ -15,6 +17,11 @@ export interface DependantFile {
   name: string;
   path: string;
   lineNumbers: number[];
+}
+
+export interface Dependants {
+  scripts: string[];
+  files: DependantFile[];
 }
 
 /**
@@ -44,3 +51,6 @@ export type FileParser = (
 
 // Loader function for compilers
 export type CompilerLoader = (paths: string[]) => Promise<void>;
+export interface LoggerConfig {
+  format: 'lines' | 'table';
+}

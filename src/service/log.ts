@@ -1,8 +1,9 @@
 import chalk from 'chalk';
+import { table } from 'table';
 
 import { FILE_TYPES } from '@/constant/files';
 
-import type { DependantFile } from '@/types';
+import type { DependantFile, LoggerConfig } from '@/types';
 
 /**
  * Sorter function when sorting dependant files by depth
@@ -37,6 +38,7 @@ function sortFiles(a: DependantFile, b: DependantFile): number {
 function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
   const result: Record<string, DependantFile[]> = {
     js: [],
+    cjs: [],
     mjs: [],
     jsx: [],
     ts: [],
@@ -58,74 +60,133 @@ function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
   return result;
 }
 
-/**
- * Outputs all dependant files to `stdout` in table
- * format.
- *
- * @param {DependantFile[]} files Dependant files
- */
-function logTable(files: DependantFile[]): void {
-  const tableFriendlyFiles = files.map(file => ({
-    'File name': file.name,
-    'File path': file.path,
-    'Line number': file.lineNumbers.join(', '),
-  }));
+function writeHeader(
+  type: 'files' | 'scripts',
+  dependency: string,
+  count: number,
+): string {
+  const emojiMap: Record<typeof type, string> = {
+    files: '📁',
+    scripts: '📜',
+  }
 
-  console.table(tableFriendlyFiles);
+  return chalk.cyanBright(
+    `${emojiMap[type]} There are ${count} ${type} in this project that depends on '${dependency}'`,
+  );
 }
 
-/**
- * Outputs all dependant files to `stdout` in line-per-line
- * format.
- *
- * @param {DependantFile[]} files Dependant files.
- */
-function logLines(files: DependantFile[]): void {
-  files.forEach(({ name, path, lineNumbers }) => {
-    console.log(
-      chalk.cyan(
-        `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
-      ),
-    )
-  });
+function showDependantFilesInTables(
+  fileMap: Record<string, DependantFile[]>,
+): string {
+  const output = [];
+
+  for (const [ext, extFiles] of Object.entries(fileMap)) {
+    const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
+
+    if (extFiles.length) {
+      const header = `📜 ${alias}`;
+
+      const entries = extFiles.map(file => ([
+        file.name,
+        file.path,
+        file.lineNumbers.join(', '),
+      ]));
+
+      const fileTable = table(
+        [
+          [
+            'Filename',
+            'Path',
+            'Line Number',
+          ],
+          ...entries,
+        ],
+      );
+
+      output.push(
+        header + '\n' + fileTable,
+      );
+    }
+  }
+
+  return output.join('\n').slice(0, -1);
 }
 
-/**
- * Outputs all dependant files to `stdout` with `console`
- *
- * @param {DependantFile[]} files Dependant files
- * @param {string} dependency Package name
- * @param {boolean} table `true` if the table output is desired,
- * `false` if line-per-line output is desired.
- */
+function showDependantFilesInLines(
+  fileMap: Record<string, DependantFile[]>,
+): string {
+  const output = [];
+
+  for (const [ext, extFiles] of Object.entries(fileMap)) {
+    const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
+
+    if (extFiles.length) {
+      const header = `📜 ${alias}`;
+
+      const entries = extFiles.map(({ name, path, lineNumbers }) => chalk.cyan(
+        ` └── ${name}:${lineNumbers.join(', ')} → ${path}`,
+      ));
+
+      output.push(header + '\n' + entries.join('\n'));
+    }
+  }
+
+  return output.join('\n\n');
+}
+
+function showDependantScriptsInLines(
+  scripts: string[],
+): string {
+  return scripts.map(script => chalk.cyan(
+    ` └── ${script}`,
+  )).join('\n');
+}
+
+function showDependantScriptsInTables(scripts: string[]): string {
+  return table(
+    [
+      ['Script'],
+      scripts.map(script => [script]),
+    ]
+  ).slice(0, -1);
+}
+
 export function showDependantFiles(
   files: DependantFile[],
   dependency: string,
-  table: boolean,
-): void {
-  console.log('\n' +
-    chalk.cyanBright(
-      `📦 There are ${files.length} files in this project that depends on '${dependency}'`,
-    ),
-  );
+  { format }: LoggerConfig,
+): string {
+  const lines = [writeHeader('files', dependency, files.length)];
+
+  const method = {
+    lines: showDependantFilesInLines,
+    table: showDependantFilesInTables
+  };
+
+  const fileMaps = categorize(files);
 
   if (files.length) {
-    console.log(); // New line
-    const fileMaps = categorize(files);
-
-    for (const [ext, files] of Object.entries(fileMaps)) {
-      const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
-
-      let logger = logTable;
-      if (!table) {
-        logger = logLines;
-      }
-
-      if (files.length) {
-        console.log(`📁 ${alias}`);
-        logger(files);
-        console.log(); // Empty lines
-      }
-    }
+    lines.push(method[format](fileMaps));
   }
+
+  return lines.join('\n\n');
+}
+
+export function showDependantScripts(
+  scripts: string[],
+  dependency: string,
+  { format }: LoggerConfig,
+): string {
+  const lines = [writeHeader('scripts', dependency, scripts.length)];
+
+  const method = {
+    lines: showDependantScriptsInLines,
+    table: showDependantScriptsInTables,
+  };
+
+  if (scripts.length) {
+    lines.push(method[format](scripts));
+  }
+
+  return lines.join('\n');
 }
