@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { table } from 'table';
 
 import { FILE_TYPES } from '@/constant/files';
 
@@ -62,87 +63,99 @@ function writeHeader(
   type: 'files' | 'scripts',
   dependency: string,
   count: number,
-): void {
+): string {
   const emojiMap: Record<typeof type, string> = {
     files: '📁',
     scripts: '📜',
   }
 
-  console.log(
-    chalk.cyanBright(
-      `${emojiMap[type]} There are ${count} ${type} in this project that depends on '${dependency}'`,
-    ) +
-    '\n'
+  return chalk.cyanBright(
+    `${emojiMap[type]} There are ${count} ${type} in this project that depends on '${dependency}'`,
   );
 }
 
 function showDependantFilesInTables(
   fileMap: Record<string, DependantFile[]>,
-): void {
+): string {
+  const output = [];
+
   for (const [ext, extFiles] of Object.entries(fileMap)) {
     const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
     if (extFiles.length) {
-      console.log(`📜 ${alias}`);
-      const tableDef = extFiles.map(file => ({
-        'File name': file.name,
-        'File path': file.path,
-        'Line number': file.lineNumbers.join(', '),
-      }));
+      const header = `📜 ${alias}`;
 
-      console.table(tableDef);
-      console.log(); // Empty lines
+      const entries = extFiles.map(file => ([
+        file.name,
+        file.path,
+        file.lineNumbers.join(', '),
+      ]));
+
+      const fileTable = table(
+        [
+          [
+            'Filename',
+            'Path',
+            'Line Number',
+          ],
+          ...entries,
+        ],
+      );
+
+      output.push(
+        header + '\n' + fileTable,
+      );
     }
   }
+
+  return output.join('\n').slice(0, -1);
 }
 
 function showDependantFilesInLines(
   fileMap: Record<string, DependantFile[]>,
-): void {
+): string {
+  const output = [];
+
   for (const [ext, extFiles] of Object.entries(fileMap)) {
     const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
     if (extFiles.length) {
-      console.log(`📜 ${alias}`);
-      extFiles.forEach(({ name, path, lineNumbers }) => {
-        console.log(
-          chalk.cyan(
-            `└── ${name}:${lineNumbers.join(', ')} → ${path}`,
-          ),
-        )
-      });
-      console.log(); // Empty lines
+      const header = `📜 ${alias}`;
+
+      const entries = extFiles.map(({ name, path, lineNumbers }) => chalk.cyan(
+        ` └── ${name}:${lineNumbers.join(', ')} → ${path}`,
+      ));
+
+      output.push(header + '\n' + entries.join('\n'));
     }
   }
 
+  return output.join('\n\n');
 }
 
 function showDependantScriptsInLines(
   scripts: string[],
-): void {
-  scripts.forEach((script) => {
-    console.log(
-      chalk.cyan(
-        `└── ${script}`,
-      ),
-    )
-  });
+): string {
+  return scripts.map(script => chalk.cyan(
+    ` └── ${script}`,
+  )).join('\n');
 }
 
-function showDependantScriptsInTables(scripts: string[],): void {
-  const tableDef = scripts.map(script => ({
-    'Script': script,
-  }));
-
-  console.table(tableDef);
+function showDependantScriptsInTables(scripts: string[]): string {
+  return table(
+    [
+      ['Script'],
+      scripts.map(script => [script]),
+    ]
+  ).slice(0, -1);
 }
 
 export function showDependantFiles(
   files: DependantFile[],
   dependency: string,
   { format }: LoggerConfig,
-): void {
-  writeHeader('files', dependency, files.length);
+): string {
+  const lines = [writeHeader('files', dependency, files.length)];
 
   const method = {
     lines: showDependantFilesInLines,
@@ -152,16 +165,18 @@ export function showDependantFiles(
   const fileMaps = categorize(files);
 
   if (files.length) {
-    method[format](fileMaps);
+    lines.push(method[format](fileMaps));
   }
+
+  return lines.join('\n\n');
 }
 
 export function showDependantScripts(
   scripts: string[],
   dependency: string,
   { format }: LoggerConfig,
-): void {
-  writeHeader('scripts', dependency, scripts.length);
+): string {
+  const lines = [writeHeader('scripts', dependency, scripts.length)];
 
   const method = {
     lines: showDependantScriptsInLines,
@@ -169,6 +184,8 @@ export function showDependantScripts(
   };
 
   if (scripts.length) {
-    method[format](scripts);
+    lines.push(method[format](scripts));
   }
+
+  return lines.join('\n');
 }

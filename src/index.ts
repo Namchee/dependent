@@ -33,6 +33,7 @@ import { showDependantFiles, showDependantScripts } from './service/log';
     const files = getProjectFiles(args.files, silent);
 
     spinner.text = chalk.greenBright('Analyzing project for dependency...');
+    const result = [];
 
     if (include.includes('files')) {
       const dependantFiles = await getDependantFiles(
@@ -43,16 +44,22 @@ import { showDependantFiles, showDependantScripts } from './service/log';
         },
       );
 
-      showDependantFiles(dependantFiles, dependency, { format: table ? 'table' : 'lines' });
+      result.push(
+        showDependantFiles(dependantFiles, dependency, { format: table ? 'table' : 'lines' }),
+      );
     }
 
     if (include.includes('scripts')) {
       const dependantScripts = getDependantScript(dependency);
 
-      showDependantScripts(dependantScripts, dependency, { format: table ? 'table' : 'lines' });
+      result.push(
+        showDependantScripts(dependantScripts, dependency, { format: table ? 'table' : 'lines' }),
+      );
     }
 
     spinner.succeed(chalk.greenBright('Analysis completed successfully'));
+
+    console.log(result.join('\n\n'));
   } catch (err) {
     const error = err as Error;
 
