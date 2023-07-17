@@ -15,7 +15,7 @@ describe('getFileExtension', () => {
     expect(type).toBe('ts');
   });
 
-  it('should strip extended extension files', () => {
+  it('should not strip extended extension files', () => {
     const file: ProjectFile = {
       name: 'foo.tsx',
       path: '',
@@ -24,6 +24,6 @@ describe('getFileExtension', () => {
 
     const type = getFileExtension(file);
 
-    expect(type).toBe('ts');
+    expect(type).toBe('tsx');
   });
 })

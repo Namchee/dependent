@@ -13,6 +13,9 @@ import { CompilerLoader } from '@/types';
  */
 const PARSER_MAP: Record<string, FileParser> = {
   js: getJSImportLines,
+  mjs: getJSImportLines,
+  cjs: getJSImportLines,
+  jsx: getJSImportLines,
   ts: getTSImportLines,
   vue: getVueImportLines,
   svelte: getSvelteImportLines,

@@ -4,10 +4,11 @@
  */
 export const FILE_TYPES = {
   js: 'JavaScript Files',
+  cjs: 'CommonJS Files',
   mjs: 'ESModule Files',
-  jsx: 'JavaScript XML Files',
+  jsx: 'JavaScript Extended Files',
   ts: 'TypeScript Files',
-  tsx: 'TypeScript XML Files',
+  tsx: 'TypeScript Extended Files',
   vue: 'Vue\'s Single File Component',
   svelte: 'Svelte\'s Single File Component',
 };

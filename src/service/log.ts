@@ -38,6 +38,7 @@ function sortFiles(a: DependantFile, b: DependantFile): number {
 function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
   const result: Record<string, DependantFile[]> = {
     js: [],
+    cjs: [],
     mjs: [],
     jsx: [],
     ts: [],

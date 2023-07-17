@@ -1,5 +1,5 @@
 /**
- *Get root package name from an import identifier
+ * Get root package name from an import identifier
  *
  * @param {string} identifier package identifier
  * @returns {string} actual package name
