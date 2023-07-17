@@ -97,6 +97,9 @@ devDependencies:
   prettier:
     specifier: ^3.0.0
     version: 3.0.0
+  prettier-eslint:
+    specifier: ^15.0.1
+    version: 15.0.1
   rollup:
     specifier: ^2.74.1
     version: 2.74.1
