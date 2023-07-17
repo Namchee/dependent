@@ -1,3 +1,15 @@
+# v0.12.0 (Mon Jul 17 2023)
+
+#### 🚀 Enhancement
+
+- feat: add CLI support [#52](https://github.com/Namchee/dependent/pull/52) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.11.0 (Thu May 26 2022)
 
 #### 🚀 Enhancement
