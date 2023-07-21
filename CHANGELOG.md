@@ -1,3 +1,19 @@
+# v0.12.0 (Fri Jul 21 2023)
+
+#### 🚀 Enhancement
+
+- feat: add CLI support [#52](https://github.com/Namchee/dependent/pull/52) ([@Namchee](https://github.com/Namchee))
+
+#### 🐛 Bug Fix
+
+- fix(cli): add 's' to default cli values for include option [#55](https://github.com/Namchee/dependent/pull/55) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.12.0 (Mon Jul 17 2023)
 
 #### 🚀 Enhancement
