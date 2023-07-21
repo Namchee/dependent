@@ -61,7 +61,7 @@ export const cli = yargs(process.argv.slice(2))
     include: {
       describe: 'Type of possible dependant to be scanned for dependency. Defaults to files and scripts',
       type: 'array',
-      default: ['script', 'file'],
+      default: ['scripts', 'files'],
       demandOption: false,
     },
   });
