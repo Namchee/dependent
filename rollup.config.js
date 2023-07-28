@@ -25,5 +25,6 @@ export default {
     'acorn',
     'acorn-walk',
     'acorn-jsx',
+    'table',
   ]
 }
