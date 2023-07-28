@@ -6,11 +6,11 @@ on:
       - master
 
 jobs:
-  refresh:
+  code-qc:
     runs-on: ubuntu-latest
     steps:
       - name: Connect workflow to repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
