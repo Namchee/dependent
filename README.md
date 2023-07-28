@@ -4,8 +4,6 @@
 
 > This project is still on active development. The API ***might** change without further notice.
 
-> This project currently doesn't work if your project is managed by pnpm. See [this issue](https://github.com/Namchee/dependent/issues/56) for more information.
-
 Dependent is a simple utility CLI to find out which files in your NodeJS-based projects are using a certain dependency. 🚀
 
 ![Demo](docs/demo.gif)
