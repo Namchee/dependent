@@ -19,16 +19,24 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
     return;
   }
 
-  const compilerPath = [
+  const oldCompilerPath = [
     '@vue',
     'compiler-sfc',
     'dist',
     'compiler-sfc.cjs.js',
   ];
 
+  // For Vue 3.2+
+  const newCompilerPath = [
+    'vue',
+    'compiler-sfc',
+    'index.js',
+  ];
+
   const paths = [
-    resolve(process.cwd(), 'node_modules', ...compilerPath),
-    ...globs.map(path => resolve(path, ...compilerPath)),
+    resolve(process.cwd(), 'node_modules', ...newCompilerPath),
+    resolve(process.cwd(), 'node_modules', ...oldCompilerPath),
+    ...globs.map(path => resolve(path, ...oldCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));
