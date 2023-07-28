@@ -1,3 +1,21 @@
+# v0.12.0 (Fri Jul 28 2023)
+
+#### 🚀 Enhancement
+
+- feat: add CLI support [#52](https://github.com/Namchee/dependent/pull/52) ([@Namchee](https://github.com/Namchee))
+
+#### 🐛 Bug Fix
+
+- fix(vue): add new compiler spec path for vue 3.2+ [#59](https://github.com/Namchee/dependent/pull/59) ([@Namchee](https://github.com/Namchee))
+- Docs/pnpm bug notice [#58](https://github.com/Namchee/dependent/pull/58) ([@Namchee](https://github.com/Namchee))
+- fix(cli): add 's' to default cli values for include option [#55](https://github.com/Namchee/dependent/pull/55) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.12.0 (Fri Jul 21 2023)
 
 #### 🚀 Enhancement
