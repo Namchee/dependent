@@ -11,12 +11,21 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
     return;
   }
 
+  const { dependencies } = resolveDependencyPackageJSON('vue');
+  const compilerVersion = dependencies['@vue/compiler-sfc'];
+
   const manualCompilerPath = [
     '@vue',
     'compiler-sfc',
     'dist',
     'compiler-sfc.cjs.js',
   ];
+
+  // For Vue 3, but older than 3.2
+  const pnpmCompilerPath = [
+    '.pnpm',
+
+  ]
 
   // For Vue 3.2+
   const newCompilerPath = [
@@ -28,6 +37,7 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
   const paths = [
     resolve(process.cwd(), 'node_modules', ...newCompilerPath),
     resolve(process.cwd(), 'node_modules', ...manualCompilerPath),
+    ...globs.map(path => resolve(path, ...newCompilerPath)),
     ...globs.map(path => resolve(path, ...manualCompilerPath)),
   ];
 

@@ -14,3 +14,7 @@ export function getRootPackage(identifier: string): string {
 
   return tokens[0];
 }
+
+export function getActualVersion(semver: string): string {
+  return semver.replace(/^([\^~><>=])+/, '');
+}

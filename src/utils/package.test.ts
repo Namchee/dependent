@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getRootPackage } from './package';
+import { getActualVersion, getRootPackage } from './package';
 
 describe('getRootPackage', () => {
   it('should be able to get package name', () => {
@@ -30,3 +30,40 @@ describe('getRootPackage', () => {
     expect(root).toBe('@namchee/decora');
   });
 });
+
+describe('getInstalledVersion', () => {
+  it('should replace nothing', () => {
+    const version = '1.6.3';
+    const result = getActualVersion(version);
+
+    expect(result).toBe('1.6.3');
+  });
+
+  it('should replace ^', () => {
+    const version = '^1.6.3';
+    const result = getActualVersion(version);
+
+    expect(result).toBe('1.6.3');
+  });
+
+  it('should replace ~', () => {
+    const version = '~1.6.3';
+    const result = getActualVersion(version);
+
+    expect(result).toBe('1.6.3');
+  });
+
+  it('should replace <', () => {
+    const version = '<1.6.3';
+    const result = getActualVersion(version);
+
+    expect(result).toBe('1.6.3');
+  });
+
+  it('should replace <> with =', () => {
+    const version = '>=1.6.3';
+    const result = getActualVersion(version);
+
+    expect(result).toBe('1.6.3');
+  });
+})

@@ -20,10 +20,14 @@ async function loadSvelteCompiler(globs: string[]): Promise<void> {
     return;
   }
 
-  const compilerPath = ['svelte', 'src', 'compiler', 'index.js'];
+  const oldCompilerPath = ['svelte', 'compiler.js'];
+  const newCompilerPath = ['svelte', 'src', 'compiler', 'index.js'];
+
   const paths = [
-    resolve(process.cwd(), 'node_modules', ...compilerPath),
-    ...globs.map(path => resolve(path, ...compilerPath)),
+    resolve(process.cwd(), 'node_modules', ...newCompilerPath),
+    resolve(process.cwd(), 'node_modules', ...oldCompilerPath),
+    ...globs.map(path => resolve(path, ...newCompilerPath)),
+    ...globs.map(path => resolve(path, ...oldCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));
