@@ -3,6 +3,10 @@ import { pathToFileURL } from 'url';
 
 import { getTSImportLines } from '@/service/parser/ts';
 
+import { getActualVersion } from '@/utils/package';
+
+import { resolveDependencyPackageJSON } from '@/service/package';
+
 let compiler: typeof import('@vue/compiler-sfc');
 
 export async function loadVueCompiler(globs: string[]): Promise<void> {
@@ -14,17 +18,19 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
   const { dependencies } = resolveDependencyPackageJSON('vue');
   const compilerVersion = dependencies['@vue/compiler-sfc'];
 
-  const manualCompilerPath = [
+  const flatCompilerPath = [
     '@vue',
     'compiler-sfc',
     'dist',
     'compiler-sfc.cjs.js',
   ];
 
-  // For Vue 3, but older than 3.2
+  // For Vue 3, but older than 3.2 on pnpm
   const pnpmCompilerPath = [
     '.pnpm',
-
+    `@vue+compiler-sfc@${getActualVersion(compilerVersion)}`,
+    'node_modules',
+    ...flatCompilerPath,
   ]
 
   // For Vue 3.2+
@@ -36,9 +42,10 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
 
   const paths = [
     resolve(process.cwd(), 'node_modules', ...newCompilerPath),
-    resolve(process.cwd(), 'node_modules', ...manualCompilerPath),
+    resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath),
+    resolve(process.cwd(), 'node_modules', ...flatCompilerPath),
     ...globs.map(path => resolve(path, ...newCompilerPath)),
-    ...globs.map(path => resolve(path, ...manualCompilerPath)),
+    ...globs.map(path => resolve(path, ...flatCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));

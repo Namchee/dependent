@@ -23,6 +23,8 @@ export async function getDependantFiles(
   ]);
 
   const globs = managerPaths.map(result => result.status === 'fulfilled' ? result.value : '');
+  // Quickfix, please remove when glob pattern is found
+  files = files.filter(file => !file.name.endsWith('.d.ts'));
 
   const dependants: Promise<DependantFile | null>[] = files.map(
     async (file) => {
