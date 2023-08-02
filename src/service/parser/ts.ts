@@ -3,11 +3,12 @@ import { pathToFileURL } from 'url';
 
 import { getRootPackage } from '@/utils/package';
 
-import type {
+import {
   SourceFile,
   Node,
   ImportDeclaration,
   CallExpression,
+  SyntaxKind,
 } from 'typescript';
 
 let compiler: typeof import('typescript');
@@ -63,12 +64,12 @@ function parseNode(
 
   const walk = (node: Node) => {
     switch (node.kind) {
-      case compiler.SyntaxKind.ImportDeclaration: {
+      case SyntaxKind.ImportDeclaration: {
         const specifier = (node as ImportDeclaration)
           .moduleSpecifier;
 
         if (
-          specifier.kind === 10 &&
+          specifier.kind === SyntaxKind.StringLiteral &&
           getRootPackage(specifier.getText().slice(1, -1)) === dependency
         ) {
           lineNumbers.push(
@@ -79,22 +80,22 @@ function parseNode(
         break;
       }
 
-      case compiler.SyntaxKind.CallExpression: {
+      case SyntaxKind.CallExpression: {
         const callExpr = node as CallExpression;
 
         const { expression } = callExpr;
         const child = callExpr.arguments;
 
         const isImport =
-          expression.kind === compiler.SyntaxKind.ImportKeyword &&
+          expression.kind === SyntaxKind.ImportKeyword &&
           child.length === 1 &&
-          child[0].kind === compiler.SyntaxKind.StringLiteral &&
+          child[0].kind === SyntaxKind.StringLiteral &&
           getRootPackage(child[0].getText().slice(1, -1)) === dependency
 
-        const isRequire = expression.kind === compiler.SyntaxKind.Identifier &&
+        const isRequire = expression.kind === SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
-          child[0].kind === compiler.SyntaxKind.StringLiteral &&
+          child[0].kind === SyntaxKind.StringLiteral &&
           getRootPackage(child[0].getText().slice(1, -1)) === dependency;
 
         if (isImport || isRequire) {
