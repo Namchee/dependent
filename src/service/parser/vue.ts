@@ -2,17 +2,9 @@ import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
 import { getTSImportLines } from '@/service/parser/ts';
-import { getJSImportLines } from '@/service/parser/js';
 
 let compiler: typeof import('@vue/compiler-sfc');
 
-/**
- * Get available Vue 3 compiler. Will prioritize locally-installed
- * compiler instead of the global one.
- *
- * @param {string[]} globs global package manager paths
- * @returns {Promise<void>}
- */
 export async function loadVueCompiler(globs: string[]): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
@@ -65,9 +57,10 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
 export async function getVueImportLines(
   content: string,
   dependency: string,
+  globs: string[],
 ): Promise<number[]> {
   if (!compiler) {
-    throw new Error('Vue 3 compiler has not been loaded yet');
+    await loadVueCompiler(globs);
   }
 
   const node = compiler.parse(content);
@@ -76,9 +69,7 @@ export async function getVueImportLines(
   if (script) {
     const startingLine = script.loc.start.line;
 
-    const parser = script.lang === 'ts' ? getTSImportLines : getJSImportLines;
-
-    const lines = await parser(script.content, dependency);
+    const lines = await getTSImportLines(script.content, dependency, globs);
     // -1, since the `<script>` block shouldn't count
     return lines.map(line => line + startingLine - 1);
   }

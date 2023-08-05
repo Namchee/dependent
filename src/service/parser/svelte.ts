@@ -14,14 +14,7 @@ import { getRootPackage } from '@/utils/package';
 
 let compiler: typeof import('svelte/compiler');
 
-/**
- * Get available Svelte compiler. Will prioritize locally-installed
- * compiler.
- *
- * @param {string[]} globs global package manager paths
- * @returns {Promise<void>}
- */
-export async function loadSvelteCompiler(globs: string[]): Promise<void> {
+async function loadSvelteCompiler(globs: string[]): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
@@ -133,9 +126,10 @@ export function parseNode(
 export async function getSvelteImportLines(
   content: string,
   dependency: string,
+  globs: string[],
 ): Promise<number[]> {
   if (!compiler) {
-    throw new Error('Svelte compiler has not been loaded');
+    await loadSvelteCompiler(globs);
   }
 
   const node = compiler.parse(content);

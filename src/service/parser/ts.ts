@@ -13,14 +13,7 @@ import {
 
 let compiler: typeof import('typescript');
 
-/**
- * Get available TypeScript compiler. Will prioritize locally-installed
- * compiler instead of the global one.
- *
- * @param {string[]} globs global package manager path
- * @returns {Promise<void>}
- */
-export async function loadTSCompiler(globs: string[]): Promise<void> {
+async function loadTSCompiler(globs: string[]): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
@@ -129,9 +122,10 @@ function parseNode(
 export async function getTSImportLines(
   content: string,
   dependency: string,
+  globs: string[],
 ): Promise<number[]> {
   if (!compiler) {
-    throw new Error('TypeScript compiler has not been loaded');
+    await loadTSCompiler(globs);
   }
 
   const node = compiler.createSourceFile(
