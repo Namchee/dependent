@@ -22,9 +22,7 @@ export default {
     'chalk',
     'glob',
     'yargs',
-    'acorn',
-    'acorn-walk',
-    'acorn-jsx',
+    'typescript',
     'table',
   ]
 }

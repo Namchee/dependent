@@ -30,12 +30,57 @@ describe('TypeScript parser test', () => {
     expect(dependant[0]).toBe(1);
   });
 
-  it('should be able to aliased imports', async () =>{
+  it('should be able to parse aliased imports', async () =>{
     const content = `import { json as jeson } from 'express';`;
 
     const dependant = await getTSImportLines(content, 'express', []);
 
     expect(dependant.length).toBe(1);
+    expect(dependant[0]).toBe(1);
+  });
+
+  it('should be able to parse default aliased imports', async () =>{
+    const content = `import { default as alias } from 'express';`;
+
+    const dependant = await getTSImportLines(content, 'express', []);
+
+    expect(dependant.length).toBe(1);
+    expect(dependant[0]).toBe(1);
+  });
+
+  it('should be able to parse multiple named imports', async () =>{
+    const content = `import { foo, bar } from 'express';`;
+
+    const dependant = await getTSImportLines(content, 'express', []);
+
+    expect(dependant.length).toBe(1);
+    expect(dependant[0]).toBe(1);
+  });
+
+  it('should be able to parse combined default and named imports', async () =>{
+    const content = `import defaultExport, { export1 } from 'express';`;
+
+    const dependant = await getTSImportLines(content, 'express', []);
+
+    expect(dependant.length).toBe(1);
+    expect(dependant[0]).toBe(1);
+  });
+
+  it('should be able to parse combined default and named imports', async () =>{
+    const content = `import defaultExport, { export1 } from 'express';`;
+
+    const dependant = await getTSImportLines(content, 'express', []);
+
+    expect(dependant.length).toBe(1);
+    expect(dependant[0]).toBe(1);
+  });
+
+  it('should be able to parse combined default and named imports in separated imports', async () =>{
+    const content = `import defaultExport from 'express';\nimport { foo } from 'express';`;
+
+    const dependant = await getTSImportLines(content, 'express', []);
+
+    expect(dependant.length).toBe(2);
     expect(dependant[0]).toBe(1);
   });
 
@@ -103,7 +148,7 @@ describe('TypeScript parser test', () => {
 
     const app: express.Application = express();
 
-    app.lister(3000, async () =>console.log('hello world'))`;
+    app.lister(3000, async () => console.log('hello world'))`;
 
     const dependants = await getTSImportLines(content, 'express', []);
     expect(dependants.length).toBe(1);

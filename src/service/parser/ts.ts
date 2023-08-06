@@ -3,13 +3,8 @@ import { pathToFileURL } from 'url';
 
 import { getRootPackage } from '@/utils/package';
 
-import {
-  SourceFile,
-  Node,
-  ImportDeclaration,
-  CallExpression,
-  SyntaxKind,
-} from 'typescript';
+// CommonJS hack
+import ts from 'typescript';
 
 let compiler: typeof import('typescript');
 
@@ -50,19 +45,19 @@ async function loadTSCompiler(globs: string[]): Promise<void> {
  * is imported.
  */
 function parseNode(
-  sourceNode: SourceFile,
+  sourceNode: ts.SourceFile,
   dependency: string,
 ): number[] {
   const lineNumbers: number[] = [];
 
-  const walk = (node: Node) => {
+  const walk = (node: ts.Node) => {
     switch (node.kind) {
-      case SyntaxKind.ImportDeclaration: {
-        const specifier = (node as ImportDeclaration)
+      case ts.SyntaxKind.ImportDeclaration: {
+        const specifier = (node as ts.ImportDeclaration)
           .moduleSpecifier;
 
         if (
-          specifier.kind === SyntaxKind.StringLiteral &&
+          specifier.kind === ts.SyntaxKind.StringLiteral &&
           getRootPackage(specifier.getText().slice(1, -1)) === dependency
         ) {
           lineNumbers.push(
@@ -73,22 +68,22 @@ function parseNode(
         break;
       }
 
-      case SyntaxKind.CallExpression: {
-        const callExpr = node as CallExpression;
+      case ts.SyntaxKind.CallExpression: {
+        const callExpr = node as ts.CallExpression;
 
         const { expression } = callExpr;
         const child = callExpr.arguments;
 
         const isImport =
-          expression.kind === SyntaxKind.ImportKeyword &&
+          expression.kind === ts.SyntaxKind.ImportKeyword &&
           child.length === 1 &&
-          child[0].kind === SyntaxKind.StringLiteral &&
+          child[0].kind === ts.SyntaxKind.StringLiteral &&
           getRootPackage(child[0].getText().slice(1, -1)) === dependency
 
-        const isRequire = expression.kind === SyntaxKind.Identifier &&
+        const isRequire = expression.kind === ts.SyntaxKind.Identifier &&
           expression.getText() === 'require' &&
           child.length === 1 &&
-          child[0].kind === SyntaxKind.StringLiteral &&
+          child[0].kind === ts.SyntaxKind.StringLiteral &&
           getRootPackage(child[0].getText().slice(1, -1)) === dependency;
 
         if (isImport || isRequire) {

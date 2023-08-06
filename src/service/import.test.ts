@@ -4,16 +4,22 @@ import { getDependantFiles } from '@/service/import';
 
 import type { ProjectFile } from '@/types';
 
-describe('Parser tolerance test', () => {
+import * as parsingUtils from '@/service/parser';
+
+describe('Parsing tolerance test', () => {
   beforeEach(() => {
     vi.spyOn(console, 'log').mockImplementation(() => undefined);
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-  })
+  });
 
-  it('should throw an error when silent is false', () => {
+  it('should throw an error when silent is false', async () => {
+    vi.spyOn(parsingUtils, 'getParser').mockImplementationOnce(() => {
+      throw new Error('error when parsing');
+    })
+
     const files: ProjectFile[] = [
       {
         name: 'a.js',
@@ -24,10 +30,12 @@ describe('Parser tolerance test', () => {
 
     expect(getDependantFiles(files, 'express', {
       silent: false,
-    })).rejects.toBeTruthy();
+    })).rejects.toThrowError();
   });
 
   it('should not throw an error when silent is true', async () => {
+    vi.spyOn(parsingUtils, 'getParser').mockImplementationOnce(() => async () => []);
+
     const files: ProjectFile[] = [
       {
         name: 'a.js',
