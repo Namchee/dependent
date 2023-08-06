@@ -1,3 +1,15 @@
+# v0.14.1 (Sun Aug 06 2023)
+
+#### 🐛 Bug Fix
+
+- Chore/typescript default parse [#61](https://github.com/Namchee/dependent/pull/61) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.12.0 (Fri Jul 28 2023)
 
 #### 🚀 Enhancement
