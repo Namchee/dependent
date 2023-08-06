@@ -16,6 +16,7 @@ All parsers must export at least one function which satisfies the following Type
 export type FileParser = (
   content: string,
   dependency: string,
+  globs: string[],
 ) => number[];
 ```
 
@@ -70,7 +71,7 @@ export function parseNode(
   return lines;
 }
 
-export function getESModulesImportLines(
+export function getXXXImportLines(
   content: string,
   dependency: string,
 ): number[] {
@@ -87,7 +88,7 @@ export function getESModulesImportLines(
 
 See all examples of parser [here](./src/parser).
 
-After the main function is exported, you must register it on [`index.ts`](./src/parser/index.ts), specifically on `PARSER_MAP`, else the parser cannot be recognized by `dependent`. `PARSER_MAP` is a key-value map that stores file extension to their respective parser function. The following exmaple shows an example of registering `js` files to the `getESModulesImportLines` from the function above.
+After the main function is exported, you must register it on [`index.ts`](./src/parser/index.ts), specifically on `PARSER_MAP`, else the parser cannot be recognized by `dependent`. `PARSER_MAP` is a key-value map that stores file extension to their respective parser function. The following example shows an example of registering `js` files to the `getXXXModulesImportLines` from the function above.
 
 ```ts
 export const PARSER_MAP: Record<string, FileParser> = {
@@ -101,16 +102,10 @@ export const PARSER_MAP: Record<string, FileParser> = {
 
 ## Testing
 
-In order to guarantee the correctness of a parser, a unit test must be provided for each supported parsers. All tests must be provided as a TypeScript file and will be executed by `jest` with following command
+In order to guarantee the correctness of a parser, a unit test must be provided for each supported parsers. All tests must be provided as a TypeScript file and will be executed by `vitest` with following command
 
 ```bash
-yarn test
-```
-
-...or, use the `watch` version, which will rerun all of the tests if at least of the test dependencies changed
-
-```bash
-yarn test:watch
+pnpm run test
 ```
 
 See [the test example](./__tests__/parser/mjs.test.ts) for how to structure a decent test for a parser.
