@@ -11,7 +11,7 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
     return;
   }
 
-  const oldCompilerPath = [
+  const manualCompilerPath = [
     '@vue',
     'compiler-sfc',
     'dist',
@@ -27,8 +27,8 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
 
   const paths = [
     resolve(process.cwd(), 'node_modules', ...newCompilerPath),
-    resolve(process.cwd(), 'node_modules', ...oldCompilerPath),
-    ...globs.map(path => resolve(path, ...oldCompilerPath)),
+    resolve(process.cwd(), 'node_modules', ...manualCompilerPath),
+    ...globs.map(path => resolve(path, ...manualCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));
