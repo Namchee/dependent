@@ -51,10 +51,18 @@ function parseNode(
   const lineNumbers: number[] = [];
 
   const walk = (node: ts.Node) => {
+    if (!node.kind) {
+      console.log(node);
+    }
+
     switch (node.kind) {
       case ts.SyntaxKind.ImportDeclaration: {
         const specifier = (node as ts.ImportDeclaration)
           .moduleSpecifier;
+
+        if (!specifier.kind) {
+          console.log(node);
+        }
 
         if (
           specifier.kind === ts.SyntaxKind.StringLiteral &&

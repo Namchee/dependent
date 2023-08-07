@@ -3,6 +3,7 @@ import { FileParser } from '@/types';
 import { getSvelteImportLines } from '@/service/parser/svelte';
 import { getTSImportLines } from '@/service/parser/ts';
 import { getVueImportLines } from '@/service/parser/vue';
+import { getAstroImportLines } from '@/service/parser/astro';
 
 /**
  * Extension to parser map. Make sure to register the function here
@@ -16,6 +17,7 @@ const PARSER_MAP: Record<string, FileParser> = {
   ts: getTSImportLines,
   vue: getVueImportLines,
   svelte: getSvelteImportLines,
+  astro: getAstroImportLines,
 };
 
 /**

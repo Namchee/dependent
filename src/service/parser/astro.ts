@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
 import { resolveDependencyPackageJSON } from '@/service/package';
+import { getTSImportLines } from '@/service/parser/ts';
 
 import { getActualVersion } from '@/utils/package';
 
@@ -10,15 +11,11 @@ import type { RootNode } from '@astrojs/compiler';
 let compiler: typeof import('@astrojs/compiler');
 let utils: typeof import('@astrojs/compiler/utils');
 
-export async function loadAstroCompiler(globs: string[]): Promise<void> {
-  const result = await Promise.allSettled([
+async function loadAstroCompiler(globs: string[]): Promise<void> {
+  await Promise.allSettled([
     loadAstroCoreCompiler(globs),
     loadAstroUtils(globs),
   ])
-
-  console.log('called');
-
-  console.log(result);
 }
 
 async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
@@ -58,8 +55,6 @@ async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
 
   for (let i = 0; i < compilerImports.length; i++) {
     const fileModule = compilerImports[i];
-
-    console.log(fileModule);
 
     if (fileModule.status === 'fulfilled') {
       compiler = fileModule.value as typeof import('@astrojs/compiler');
@@ -122,12 +117,12 @@ export function parseNode(
   dependency: string,
 ): number[] {
   const lines: number[] = [];
-  const scriptNodes: string[] = [];
 
-  utils.walk(sourceNode, (node) => {
+  utils.walk(sourceNode, async (node) => {
     if (node.type === 'frontmatter') {
-      scriptNodes.push(node.value);
-      console.log(node.value);
+      const analysis = await getTSImportLines(node.value, dependency, []);
+
+      lines.push(...analysis);
     }
   });
 
@@ -138,10 +133,10 @@ export function parseNode(
 export async function getAstroImportLines(
   content: string,
   dependency: string,
+  globs: string[],
 ): Promise<number[]> {
-  console.log(compiler, utils);
   if (!compiler || !utils) {
-    throw new Error('Astro compiler has not been loaded yet');
+    await loadAstroCompiler(globs);
   }
 
   const nodeTree = await compiler.parse(content);
