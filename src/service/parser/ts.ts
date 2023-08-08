@@ -1,40 +1,7 @@
-import { resolve } from 'path';
-import { pathToFileURL } from 'url';
-
 import { getRootPackage } from '@/utils/package';
 
 // CommonJS hack
 import ts from 'typescript';
-
-let compiler: typeof import('typescript');
-
-async function loadTSCompiler(globs: string[]): Promise<void> {
-  // Do not load the compiler twice
-  if (compiler) {
-    return;
-  }
-
-  const compilerPath = ['typescript', 'lib', 'typescript.js'];
-
-  const paths = [
-    resolve(process.cwd(), 'node_modules', ...compilerPath),
-    ...globs.map(path => resolve(path, ...compilerPath)),
-  ];
-
-  const imports = paths.map(path => import(pathToFileURL(path).toString()));
-  const compilerImports = await Promise.allSettled(imports);
-
-  for (let i = 0; i < compilerImports.length; i++) {
-    const fileModule = compilerImports[i];
-
-    if (fileModule.status === 'fulfilled') {
-      compiler = fileModule.value.default as typeof import('typescript');
-      return;
-    }
-  }
-
-  throw new Error('No TypeScript parsers available');
-}
 
 /**
  * Parse TypeScript node for imports to `dependency`
@@ -51,18 +18,10 @@ function parseNode(
   const lineNumbers: number[] = [];
 
   const walk = (node: ts.Node) => {
-    if (!node.kind) {
-      console.log(node);
-    }
-
     switch (node.kind) {
       case ts.SyntaxKind.ImportDeclaration: {
         const specifier = (node as ts.ImportDeclaration)
           .moduleSpecifier;
-
-        if (!specifier.kind) {
-          console.log(node);
-        }
 
         if (
           specifier.kind === ts.SyntaxKind.StringLiteral &&
@@ -106,7 +65,7 @@ function parseNode(
       default: break;
     }
 
-    compiler.forEachChild(node, walk);
+    ts.forEachChild(node, walk);
   }
 
   walk(sourceNode);
@@ -125,18 +84,13 @@ function parseNode(
 export async function getTSImportLines(
   content: string,
   dependency: string,
-  globs: string[],
 ): Promise<number[]> {
-  if (!compiler) {
-    await loadTSCompiler(globs);
-  }
-
-  const node = compiler.createSourceFile(
+  const node = ts.createSourceFile(
     '',
     content,
-    compiler.ScriptTarget.Latest,
+    ts.ScriptTarget.Latest,
     true,
-    compiler.ScriptKind.TSX,
+    ts.ScriptKind.TSX,
   );
 
   return parseNode(node, dependency);

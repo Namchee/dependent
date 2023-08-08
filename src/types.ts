@@ -47,7 +47,6 @@ export interface ParserOptions {
 export type FileParser = (
   content: string,
   dependency: string,
-  globs: string[],
 ) => Promise<number[]>;
 
 export interface LoggerConfig {

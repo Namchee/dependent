@@ -5,17 +5,35 @@ import { resolveDependencyPackageJSON } from '@/service/package';
 import { getTSImportLines } from '@/service/parser/ts';
 
 import { getActualVersion } from '@/utils/package';
+import { getGlobs } from '@/utils/global';
 
 import type { RootNode } from '@astrojs/compiler';
 
 let compiler: typeof import('@astrojs/compiler');
 let utils: typeof import('@astrojs/compiler/utils');
 
-async function loadAstroCompiler(globs: string[]): Promise<void> {
+async function loadAstroCompiler(): Promise<void> {
+  const globs = await getGlobs();
+
   await Promise.allSettled([
     loadAstroCoreCompiler(globs),
     loadAstroUtils(globs),
   ])
+}
+
+function getPnpmCompilerPath(): string[] {
+  try {
+    const { dependencies } = resolveDependencyPackageJSON('astro');
+    const compilerVersion = dependencies['@astrojs/compiler'];
+
+    return [
+      '.pnpm',
+      `@astrojs+compiler@${getActualVersion(compilerVersion)}`,
+      'node_modules',
+    ]
+  } catch (err) {
+    return [];
+  }
 }
 
 async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
@@ -23,9 +41,6 @@ async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
   if (compiler) {
     return;
   }
-
-  const { dependencies } = resolveDependencyPackageJSON('astro');
-  const compilerVersion = dependencies['@astrojs/compiler'];
 
   const compilerPath = [
     '@astrojs',
@@ -35,19 +50,18 @@ async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
     'index.js',
   ];
 
-  // For Vue 3, but older than 3.2 on pnpm
-  const pnpmCompilerPath = [
-    '.pnpm',
-    `@astrojs+compiler@${getActualVersion(compilerVersion)}`,
-    'node_modules',
-    ...compilerPath,
-  ]
+  const pnpmCompilerPath = getPnpmCompilerPath();
+
+  const nonGlobs = [resolve(process.cwd(), 'node_modules', ...compilerPath)];
+  if (pnpmCompilerPath.length) {
+    nonGlobs.push(
+      resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...compilerPath),
+    )
+  }
 
   const paths = [
-    resolve(process.cwd(), 'node_modules', ...compilerPath),
-    resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath),
+    ...nonGlobs,
     ...globs.map(path => resolve(path, ...compilerPath)),
-    ...globs.map(path => resolve(path, ...pnpmCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));
@@ -71,9 +85,6 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
     return;
   }
 
-  const { dependencies } = resolveDependencyPackageJSON('astro');
-  const compilerVersion = dependencies['@astrojs/compiler'];
-
   const compilerPath = [
     '@astrojs',
     'compiler',
@@ -82,19 +93,18 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
     'utils.js',
   ];
 
-  // For Vue 3, but older than 3.2 on pnpm
-  const pnpmCompilerPath = [
-    '.pnpm',
-    `@astrojs+compiler@${getActualVersion(compilerVersion)}`,
-    'node_modules',
-    ...compilerPath,
-  ]
+  const pnpmCompilerPath = getPnpmCompilerPath();
+
+  const nonGlobs = [resolve(process.cwd(), 'node_modules', ...compilerPath)];
+  if (pnpmCompilerPath.length) {
+    nonGlobs.push(
+      resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...compilerPath),
+    )
+  }
 
   const paths = [
-    resolve(process.cwd(), 'node_modules', ...compilerPath),
-    resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath),
+    ...nonGlobs,
     ...globs.map(path => resolve(path, ...compilerPath)),
-    ...globs.map(path => resolve(path, ...pnpmCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));
@@ -112,31 +122,36 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
   throw new Error('Failed to load Astro utility');
 }
 
-export function parseNode(
+export async function parseNode(
   sourceNode: RootNode,
   dependency: string,
-): number[] {
-  const lines: number[] = [];
+): Promise<number[]> {
+  const frontmatters: string[] = [];
 
-  utils.walk(sourceNode, async (node) => {
+  utils.walk(sourceNode, (node) => {
     if (node.type === 'frontmatter') {
-      const analysis = await getTSImportLines(node.value, dependency, []);
+      frontmatters.push(node.value);
 
-      lines.push(...analysis);
+      console.log(node.value);
     }
   });
 
-  return lines;
+  console.log(frontmatters);
+
+  const imports = await Promise.all(
+    frontmatters.map(frontmatter => getTSImportLines(frontmatter, dependency))
+  );
+
+  return imports.flat();
 }
 
 
 export async function getAstroImportLines(
   content: string,
   dependency: string,
-  globs: string[],
 ): Promise<number[]> {
   if (!compiler || !utils) {
-    await loadAstroCompiler(globs);
+    await loadAstroCompiler();
   }
 
   const nodeTree = await compiler.parse(content);

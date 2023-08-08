@@ -1,8 +1,8 @@
 import { FileParser } from '@/types';
 
-import { getSvelteImportLines } from '@/service/parser/svelte';
 import { getTSImportLines } from '@/service/parser/ts';
 import { getVueImportLines } from '@/service/parser/vue';
+import { getSvelteImportLines } from '@/service/parser/svelte';
 import { getAstroImportLines } from '@/service/parser/astro';
 
 /**

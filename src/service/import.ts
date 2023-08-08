@@ -9,20 +9,12 @@ import type {
 } from '@/types';
 
 import { getFileExtension } from '@/utils/file';
-import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
 
 export async function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
   { silent }: ParserOptions,
 ): Promise<DependantFile[]> {
-  const managerPaths = await Promise.allSettled([
-    getGlobalNPMPath(),
-    getGlobalYarnPath(),
-    getGlobalPnpmPath(),
-  ]);
-
-  const globs = managerPaths.map(result => result.status === 'fulfilled' ? result.value : '');
   // Quickfix, please remove when glob pattern is found
   files = files.filter(file => !file.name.endsWith('.d.ts'));
 
@@ -32,7 +24,7 @@ export async function getDependantFiles(
         const ext = getFileExtension(file);
 
         const parse = getParser(ext);
-        const dependants = await parse(file.content, dependency, globs);
+        const dependants = await parse(file.content, dependency);
 
         if (dependants.length) {
           return {

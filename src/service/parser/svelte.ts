@@ -11,14 +11,17 @@ import type {
 import type { BaseNode } from 'estree-walker';
 
 import { getRootPackage } from '@/utils/package';
+import { getGlobs } from '@/utils/global';
 
 let compiler: typeof import('svelte/compiler');
 
-async function loadSvelteCompiler(globs: string[]): Promise<void> {
+async function loadSvelteCompiler(): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
   }
+
+  const globs = await getGlobs();
 
   const oldCompilerPath = ['svelte', 'compiler.js'];
   const newCompilerPath = ['svelte', 'src', 'compiler', 'index.js'];
@@ -130,10 +133,9 @@ export function parseNode(
 export async function getSvelteImportLines(
   content: string,
   dependency: string,
-  globs: string[],
 ): Promise<number[]> {
   if (!compiler) {
-    await loadSvelteCompiler(globs);
+    await loadSvelteCompiler();
   }
 
   const node = compiler.parse(content);

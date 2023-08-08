@@ -78,7 +78,7 @@ export function resolveDependencyPackageJSON(
   // Check package.json existence
   if (!existsSync(path)) {
     throw new Error(
-      'The current project directory is not a NodeJS-based project',
+      `Cannot find metadata for dependency ${dependency}`,
     );
   }
 

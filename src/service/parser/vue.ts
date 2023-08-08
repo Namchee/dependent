@@ -4,19 +4,34 @@ import { pathToFileURL } from 'url';
 import { getTSImportLines } from '@/service/parser/ts';
 
 import { getActualVersion } from '@/utils/package';
+import { getGlobs } from '@/utils/global';
 
 import { resolveDependencyPackageJSON } from '@/service/package';
 
 let compiler: typeof import('@vue/compiler-sfc');
 
-export async function loadVueCompiler(globs: string[]): Promise<void> {
+function getPnpmCompilerPath(): string[] {
+  try {
+    const { dependencies } = resolveDependencyPackageJSON('vue');
+    const compilerVersion = dependencies['@vue/compiler-sfc'];
+
+    return [
+      '.pnpm',
+      `@vue+compiler-sfc@${getActualVersion(compilerVersion)}`,
+      'node_modules',
+    ]
+  } catch (err) {
+    return [];
+  }
+}
+
+async function loadVueCompiler(): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
   }
 
-  const { dependencies } = resolveDependencyPackageJSON('vue');
-  const compilerVersion = dependencies['@vue/compiler-sfc'];
+  const globs = await getGlobs();
 
   const flatCompilerPath = [
     '@vue',
@@ -25,14 +40,6 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
     'compiler-sfc.cjs.js',
   ];
 
-  // For Vue 3, but older than 3.2 on pnpm
-  const pnpmCompilerPath = [
-    '.pnpm',
-    `@vue+compiler-sfc@${getActualVersion(compilerVersion)}`,
-    'node_modules',
-    ...flatCompilerPath,
-  ]
-
   // For Vue 3.2+
   const newCompilerPath = [
     'vue',
@@ -40,9 +47,17 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
     'index.js',
   ];
 
+  const pnpmCompilerPath = getPnpmCompilerPath();
+
+  const nonGlobs = [resolve(process.cwd(), 'node_modules', ...newCompilerPath)];
+  if (pnpmCompilerPath.length) {
+    nonGlobs.push(
+      resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...flatCompilerPath)
+    )
+  }
+
   const paths = [
-    resolve(process.cwd(), 'node_modules', ...newCompilerPath),
-    resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath),
+    ...nonGlobs,
     resolve(process.cwd(), 'node_modules', ...flatCompilerPath),
     ...globs.map(path => resolve(path, ...newCompilerPath)),
     ...globs.map(path => resolve(path, ...flatCompilerPath)),
@@ -74,10 +89,9 @@ export async function loadVueCompiler(globs: string[]): Promise<void> {
 export async function getVueImportLines(
   content: string,
   dependency: string,
-  globs: string[],
 ): Promise<number[]> {
   if (!compiler) {
-    await loadVueCompiler(globs);
+    await loadVueCompiler();
   }
 
   const node = compiler.parse(content);
@@ -86,8 +100,8 @@ export async function getVueImportLines(
   if (script) {
     const startingLine = script.loc.start.line;
 
-    const lines = await getTSImportLines(script.content, dependency, globs);
-    // -1, since the `<script>` block shouldn't count
+    const lines = await getTSImportLines(script.content, dependency);
+
     return lines.map(line => line + startingLine - 1);
   }
 
