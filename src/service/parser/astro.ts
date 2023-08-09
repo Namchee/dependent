@@ -12,7 +12,7 @@ import type { RootNode } from '@astrojs/compiler';
 let compiler: typeof import('@astrojs/compiler');
 let utils: typeof import('@astrojs/compiler/utils');
 
-async function loadAstroCompiler(): Promise<void> {
+export async function loadAstroCompiler(): Promise<void> {
   const globs = await getGlobs();
 
   await Promise.allSettled([
@@ -161,13 +161,12 @@ export async function parseNode(
   return getTSImportLines(frontmatter, dependency);
 }
 
-
 export async function getAstroImportLines(
   content: string,
   dependency: string,
 ): Promise<number[]> {
   if (!compiler || !utils) {
-    await loadAstroCompiler();
+    throw new Error('Astro compiler has not been loaded yet');
   }
 
   const nodeTree = await compiler.parse(content);

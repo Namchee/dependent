@@ -15,7 +15,7 @@ import { getGlobs } from '@/utils/global';
 
 let compiler: typeof import('svelte/compiler');
 
-async function loadSvelteCompiler(): Promise<void> {
+export async function loadSvelteCompiler(): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
@@ -135,7 +135,7 @@ export async function getSvelteImportLines(
   dependency: string,
 ): Promise<number[]> {
   if (!compiler) {
-    await loadSvelteCompiler();
+    throw new Error('Svelte compiler has not been loaded yet');
   }
 
   const node = compiler.parse(content);

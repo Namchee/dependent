@@ -25,7 +25,7 @@ function getPnpmCompilerPath(): string[] {
   }
 }
 
-async function loadVueCompiler(): Promise<void> {
+export async function loadVueCompiler(): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
@@ -91,7 +91,7 @@ export async function getVueImportLines(
   dependency: string,
 ): Promise<number[]> {
   if (!compiler) {
-    await loadVueCompiler();
+    throw new Error('Vue compiler has not been loaded yet');
   }
 
   const node = compiler.parse(content);
