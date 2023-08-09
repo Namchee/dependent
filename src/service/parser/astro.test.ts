@@ -16,7 +16,7 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro-iconify');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse all modules import', async () =>{
@@ -32,7 +32,7 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro-iconify');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse named imports', async () =>{
@@ -48,7 +48,7 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro-iconify');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse aliased imports', async () =>{
@@ -64,7 +64,7 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro-iconify');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse default aliased imports', async () =>{
@@ -80,7 +80,7 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro-iconify');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse multiple named imports', async () =>{
@@ -94,12 +94,11 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'something');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse combined default and named imports', async () =>{
-    const content = `
-    ---
+    const content = `---
     import Something, { foo, bar } from 'something/like/this';
     ---
 
@@ -109,12 +108,11 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'something');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse combined default and named imports in separated imports', async () =>{
-    const content = `
-    ---
+    const content = `---
     import { foo, bar } from 'something/like/this';
     import Something from 'something';
     ---
@@ -127,12 +125,11 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'something');
 
     expect(dependant.length).toBe(2);
-    expect(dependant[0]).toBe(1);
+    expect(dependant).toStrictEqual([2, 3]);
   });
 
   it('should be able to parse side-effect imports', async () =>{
-    const content = `
-    ---
+    const content = `---
     import 'astro';
     ---
 
@@ -142,12 +139,11 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse type import', async () =>{
-    const content = `
-    ---
+    const content = `---
     import type { HTMLDivAttributes } from 'astro/types';
     ---
 
@@ -157,12 +153,11 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse dynamic imports', async () =>{
-    const content = `
-    ---
+    const content = `---
     const a = import('astro');
     ---
 
@@ -172,12 +167,11 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 
   it('should be able to parse CommonJS imports', async () =>{
-    const content = `
-    ---
+    const content = `---
     const a = require('astro');
     ---
 
@@ -187,6 +181,6 @@ describe('Astro parser test', () => {
     const dependant = await getAstroImportLines(content, 'astro');
 
     expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
+    expect(dependant[0]).toBe(2);
   });
 });

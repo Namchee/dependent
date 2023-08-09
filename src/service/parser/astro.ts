@@ -18,7 +18,7 @@ async function loadAstroCompiler(): Promise<void> {
   await Promise.allSettled([
     loadAstroCoreCompiler(globs),
     loadAstroUtils(globs),
-  ])
+  ]);
 }
 
 function getPnpmCompilerPath(): string[] {
@@ -45,6 +45,12 @@ async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
   const compilerPath = [
     '@astrojs',
     'compiler',
+    'node',
+    'index.js',
+  ];
+  const newCompilerPath = [
+    '@astrojs',
+    'compiler',
     'dist',
     'node',
     'index.js',
@@ -52,10 +58,14 @@ async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
 
   const pnpmCompilerPath = getPnpmCompilerPath();
 
-  const nonGlobs = [resolve(process.cwd(), 'node_modules', ...compilerPath)];
+  const nonGlobs = [
+    resolve(process.cwd(), 'node_modules', ...compilerPath),
+    resolve(process.cwd(), 'node_modules', ...newCompilerPath),
+  ];
   if (pnpmCompilerPath.length) {
     nonGlobs.push(
       resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...compilerPath),
+      resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...newCompilerPath),
     )
   }
 
@@ -81,11 +91,17 @@ async function loadAstroCoreCompiler(globs: string[]): Promise<void> {
 
 async function loadAstroUtils(globs: string[]): Promise<void> {
   // Do not load the compiler twice
-  if (compiler) {
+  if (utils) {
     return;
   }
 
   const compilerPath = [
+    '@astrojs',
+    'compiler',
+    'node',
+    'utils.js',
+  ];
+  const newCompilerPath = [
     '@astrojs',
     'compiler',
     'dist',
@@ -95,10 +111,14 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
 
   const pnpmCompilerPath = getPnpmCompilerPath();
 
-  const nonGlobs = [resolve(process.cwd(), 'node_modules', ...compilerPath)];
+  const nonGlobs = [
+    resolve(process.cwd(), 'node_modules', ...compilerPath),
+    resolve(process.cwd(), 'node_modules', ...newCompilerPath),
+  ];
   if (pnpmCompilerPath.length) {
     nonGlobs.push(
       resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...compilerPath),
+      resolve(process.cwd(), 'node_modules', ...pnpmCompilerPath, ...newCompilerPath),
     )
   }
 
@@ -122,27 +142,23 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
   throw new Error('Failed to load Astro utility');
 }
 
+async function getFrontmatter(node: RootNode): Promise<string> {
+  return new Promise((resolve) => {
+    utils.walk(node, (node) => {
+      if (node.type === 'frontmatter') {
+        resolve(node.value);
+      }
+    });
+  });
+}
+
 export async function parseNode(
   sourceNode: RootNode,
   dependency: string,
 ): Promise<number[]> {
-  const frontmatters: string[] = [];
+  const frontmatter = await getFrontmatter(sourceNode);
 
-  utils.walk(sourceNode, (node) => {
-    if (node.type === 'frontmatter') {
-      frontmatters.push(node.value);
-
-      console.log(node.value);
-    }
-  });
-
-  console.log(frontmatters);
-
-  const imports = await Promise.all(
-    frontmatters.map(frontmatter => getTSImportLines(frontmatter, dependency))
-  );
-
-  return imports.flat();
+  return getTSImportLines(frontmatter, dependency);
 }
 
 
