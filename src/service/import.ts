@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { getParser } from '@/service/parser';
+import { getParser, loadCompiler } from '@/service/parser';
 
 import type {
   DependantFile,
@@ -9,6 +9,7 @@ import type {
 } from '@/types';
 
 import { getFileExtension } from '@/utils/file';
+import { FILE_TYPES } from '@/constant/files';
 
 export async function getDependantFiles(
   files: ProjectFile[],
@@ -17,6 +18,8 @@ export async function getDependantFiles(
 ): Promise<DependantFile[]> {
   // Quickfix, please remove when glob pattern is found
   files = files.filter(file => !file.name.endsWith('.d.ts'));
+
+  await loadCompilers(files);
 
   const dependants: Promise<DependantFile | null>[] = files.map(
     async (file) => {
@@ -61,4 +64,23 @@ export async function getDependantFiles(
   }
 
   return results;
+}
+
+async function loadCompilers(files: ProjectFile[]) {
+  const compilers = [
+    ...new Set(
+      files.map(file => getFileExtension(file))
+    ),
+  ].map((ext: string) => {
+    try {
+      return loadCompiler(ext);
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(
+        `Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`,
+      );
+    }
+  });
+
+  await Promise.all(compilers);
 }
