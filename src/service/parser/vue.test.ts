@@ -1,10 +1,14 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach, beforeAll } from 'vitest';
 
-import { getVueImportLines } from '@/service/parser/vue';
+import { getVueImportLines, loadVueCompiler } from '@/service/parser/vue';
 
 import * as pkgUtils from '@/service/package';
 
 describe('Vue parser test', () => {
+  beforeAll(async () => {
+    await loadVueCompiler();
+  });
+
   beforeEach(() => {
     vi.spyOn(pkgUtils, 'resolveDependencyPackageJSON').mockImplementation(() => ({
       name: 'vue',

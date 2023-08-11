@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import { getAstroImportLines } from '@/service/parser/astro';
+import { getAstroImportLines, loadAstroCompiler } from '@/service/parser/astro';
 
 describe('Astro parser test', () => {
+  beforeAll(async () => {
+    await loadAstroCompiler();
+  });
+
   it('should be able to parse ES modules import', async () =>{
     const content = `---
     import Icon from 'astro-iconify';
