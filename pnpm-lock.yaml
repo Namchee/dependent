@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -105,7 +105,7 @@ devDependencies:
     version: 7.0.2(rollup@2.74.1)
   svelte:
     specifier: ^3.42.4
-    version: 3.48.0
+    version: 3.49.0
   tslib:
     specifier: ^2.4.0
     version: 2.4.0
@@ -4249,8 +4249,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svelte@3.48.0:
-    resolution: {integrity: sha512-fN2YRm/bGumvjUpu6yI3BpvZnpIm9I6A7HR4oUNYd7ggYyIwSA/BX7DJ+UXXffLp6XNcUijyLvttbPVCYa/3xQ==}
+  /svelte@3.49.0:
+    resolution: {integrity: sha512-+lmjic1pApJWDfPCpUUTc1m8azDqYCG1JN9YEngrx/hUyIcFJo6VZhj0A1Ai0wqoHcEIuQy+e9tk+4uDgdtsFA==}
     engines: {node: '>= 8'}
     dev: true
 
