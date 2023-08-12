@@ -9,6 +9,7 @@ export const FILE_TYPES = {
   jsx: 'JavaScript Extended Files',
   ts: 'TypeScript Files',
   tsx: 'TypeScript Extended Files',
-  vue: 'Vue\'s Single File Component',
-  svelte: 'Svelte\'s Single File Component',
+  vue: 'Vue Single File Component',
+  svelte: 'Svelte Single File Component',
+  astro: 'Astro Components'
 };

@@ -1,8 +1,20 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import { getSvelteImportLines } from '@/service/parser/svelte';
+import { getSvelteImportLines, loadSvelteCompiler } from '@/service/parser/svelte';
 
 describe('Svelte parser test', () => {
+  beforeAll(async () => {
+    await loadSvelteCompiler();
+  });
+
+  it('should be able to parse empty file', async () => {
+    const content = ``;
+
+    const result = await getSvelteImportLines(content, 'lodash');
+
+    expect(result.length).toBe(0);
+  });
+
   it('should be able to parse ES module import', async () => {
     const content = `<script>
       import _ from 'lodash';
@@ -16,7 +28,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'lodash', []);
+    const result = await getSvelteImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -35,7 +47,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'lodash', []);
+    const result = await getSvelteImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -54,7 +66,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'lodash', []);
+    const result = await getSvelteImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -73,7 +85,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'lodash', []);
+    const result = await getSvelteImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -93,7 +105,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'foo', []);
+    const result = await getSvelteImportLines(content, 'foo');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(3);
@@ -116,7 +128,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'foo', []);
+    const result = await getSvelteImportLines(content, 'foo');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(5);
@@ -136,7 +148,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'baz', []);
+    const result = await getSvelteImportLines(content, 'baz');
 
     expect(result.length).toBe(0);
   });
@@ -155,7 +167,7 @@ describe('Svelte parser test', () => {
 
     <h1>Hello, {formatted}!</h1>`;
 
-    const result = await getSvelteImportLines(content, 'bar', []);
+    const result = await getSvelteImportLines(content, 'bar');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(3);

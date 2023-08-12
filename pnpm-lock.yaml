@@ -25,6 +25,9 @@ dependencies:
     version: 17.5.1
 
 devDependencies:
+  '@astrojs/compiler':
+    specifier: ^1.6.3
+    version: 1.6.3
   '@auto-it/conventional-commits':
     specifier: ^10.37.0
     version: 10.37.0(@octokit/core@3.6.0)(typescript@5.1.6)
@@ -118,6 +121,10 @@ packages:
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /@astrojs/compiler@1.6.3:
+    resolution: {integrity: sha512-n0xTuBznKspc0plk6RHBOlSv/EwQGyMNSxEOPj7HMeiRNnXX4woeSopN9hQsLkqraDds1eRvB4u99buWgVNJig==}
     dev: true
 
   /@auto-it/bot-list@10.37.0:

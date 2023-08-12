@@ -1,8 +1,9 @@
-import { FileParser } from '@/types';
+import { CompilerLoader, FileParser } from '@/types';
 
-import { getSvelteImportLines } from '@/service/parser/svelte';
 import { getTSImportLines } from '@/service/parser/ts';
-import { getVueImportLines } from '@/service/parser/vue';
+import { getVueImportLines, loadVueCompiler } from '@/service/parser/vue';
+import { getSvelteImportLines, loadSvelteCompiler } from '@/service/parser/svelte';
+import { getAstroImportLines, loadAstroCompiler } from '@/service/parser/astro';
 
 /**
  * Extension to parser map. Make sure to register the function here
@@ -16,6 +17,13 @@ const PARSER_MAP: Record<string, FileParser> = {
   ts: getTSImportLines,
   vue: getVueImportLines,
   svelte: getSvelteImportLines,
+  astro: getAstroImportLines,
+};
+
+const COMPILER_MAP: Record<string, CompilerLoader> = {
+  vue: loadVueCompiler,
+  svelte: loadSvelteCompiler,
+  astro: loadAstroCompiler,
 };
 
 /**
@@ -32,4 +40,8 @@ export function getParser(ext: string): FileParser {
   }
 
   return PARSER_MAP[ext];
+}
+
+export function getCompiler(ext: string): CompilerLoader | null {
+  return ext in COMPILER_MAP ? COMPILER_MAP[ext] : null;
 }

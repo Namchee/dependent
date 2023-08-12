@@ -3,10 +3,18 @@ import { describe, it, expect } from 'vitest';
 import { getTSImportLines } from '@/service/parser/ts';
 
 describe('TypeScript parser test', () => {
+  it('should be able to parse empty file', async () =>{
+    const content = ``;
+
+    const dependant = await getTSImportLines(content, 'express');
+
+    expect(dependant.length).toBe(0);
+  });
+
   it('should be able to parse ES modules import', async () =>{
     const content = `import express from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -15,7 +23,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse all modules import', async () =>{
     const content = `import * as express from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -24,7 +32,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse named imports', async () =>{
     const content = `import { json } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -33,7 +41,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse aliased imports', async () =>{
     const content = `import { json as jeson } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -42,7 +50,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse default aliased imports', async () =>{
     const content = `import { default as alias } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -51,7 +59,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse multiple named imports', async () =>{
     const content = `import { foo, bar } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -60,16 +68,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse combined default and named imports', async () =>{
     const content = `import defaultExport, { export1 } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
-
-    expect(dependant.length).toBe(1);
-    expect(dependant[0]).toBe(1);
-  });
-
-  it('should be able to parse combined default and named imports', async () =>{
-    const content = `import defaultExport, { export1 } from 'express';`;
-
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -78,7 +77,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse combined default and named imports in separated imports', async () =>{
     const content = `import defaultExport from 'express';\nimport { foo } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(2);
     expect(dependant[0]).toBe(1);
@@ -87,7 +86,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse side-effect imports', async () =>{
     const content = `import 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -96,7 +95,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse type import', async () =>{
     const content = `import type { Application } from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -105,7 +104,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse dynamic imports', async () =>{
     const content = `const a = import('express');`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -114,7 +113,7 @@ describe('TypeScript parser test', () => {
   it('should be able to parse CommonJS imports', async () =>{
     const content = `const a = require('express');`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(1);
@@ -125,7 +124,7 @@ describe('TypeScript parser test', () => {
 
     import express from 'express';`;
 
-    const dependant = await getTSImportLines(content, 'express', []);
+    const dependant = await getTSImportLines(content, 'express');
 
     expect(dependant.length).toBe(1);
     expect(dependant[0]).toBe(3);
@@ -138,7 +137,7 @@ describe('TypeScript parser test', () => {
       }
     })();`;
 
-    const dependants = await getTSImportLines(content, 'express', []);
+    const dependants = await getTSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
@@ -150,7 +149,7 @@ describe('TypeScript parser test', () => {
 
     app.lister(3000, async () => console.log('hello world'))`;
 
-    const dependants = await getTSImportLines(content, 'express', []);
+    const dependants = await getTSImportLines(content, 'express');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -160,7 +159,7 @@ describe('TypeScript parser test', () => {
 
     export default defineConfig({});`;
 
-    const dependants = await getTSImportLines(content, 'windicss', []);
+    const dependants = await getTSImportLines(content, 'windicss');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -170,7 +169,7 @@ describe('TypeScript parser test', () => {
 
     export default defineConfig({});`;
 
-    const dependants = await getTSImportLines(content, 'windicss', []);
+    const dependants = await getTSImportLines(content, 'windicss');
     expect(dependants.length).toBe(0);
   });
 });
@@ -190,7 +189,7 @@ describe('React TSX test', () =>{
 
     export default Home;`;
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -211,7 +210,7 @@ describe('React TSX test', () =>{
 
     export default Home;`;
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(2);
     expect(dependants[0]).toBe(1);
     expect(dependants[1]).toBe(2);
@@ -233,7 +232,7 @@ describe('React TSX test', () =>{
 
     export default Home;`
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(2);
     expect(dependants[0]).toBe(1);
     expect(dependants[1]).toBe(2);
@@ -248,7 +247,7 @@ describe('React TSX test', () =>{
 
     export default Home;`
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -262,7 +261,7 @@ describe('React TSX test', () =>{
 
     export default Home;`
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -276,7 +275,7 @@ describe('React TSX test', () =>{
 
     export default Home;`
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -296,7 +295,7 @@ describe('React TSX test', () =>{
 
     export default Home;`;
 
-    const dependants = await getTSImportLines(content, 'b', []);
+    const dependants = await getTSImportLines(content, 'b');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(6);
   });
@@ -316,7 +315,7 @@ describe('React TSX test', () =>{
 
     export default Home;`;
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(0);
   });
 
@@ -331,7 +330,7 @@ describe('React TSX test', () =>{
 
     export default Home;`;
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(3);
   });
@@ -345,7 +344,7 @@ describe('React TSX test', () =>{
       }
     }`;
 
-    const dependants = await getTSImportLines(content, 'react', []);
+    const dependants = await getTSImportLines(content, 'react');
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });
@@ -355,7 +354,8 @@ describe('React TSX test', () =>{
 
     export default defineConfig({});`;
 
-    const dependants = await getTSImportLines(content, 'windicss', []);
+    const dependants = await getTSImportLines(content, 'windicss');
+
     expect(dependants.length).toBe(1);
     expect(dependants[0]).toBe(1);
   });

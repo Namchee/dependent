@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { getParser } from '@/service/parser';
+import { getParser, getCompiler } from '@/service/parser';
 
 import type {
   DependantFile,
@@ -9,20 +9,17 @@ import type {
 } from '@/types';
 
 import { getFileExtension } from '@/utils/file';
-import { getGlobalNPMPath, getGlobalYarnPath, getGlobalPnpmPath } from '@/utils/global';
+import { FILE_TYPES } from '@/constant/files';
 
 export async function getDependantFiles(
   files: ProjectFile[],
   dependency: string,
   { silent }: ParserOptions,
 ): Promise<DependantFile[]> {
-  const managerPaths = await Promise.allSettled([
-    getGlobalNPMPath(),
-    getGlobalYarnPath(),
-    getGlobalPnpmPath(),
-  ]);
+  // Quickfix, please remove when glob pattern is found
+  files = files.filter(file => !file.name.endsWith('.d.ts'));
 
-  const globs = managerPaths.map(result => result.status === 'fulfilled' ? result.value : '');
+  await loadCompilers(files);
 
   const dependants: Promise<DependantFile | null>[] = files.map(
     async (file) => {
@@ -30,7 +27,7 @@ export async function getDependantFiles(
         const ext = getFileExtension(file);
 
         const parse = getParser(ext);
-        const dependants = await parse(file.content, dependency, globs);
+        const dependants = await parse(file.content, dependency);
 
         if (dependants.length) {
           return {
@@ -50,7 +47,7 @@ export async function getDependantFiles(
 
   if (!silent) {
     const results = await Promise.all(dependants);
-    return results.filter(val => val !== null) as DependantFile[];
+    return results.filter(Boolean) as DependantFile[];
   }
 
   const rawResults = await Promise.allSettled(dependants);
@@ -67,4 +64,28 @@ export async function getDependantFiles(
   }
 
   return results;
+}
+
+async function loadCompilers(files: ProjectFile[]) {
+  const compilers = [
+    ...new Set(
+      files.map(file => getFileExtension(file))
+    ),
+  ].map((ext: string) => {
+    try {
+      const compiler = getCompiler(ext);
+      if (compiler) {
+        return compiler();
+      }
+
+      return null;
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(
+        `Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`,
+      );
+    }
+  }).filter(Boolean);
+
+  await Promise.all(compilers);
 }

@@ -29,6 +29,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@astrojs/compiler": "^1.6.3",
     "@auto-it/conventional-commits": "^10.37.0",
     "@auto-it/npm": "^10.37.0",
     "@octokit/core": "^3.6.0",

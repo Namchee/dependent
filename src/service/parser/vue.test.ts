@@ -1,8 +1,39 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach, beforeAll } from 'vitest';
 
-import { getVueImportLines } from '@/service/parser/vue';
+import { getVueImportLines, loadVueCompiler } from '@/service/parser/vue';
+
+import * as pkgUtils from '@/service/package';
 
 describe('Vue parser test', () => {
+  beforeAll(async () => {
+    await loadVueCompiler();
+  });
+
+  beforeEach(() => {
+    vi.spyOn(pkgUtils, 'resolveDependencyPackageJSON').mockImplementation(() => ({
+      name: 'vue',
+      executables: {},
+      scripts: {},
+      dependencies: {
+        '@vue/compiler-sfc': '^3.3.4',
+      },
+      devDependencies: {},
+      peerDependencies: {},
+    }));
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('should be able to parse empty files', async () => {
+    const content = ``;
+
+    const result = await getVueImportLines(content, 'vue');
+
+    expect(result.length).toBe(0);
+  });
+
   it('should be able to parse ES module import', async () => {
     const content = `<script>
     import Vue from 'vue';
@@ -22,7 +53,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -47,7 +78,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -72,7 +103,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -97,7 +128,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -123,7 +154,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'foo', []);
+    const result = await getVueImportLines(content, 'foo');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(3);
@@ -152,7 +183,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'baz', []);
+    const result = await getVueImportLines(content, 'baz');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(5);
@@ -178,7 +209,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'baz', []);
+    const result = await getVueImportLines(content, 'baz');
 
     expect(result.length).toBe(0);
   });
@@ -202,7 +233,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -227,7 +258,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -253,7 +284,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'vue', []);
+    const result = await getVueImportLines(content, 'vue');
 
     expect(result.length).toBe(2);
     expect(result[0]).toBe(2);
@@ -271,7 +302,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'lodash', []);
+    const result = await getVueImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -302,7 +333,7 @@ describe('Vue parser test', () => {
       Hello, {{ name }}
     </template>`;
 
-    const result = await getVueImportLines(content, 'lodash', []);
+    const result = await getVueImportLines(content, 'lodash');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(2);
@@ -337,7 +368,7 @@ describe('Vue parser test', () => {
     }
     </script>`;
 
-    const result = await getVueImportLines(content, 'vue-class-component', []);
+    const result = await getVueImportLines(content, 'vue-class-component');
 
     expect(result.length).toBe(1);
     expect(result[0]).toBe(11);

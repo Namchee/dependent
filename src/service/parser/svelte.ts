@@ -11,19 +11,26 @@ import type {
 import type { BaseNode } from 'estree-walker';
 
 import { getRootPackage } from '@/utils/package';
+import { getGlobs } from '@/utils/global';
 
 let compiler: typeof import('svelte/compiler');
 
-async function loadSvelteCompiler(globs: string[]): Promise<void> {
+export async function loadSvelteCompiler(): Promise<void> {
   // Do not load the compiler twice
   if (compiler) {
     return;
   }
 
-  const compilerPath = ['svelte', 'compiler.js'];
+  const globs = await getGlobs();
+
+  const oldCompilerPath = ['svelte', 'compiler.js'];
+  const newCompilerPath = ['svelte', 'src', 'compiler', 'index.js'];
+
   const paths = [
-    resolve(process.cwd(), 'node_modules', ...compilerPath),
-    ...globs.map(path => resolve(path, ...compilerPath)),
+    resolve(process.cwd(), 'node_modules', ...newCompilerPath),
+    resolve(process.cwd(), 'node_modules', ...oldCompilerPath),
+    ...globs.map(path => resolve(path, ...newCompilerPath)),
+    ...globs.map(path => resolve(path, ...oldCompilerPath)),
   ];
 
   const imports = paths.map(path => import(pathToFileURL(path).toString()));
@@ -51,13 +58,12 @@ async function loadSvelteCompiler(globs: string[]): Promise<void> {
  * is imported.
  */
 export function parseNode(
-  svelte: typeof compiler,
   sourceNode: BaseNode,
   dependency: string,
 ): number[] {
   const lines: number[] = [];
 
-  svelte.walk(sourceNode, {
+  compiler.walk(sourceNode, {
     enter(node) {
       switch (node.type) {
         case 'ImportDeclaration': {
@@ -126,15 +132,14 @@ export function parseNode(
 export async function getSvelteImportLines(
   content: string,
   dependency: string,
-  globs: string[],
 ): Promise<number[]> {
   if (!compiler) {
-    await loadSvelteCompiler(globs);
+    throw new Error('Svelte compiler has not been loaded yet');
   }
 
   const node = compiler.parse(content);
   return [
-    ...parseNode(compiler, node.instance as BaseNode, dependency),
-    ...parseNode(compiler, node.module as BaseNode, dependency),
+    ...parseNode(node.instance as BaseNode, dependency),
+    ...parseNode(node.module as BaseNode, dependency),
   ];
 }

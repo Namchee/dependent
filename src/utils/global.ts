@@ -2,12 +2,14 @@ import { resolve } from 'path';
 
 import { executeCommand } from '@/utils/cmd';
 
+let globs: string[] = [];
+
 /**
  * Get the current npm global installation path
  *
  * @returns {Promise<string>} global NPM path
  */
-export async function getGlobalNPMPath(): Promise<string> {
+async function getGlobalNPMPath(): Promise<string> {
   try {
     const path = await executeCommand(
       /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
@@ -31,7 +33,7 @@ export async function getGlobalNPMPath(): Promise<string> {
  *
  * @returns {Promise<string>} global Yarn path
  */
-export async function getGlobalYarnPath(): Promise<string> {
+async function getGlobalYarnPath(): Promise<string> {
   try {
     const path = await executeCommand(
       /^win/.test(process.platform) ? 'yarn.cmd' : 'yarn',
@@ -55,7 +57,7 @@ export async function getGlobalYarnPath(): Promise<string> {
  *
  * @returns {Promise<string>} global pnpm path
  */
-export async function getGlobalPnpmPath(): Promise<string> {
+async function getGlobalPnpmPath(): Promise<string> {
   try {
     const path = await executeCommand(
       /^win/.test(process.platform) ? 'pnpm.cmd' : 'pnpm',
@@ -72,4 +74,22 @@ export async function getGlobalPnpmPath(): Promise<string> {
 
     throw err;
   }
+}
+
+export async function getGlobs(): Promise<string[]> {
+  if (globs.length) {
+    return globs;
+  }
+
+  const managerPaths = await Promise.allSettled([
+    getGlobalNPMPath(),
+    getGlobalYarnPath(),
+    getGlobalPnpmPath(),
+  ]);
+
+  globs = managerPaths
+    .map(result => result.status === 'fulfilled' ? result.value : '')
+    .filter(Boolean);
+
+  return globs;
 }
