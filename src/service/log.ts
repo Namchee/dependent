@@ -45,6 +45,7 @@ function categorize(files: DependantFile[]): Record<string, DependantFile[]> {
     tsx: [],
     vue: [],
     svelte: [],
+    astro: [],
   };
 
   for (const file of files) {

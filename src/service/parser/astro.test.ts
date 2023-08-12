@@ -7,6 +7,14 @@ describe('Astro parser test', () => {
     await loadAstroCompiler();
   });
 
+  it('should be able to parse empty file', async () =>{
+    const content = ``;
+
+    const dependant = await getAstroImportLines(content, 'astro-iconify');
+
+    expect(dependant.length).toBe(0);
+  });
+
   it('should be able to parse ES modules import', async () =>{
     const content = `---
     import Icon from 'astro-iconify';

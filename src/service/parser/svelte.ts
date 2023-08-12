@@ -58,13 +58,12 @@ export async function loadSvelteCompiler(): Promise<void> {
  * is imported.
  */
 export function parseNode(
-  svelte: typeof compiler,
   sourceNode: BaseNode,
   dependency: string,
 ): number[] {
   const lines: number[] = [];
 
-  svelte.walk(sourceNode, {
+  compiler.walk(sourceNode, {
     enter(node) {
       switch (node.type) {
         case 'ImportDeclaration': {
@@ -140,7 +139,7 @@ export async function getSvelteImportLines(
 
   const node = compiler.parse(content);
   return [
-    ...parseNode(compiler, node.instance as BaseNode, dependency),
-    ...parseNode(compiler, node.module as BaseNode, dependency),
+    ...parseNode(node.instance as BaseNode, dependency),
+    ...parseNode(node.module as BaseNode, dependency),
   ];
 }

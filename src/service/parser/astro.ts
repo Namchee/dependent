@@ -98,14 +98,14 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
   const compilerPath = [
     '@astrojs',
     'compiler',
-    'node',
+    'browser',
     'utils.js',
   ];
   const newCompilerPath = [
     '@astrojs',
     'compiler',
     'dist',
-    'node',
+    'browser',
     'utils.js',
   ];
 
@@ -142,23 +142,22 @@ async function loadAstroUtils(globs: string[]): Promise<void> {
   throw new Error('Failed to load Astro utility');
 }
 
-async function getFrontmatter(node: RootNode): Promise<string> {
-  return new Promise((resolve) => {
-    utils.walk(node, (node) => {
-      if (node.type === 'frontmatter') {
-        resolve(node.value);
-      }
-    });
-  });
-}
-
-export async function parseNode(
-  sourceNode: RootNode,
+async function parseNode(
+  node: RootNode,
   dependency: string,
 ): Promise<number[]> {
-  const frontmatter = await getFrontmatter(sourceNode);
+  const lines: number[] = [];
 
-  return getTSImportLines(frontmatter, dependency);
+  // Need await to ensure that the code is executed before returning
+  await utils.walk(node, async (node) => {
+    if (utils.is.frontmatter(node)) {
+      const importLines = await getTSImportLines(node.value, dependency);
+
+      lines.push(...importLines);
+    }
+  });
+
+  return lines;
 }
 
 export async function getAstroImportLines(
@@ -169,6 +168,7 @@ export async function getAstroImportLines(
     throw new Error('Astro compiler has not been loaded yet');
   }
 
-  const nodeTree = await compiler.parse(content);
-  return parseNode(nodeTree.ast, dependency);
+  const node = await compiler.parse(content);
+
+  return parseNode(node.ast, dependency);
 }

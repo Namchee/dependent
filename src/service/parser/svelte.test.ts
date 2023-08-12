@@ -7,6 +7,14 @@ describe('Svelte parser test', () => {
     await loadSvelteCompiler();
   });
 
+  it('should be able to parse empty file', async () => {
+    const content = ``;
+
+    const result = await getSvelteImportLines(content, 'lodash');
+
+    expect(result.length).toBe(0);
+  });
+
   it('should be able to parse ES module import', async () => {
     const content = `<script>
       import _ from 'lodash';

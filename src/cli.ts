@@ -27,6 +27,7 @@ export const cli = yargs(process.argv.slice(2))
       '!(node_modules)/**/*.tsx',
       '!(node_modules)/**/*.vue',
       '!(node_modules)/**/*.svelte',
+      '!(node_modules)/**/*.astro',
       '*.js',
       '*.mjs',
       '*.ts',

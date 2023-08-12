@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { getParser, loadCompiler } from '@/service/parser';
+import { getParser, getCompiler } from '@/service/parser';
 
 import type {
   DependantFile,
@@ -47,7 +47,7 @@ export async function getDependantFiles(
 
   if (!silent) {
     const results = await Promise.all(dependants);
-    return results.filter(val => val !== null) as DependantFile[];
+    return results.filter(Boolean) as DependantFile[];
   }
 
   const rawResults = await Promise.allSettled(dependants);
@@ -73,14 +73,19 @@ async function loadCompilers(files: ProjectFile[]) {
     ),
   ].map((ext: string) => {
     try {
-      return loadCompiler(ext);
+      const compiler = getCompiler(ext);
+      if (compiler) {
+        return compiler();
+      }
+
+      return null;
     } catch (err) {
       const error = err as Error;
       throw new Error(
         `Failed to load compiler for ${FILE_TYPES[ext as keyof typeof FILE_TYPES]}: ${error.message}`,
       );
     }
-  });
+  }).filter(Boolean);
 
   await Promise.all(compilers);
 }

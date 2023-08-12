@@ -24,7 +24,15 @@ describe('Vue parser test', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-  })
+  });
+
+  it('should be able to parse empty files', async () => {
+    const content = ``;
+
+    const result = await getVueImportLines(content, 'vue');
+
+    expect(result.length).toBe(0);
+  });
 
   it('should be able to parse ES module import', async () => {
     const content = `<script>

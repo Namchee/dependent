@@ -49,7 +49,7 @@ export type FileParser = (
   dependency: string,
 ) => Promise<number[]>;
 
-export type CompilerLoader = (globs: string[]) => Promise<void>;
+export type CompilerLoader = () => Promise<void>;
 
 export interface LoggerConfig {
   format: 'lines' | 'table';

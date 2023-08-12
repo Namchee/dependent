@@ -42,6 +42,6 @@ export function getParser(ext: string): FileParser {
   return PARSER_MAP[ext];
 }
 
-export function loadCompiler(ext: string): CompilerLoader | null {
+export function getCompiler(ext: string): CompilerLoader | null {
   return ext in COMPILER_MAP ? COMPILER_MAP[ext] : null;
 }

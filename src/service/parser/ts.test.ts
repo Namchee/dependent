@@ -3,6 +3,14 @@ import { describe, it, expect } from 'vitest';
 import { getTSImportLines } from '@/service/parser/ts';
 
 describe('TypeScript parser test', () => {
+  it('should be able to parse empty file', async () =>{
+    const content = ``;
+
+    const dependant = await getTSImportLines(content, 'express');
+
+    expect(dependant.length).toBe(0);
+  });
+
   it('should be able to parse ES modules import', async () =>{
     const content = `import express from 'express';`;
 
