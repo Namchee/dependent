@@ -85,7 +85,7 @@ function showDependantFilesInTables(
     const alias = FILE_TYPES[ext as keyof typeof FILE_TYPES];
 
     if (extFiles.length) {
-      const header = `📜 ${alias}`;
+      const header = `📝 ${alias}`;
 
       const entries = extFiles.map(file => ([
         file.name,
