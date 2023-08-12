@@ -1,3 +1,15 @@
+# v0.15.0 (Sat Aug 12 2023)
+
+#### 🚀 Enhancement
+
+- feat: add astro support [#62](https://github.com/Namchee/dependent/pull/62) ([@Namchee](https://github.com/Namchee))
+
+#### Authors: 1
+
+- Cristopher ([@Namchee](https://github.com/Namchee))
+
+---
+
 # v0.14.1 (Sun Aug 06 2023)
 
 #### 🐛 Bug Fix
